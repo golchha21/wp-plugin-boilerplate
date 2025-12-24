@@ -22,9 +22,6 @@ class Lifecycle
         if (! wp_next_scheduled('plugin_boilerplate_cron_event')) {
             wp_schedule_event(time(), 'daily', 'plugin_boilerplate_cron_event');
         }
-
-        // If you add rewrite rules later:
-        // flush_rewrite_rules(false);
     }
 
     /**

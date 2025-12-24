@@ -9,7 +9,6 @@ abstract class Field
     public string $tab;
     public string $section;
     protected array $args = [];
-
     protected string $option_name;
 
     public function __construct(

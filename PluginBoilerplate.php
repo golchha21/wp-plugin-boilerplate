@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP Plugin Boilerplate
  * Plugin URI: http://www.ulhas.net/labs/wp-plugin-boilerplate/
- * Description: A WordPress plugin Boilerplate.
+ * Description: A reusable, OOP-based WordPress admin settings framework designed for real plugins.
  * Version: 1.0.0
  * Author: Ulhas Vardhan Golchha
  * Author URI: https://www.ulhas.net/
@@ -17,6 +17,8 @@ namespace {
     if (!defined('ABSPATH')) {
         exit;
     }
+
+    define('MY_PLUGIN_VERSION', '1.0.0');
 
     // Constants in the root namespace
     const PLUGIN_FILE = __FILE__;
