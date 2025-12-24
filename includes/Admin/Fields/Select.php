@@ -22,6 +22,7 @@ class Select extends Field
             <?php endforeach; ?>
         </select>
         <?php
+        $this->render_description();
     }
 
     public function sanitize($value): ?string

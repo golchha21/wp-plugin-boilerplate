@@ -35,6 +35,8 @@ wp-plugin-boilerplate/
        │   ├── Number.php
        │   ├── Email.php
        │   ├── Media.php
+       │   ├── MultiCheckbox.php
+       │   ├── MultiSelect.php
        │   └── RawHtml.php
        └── Helpers/
            └── ExportImport.php

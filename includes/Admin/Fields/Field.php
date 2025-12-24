@@ -42,4 +42,15 @@ abstract class Field
 
     abstract public function render(): void;
     abstract public function sanitize($value);
+
+    protected function render_description(): void
+    {
+        if (! empty($this->args['description'])) {
+            printf(
+                '<p class="description">%s</p>',
+                esc_html($this->args['description'])
+            );
+        }
+    }
+
 }

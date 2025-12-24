@@ -15,6 +15,7 @@ class Email extends Field
             class="regular-text"
         >
         <?php
+        $this->render_description();
     }
 
     public function sanitize($value): ?string

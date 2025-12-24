@@ -7,28 +7,75 @@ class Number extends Field
     public function render(): void
     {
         $value = $this->get_value();
-        $min   = $this->args['min']  ?? '';
-        $max   = $this->args['max']  ?? '';
-        $step  = $this->args['step'] ?? '1';
-        ?>
-        <input
-            type="number"
-            name="<?php echo esc_attr($this->get_option_name()); ?>"
-            value="<?php echo esc_attr($value !== null ? (string) $value : ''); ?>"
-            class="small-text"
-            <?php if ($min !== ''): ?>min="<?php echo esc_attr($min); ?>"<?php endif; ?>
-            <?php if ($max !== ''): ?>max="<?php echo esc_attr($max); ?>"<?php endif; ?>
-            step="<?php echo esc_attr($step); ?>"
-        >
-        <?php
-    }
 
-    public function sanitize($value): ?string
-    {
-        if ($value === null) {
-            return null;
+        $min  = $this->args['min']  ?? null;
+        $max  = $this->args['max']  ?? null;
+        $step = $this->args['step'] ?? '1';
+
+        printf(
+                '<input type="number"
+                name="%s"
+                value="%s"
+                class="small-text"
+                %s %s
+                step="%s"
+            >',
+                esc_attr($this->get_option_name()),
+                esc_attr((string) $value),
+                $min !== null ? 'min="' . esc_attr($min) . '"' : '',
+                $max !== null ? 'max="' . esc_attr($max) . '"' : '',
+                esc_attr($step)
+        );
+
+        // Range hint
+        if ($min !== null || $max !== null) {
+            echo '<p class="description">';
+
+            if ($min !== null && $max !== null) {
+                printf(
+                        'Allowed range: %s – %s',
+                        esc_html($min),
+                        esc_html($max)
+                );
+            } elseif ($min !== null) {
+                printf(
+                        'Minimum value: %s',
+                        esc_html($min)
+                );
+            } else {
+                printf(
+                        'Maximum value: %s',
+                        esc_html($max)
+                );
+            }
+
+            echo '</p>';
         }
-        return is_numeric($value) ? (string) $value : null;
+
+        // Optional custom description
+        $this->render_description();
     }
 
+    public function sanitize($value)
+    {
+        if ($value === '' || $value === null) {
+            return '';
+        }
+
+        if (! is_numeric($value)) {
+            return '';
+        }
+
+        $number = $value + 0;
+
+        if (isset($this->args['min']) && $number < $this->args['min']) {
+            $number = $this->args['min'];
+        }
+
+        if (isset($this->args['max']) && $number > $this->args['max']) {
+            $number = $this->args['max'];
+        }
+
+        return $number;
+    }
 }

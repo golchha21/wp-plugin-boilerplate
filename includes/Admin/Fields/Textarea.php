@@ -15,6 +15,7 @@ class Textarea extends Field
             class="large-text"
         ><?php echo esc_textarea((string) $value); ?></textarea>
         <?php
+        $this->render_description();
     }
 
     public function sanitize($value): ?string

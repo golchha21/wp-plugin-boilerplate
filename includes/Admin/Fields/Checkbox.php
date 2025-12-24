@@ -22,9 +22,18 @@ class Checkbox extends Field
                     value="1"
                     <?php checked($value, '1'); ?>
             >
-            <?php echo esc_html($this->label); ?>
+
+            <?php
+
+            if (! empty($this->args['label'])) {
+                echo esc_html($this->args['label']);
+            } else {
+                echo esc_html($this->label);
+            }
+            ?>
         </label>
         <?php
+        $this->render_description();
     }
 
     public function sanitize($value): ?string
