@@ -7,6 +7,10 @@ Keep a Changelog, without unnecessary ceremony.
 
 ---
 
+## [1.1.1] – Updated README.md
+
+---
+
 ## [1.1.0] – Field System Expansion & Media UX Improvements
 
 ### Added
