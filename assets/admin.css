@@ -1,0 +1,9 @@
+.plugin-boilerplate-single-column {
+    grid-column: 1 / -1;
+    max-width: 100%;
+}
+
+.plugin-boilerplate-single-column td {
+    display: block;
+    width: 100%;
+}

@@ -7,6 +7,48 @@ Keep a Changelog, without unnecessary ceremony.
 
 ---
 
+## [1.2] – New Field Types, Default Support & Framework Stabilization
+
+### Added
+- New field types:
+    - Radio
+    - RichText (WordPress WYSIWYG)
+    - Date
+    - Time
+    - DateTime
+- Optional `default` value support across all field types
+- WordPress-aware date and time handling using site timezone and formats
+- `Tab` value object with `is_form_tab()` to distinguish form vs render-only tabs
+- Versioned JSON export/import format
+- Unified Tools service with nonce-protected actions
+- About and Tools tabs implemented as render-only helpers
+
+### Changed
+- RawHtml fields now render outside the Settings API table
+- Tools and About tabs no longer rely on `do_settings_sections()`
+- Export and Import logic merged into a single service
+- Date, Time, and DateTime fields normalized to WordPress timezone handling
+- Select field standardized to use `choices` consistently
+- MultiSelect and MultiCheckbox now support array-based defaults
+- README updated to reflect the complete field set and default behavior
+
+### Fixed
+- DateTime values not being saved due to incorrect sanitization
+- Select fields not rendering due to mismatched argument keys
+- Tools tab appearing blank because of improper Settings API usage
+- Inactive tab data being removed on save
+- Layout issues caused by forcing single-column UI inside Settings API tables
+
+### Notes
+- Defaults are applied only when an option does not exist
+- Defaults never overwrite user-saved values
+- No breaking changes to stored data
+- Export format is forward-compatible via `export_version`
+- Clear separation between data-entry UI and utility UI
+- No migration required for existing installations
+
+---
+
 ## [1.1.1] – Updated README.md
 
 ---

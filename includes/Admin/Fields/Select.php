@@ -7,34 +7,34 @@ class Select extends Field
     public function render(): void
     {
         $value   = $this->get_value();
-        $options = $this->args['options'] ?? [];
+        $choices = $this->args['choices'] ?? [];
 
-        if (empty($options)) {
+        if (empty($choices)) {
+            echo '<em>No choices defined.</em>';
             return;
         }
         ?>
         <select name="<?php echo esc_attr($this->get_option_name()); ?>">
-            <?php foreach ($options as $key => $label): ?>
+            <?php foreach ($choices as $key => $label): ?>
                 <option value="<?php echo esc_attr($key); ?>"
-                        <?php selected((string) $value, (string) $key); ?>>
+                        <?php selected($value, (string) $key); ?>>
                     <?php echo esc_html($label); ?>
                 </option>
             <?php endforeach; ?>
         </select>
+
         <?php
         $this->render_description();
     }
 
-    public function sanitize($value): ?string
+    public function sanitize($value)
     {
-        if ($value === null) {
-            return null;
+        $choices = $this->args['choices'] ?? [];
+
+        if (! array_key_exists($value, $choices)) {
+            return $this->default();
         }
 
-        $options = $this->args['options'] ?? [];
-        return array_key_exists((string) $value, $options)
-                ? (string) $value
-                : null;
+        return $value;
     }
-
 }

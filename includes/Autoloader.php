@@ -1,7 +1,6 @@
 <?php
 
 namespace PluginBoilerplate;
-
 class Autoloader {
     public static function register(): void
     {

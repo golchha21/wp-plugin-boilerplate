@@ -7,12 +7,6 @@ use PluginBoilerplate\Admin\Helpers\Cache;
 class Lifecycle
 {
     /**
-     * Prefix for ALL plugin-owned options.
-     * Must match SettingsPage option_prefix.
-     */
-    const OPTION_PREFIX = 'yps-';
-
-    /**
      * On plugin activation.
      * Runtime setup only.
      */
@@ -58,7 +52,7 @@ class Lifecycle
 
         // Clear plugin cache (if any)
         if (class_exists(Cache::class)) {
-            Cache::clear(self::OPTION_PREFIX);
+            Cache::clear(OPTION_PREFIX);
         }
 
         // Clear plugin transients

@@ -2,15 +2,22 @@
 
 namespace PluginBoilerplate;
 
+use PluginBoilerplate\Admin\Fields\Date;
+use PluginBoilerplate\Admin\Fields\DateTime;
 use PluginBoilerplate\Admin\Fields\Email;
 use PluginBoilerplate\Admin\Fields\Media;
 use PluginBoilerplate\Admin\Fields\MultiCheckbox;
 use PluginBoilerplate\Admin\Fields\MultiSelect;
 use PluginBoilerplate\Admin\Fields\Number;
+use PluginBoilerplate\Admin\Fields\Radio;
 use PluginBoilerplate\Admin\Fields\RawHtml;
+use PluginBoilerplate\Admin\Fields\RichText;
 use PluginBoilerplate\Admin\Fields\Text;
+use PluginBoilerplate\Admin\Fields\Time;
+use PluginBoilerplate\Admin\Helpers\AboutPage;
 use PluginBoilerplate\Admin\Helpers\Choices;
-use PluginBoilerplate\Admin\Helpers\ExportImport;
+use PluginBoilerplate\Admin\Helpers\ToolsPage;
+use PluginBoilerplate\Admin\Services\ToolsService;
 use PluginBoilerplate\Admin\SettingsPage;
 use PluginBoilerplate\Admin\Fields\Checkbox;
 use PluginBoilerplate\Admin\Fields\Select;
@@ -22,6 +29,8 @@ class Bootstrap
     {
         // Settings page setup
         add_action('plugins_loaded', [$this, 'init_settings_page']);
+
+        ToolsService::register();
 
         // Settings link on plugin page
         add_filter(
@@ -43,155 +52,267 @@ class Bootstrap
             'capability' => 'manage_options',
         ]);
 
-        // Tabs
-        $page->add_tab('general', 'General');
-        $page->add_tab('content', 'Content Rules');
-        $page->add_tab('tools', 'Tools');
+        /*
+        |--------------------------------------------------------------------------
+        | Tabs
+        |--------------------------------------------------------------------------
+        */
 
-        // Sections
-        $page->add_section('general', 'basic', '');
-        $page->add_section('content', 'filters', '');
-        $page->add_section('tools', 'export_import', '');
+        $page->add_tab('content', 'Content');
+        $page->add_tab('choices', 'Choices');
+        $page->add_tab('datetime', 'Date & Time');
+        $page->add_tab('media', 'Media');
+        $page->add_tab('tools', 'Tools', false);
+        $page->add_tab('about', 'About', false);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sections
+        |--------------------------------------------------------------------------
+        */
+
+        $page->add_section('content', 'text', 'Text & Content Fields');
+        $page->add_section('choices', 'single', 'Single Choice');
+        $page->add_section('choices', 'multiple', 'Multiple Choice');
+        $page->add_section('datetime', 'time', 'Date & Time');
+        $page->add_section('media', 'files', 'Media');
+        $page->add_section('tools', 'tools');
+        $page->add_section('about', 'about');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Text & Content Fields
+        |--------------------------------------------------------------------------
+        */
 
         $page->add_field(new Text(
-            'name',
-            'Name',
-            'general',
-            'basic'
-        ));
-
-        $page->add_field(new Email(
-            'email',
-            'Email',
-            'general',
-            'basic'
-        ));
-
-        $page->add_field(new Number(
-            'number',
-            'Number',
-            'general',
-            'basic',
+            'sample_text',
+            'Text',
+            'content',
+            'text',
             [
-                'min'         => 1,
-                'max'         => 5000,
-                'step'        => 1,
-                'description' => 'Controls how many items are processed per run.'
+                'default'     => 'Sample text',
+                'description' => 'Single-line text input.'
             ]
         ));
 
         $page->add_field(new Textarea(
-            'address',
-            'Address',
-            'general',
-            'basic',
+            'sample_textarea',
+            'Textarea',
+            'content',
+            'text',
             [
-                'rows' => 6,
-                'description' => 'Complete address'
+                'rows'        => 4,
+                'description' => 'Multi-line plain text.'
             ]
         ));
+
+        $page->add_field(new Email(
+            'sample_email',
+            'Email',
+            'content',
+            'text',
+            [
+                'description' => 'Email address input.'
+            ]
+        ));
+
+        $page->add_field(new Number(
+            'sample_number',
+            'Number',
+            'content',
+            'text',
+            [
+                'min'         => 1,
+                'max'         => 100,
+                'default'     => 10,
+                'description' => 'Numeric input with constraints.'
+            ]
+        ));
+
+        $page->add_field(new RichText(
+            'sample_richtext',
+            'Rich Text',
+            'content',
+            'text',
+            [
+                'rows'           => 6,
+                'media_buttons'  => false,
+                'description'    => 'WordPress WYSIWYG editor.'
+            ]
+        ));
+
+        /*
+        |--------------------------------------------------------------------------
+        | Single Choice Fields
+        |--------------------------------------------------------------------------
+        */
 
         $page->add_field(new Checkbox(
-            'subscribe_promo',
-            'Subscription',
-            'general',
-            'basic',
+            'sample_checkbox',
+            'Checkbox',
+            'choices',
+            'single',
             [
-                'label' => 'Subscribe to promotional emails.'
+                'default'     => '1',
+                'description' => 'Boolean on/off toggle.'
             ]
         ));
 
+        $page->add_field(new Radio(
+            'sample_radio',
+            'Radio',
+            'choices',
+            'single',
+            [
+                'choices' => [
+                    'one' => 'Option One',
+                    'two' => 'Option Two',
+                ],
+                'default'     => 'one',
+                'description' => 'Mutually exclusive choices.'
+            ]
+        ));
 
         $page->add_field(new Select(
-            'roles',
-            'Roles',
-            'general',
-            'basic',
+            'sample_select',
+            'Select',
+            'choices',
+            'single',
             [
-                'options' => Choices::roles(),
-                'description' => 'List of all the roles.'
+                'choices' => [
+                    'a' => 'Choice A',
+                    'b' => 'Choice B',
+                ],
+                'default'     => 'a',
+                'description' => 'Dropdown selection.'
             ]
         ));
 
-        $page->add_field(
-            new MultiSelect(
-                'enabled_post_types',
-                'Select Post Types',
-                'content',
-                'filters',
-                [
-                    'choices' => Choices::post_types(),
-                    'description' => 'Select one or more post types'
-                ]
-            )
-        );
+        /*
+        |--------------------------------------------------------------------------
+        | Multiple Choice Fields
+        |--------------------------------------------------------------------------
+        */
 
-        $page->add_field(
-            new MultiCheckbox(
-                'enabled_taxonomy',
-                'Select Taxonomies',
-                'content',
-                'filters',
-                [
-                    'choices' => Choices::taxonomies(),
-                    'description' => 'Select one or more taxonomies'
-                ]
-            )
-        );
+        $page->add_field(new MultiCheckbox(
+            'sample_multicheckbox',
+            'MultiCheckbox',
+            'choices',
+            'multiple',
+            [
+                'choices' => Choices::post_types(),
+                'default' => ['post', 'page'],
+                'description' => 'Multiple checkbox selection.'
+            ]
+        ));
+
+        $page->add_field(new MultiSelect(
+            'sample_multiselect',
+            'MultiSelect',
+            'choices',
+            'multiple',
+            [
+                'choices' => Choices::roles(),
+                'default' => ['administrator'],
+                'description' => 'Searchable multi-select (Select2).'
+            ]
+        ));
+
+        /*
+        |--------------------------------------------------------------------------
+        | Date & Time Fields (WordPress-aware)
+        |--------------------------------------------------------------------------
+        */
+
+        $page->add_field(new Date(
+            'sample_date',
+            'Date',
+            'datetime',
+            'time',
+            [
+                'default'     => wp_date('Y-m-d'),
+                'description' => 'Stored as YYYY-MM-DD.'
+            ]
+        ));
+
+        $page->add_field(new Time(
+            'sample_time',
+            'Time',
+            'datetime',
+            'time',
+            [
+                'default'     => '09:00',
+                'description' => 'Stored as HH:MM.'
+            ]
+        ));
+
+        $page->add_field(new DateTime(
+            'sample_datetime',
+            'DateTime',
+            'datetime',
+            'time',
+            [
+                'default'     => strtotime('tomorrow 09:00', current_time('timestamp')),
+                'description' => 'Stored as Unix timestamp, rendered using WP settings.'
+            ]
+        ));
+
+        /*
+        |--------------------------------------------------------------------------
+        | Media Fields
+        |--------------------------------------------------------------------------
+        */
 
         $page->add_field(new Media(
-            'media',
+            'sample_media',
             'Media',
-            'content',
-            'filters',
+            'media',
+            'files',
             [
-                'button'      => 'Choose Image',
-                'description' => 'Used as the primary image.'
-            ]
-        ));
-
-        $page->add_field(new Media(
-            'medias',
-            'Medias',
-            'content',
-            'filters',
-            [
-                'multiple'      => true,
-                'button'      => 'Choose Images',
-                'description' => 'Used as the gallery images.'
+                'multiple'    => true,
+                'mime_types'  => ['image'],
+                'description' => 'Attachment IDs only. Drag to reorder.'
             ]
         ));
 
         $page->add_field(new Media(
             'pdf',
             'Documents (PDF)',
-            'content',
-            'filters',
+            'media',
+            'files',
             [
                 'type'        => 'application/pdf',
                 'button'      => 'Select PDF'
             ]
         ));
 
-        $page->add_field(
-            new RawHtml(
-                'export_settings',
-                'Export Settings',
-                'tools',
-                'export_import',
-                [ExportImport::class, 'render_export']
-            )
-        );
+        /*
+        |--------------------------------------------------------------------------
+        | Tools Fields
+        |--------------------------------------------------------------------------
+        */
 
-        $page->add_field(
-            new RawHtml(
-                'import_settings',
-                'Import Settings',
-                'tools',
-                'export_import',
-                [ExportImport::class, 'render_import']
-            )
-        );
+        $page->add_tab('tools', 'Tools', false);
+
+        $page->add_field(new RawHtml(
+            'tools_page',
+            '',
+            'tools',
+            'tools',
+            fn () => ToolsPage::render(),
+            ['single_column' => true]
+        ));
+
+        $page->add_field(new RawHtml(
+            'about_page',
+            '',
+            'about',
+            'about',
+            fn () => AboutPage::render(MY_PLUGIN_VERSION),
+            ['single_column' => true]
+        ));
+
     }
 
     public function add_settings_link(array $links): array
@@ -215,6 +336,13 @@ class Bootstrap
             return;
         }
 
+
+        wp_enqueue_style(
+            'plugin-boilerplate-admin',
+            plugin_dir_url(PLUGIN_FILE) . 'assets/admin.css',
+            [],
+            MY_PLUGIN_VERSION
+        );
         wp_enqueue_script('jquery-ui-sortable');
 
         // Detect Select2 / SelectWoo

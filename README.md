@@ -1,60 +1,84 @@
-# Plugin Boilerplate – Settings Framework
+# Plugin Boilerplate – WordPress Settings Framework
 
-A reusable, OOP-based WordPress admin settings framework designed for **real-world plugins**, not demos.
+A lightweight, OOP-based WordPress admin settings framework built for **real plugins**.
 
-This framework gives you a solid foundation for building complex, maintainable plugin settings without fighting the WordPress Settings API.
+Designed to be **copied, renamed, and adapted**, this framework removes the repetitive and error-prone parts of building WordPress settings while staying close to core APIs.
 
-**This is not a generator.**  
-It’s a **copy–rename–adapt foundation** you use to build your own plugins.
+> This is not a generator and not a dependency.  
+> It’s a foundation you own inside your plugin.
+
+---
+
+## What This Solves
+
+- No more serialized option arrays
+- No data loss when switching tabs
+- Clean separation between settings and tools
+- WordPress-aware date, time, and media handling
+- Safe lifecycle cleanup on uninstall
 
 ---
 
 ## Key Features
 
-- Independent options per field (no serialized option arrays)
-- Prefix-based option naming for clean storage and easy cleanup
-- Tab-based settings UI with safe per-tab saving
-- Fully namespaced, PSR-12–compliant architecture
-- Expandable field system with first-class sanitization
-- WordPress-native data helpers (post types, taxonomies, roles, users)
-- Production-grade Media field (IDs only, reorderable, removable)
-- Safe lifecycle handling (activate / deactivate / uninstall)
-- Tools tab rendered outside the Settings API
+- One option per field (prefix-based storage)
+- Tab-based settings UI
+- Default value support (applied only when no value exists)
+- WordPress-native Date, Time, and DateTime fields
+- Media fields with previews, ordering, and MIME control
+- Versioned JSON export / import
+- Nonce-protected Tools tab
+- Safe activate / deactivate / uninstall handling
 
 ---
 
-## Folder Structure
+## Fields
 
-```text
-wp-plugin-boilerplate/
-├── PluginBoilerplate.php
-├── uninstall.php
-└── includes/
-   ├── Autoloader.php
-   ├── Bootstrap.php
-   ├── Lifecycle.php
-   └── Admin/
-       ├── SettingsPage.php
-       ├── Fields/
-       │   ├── Field.php
-       │   ├── Checkbox.php
-       │   ├── Text.php
-       │   ├── Textarea.php
-       │   ├── Select.php
-       │   ├── Number.php
-       │   ├── Email.php
-       │   ├── Media.php
-       │   ├── MultiCheckbox.php
-       │   ├── MultiSelect.php
-       │   └── RawHtml.php
-       └── Helpers/
-           ├── Choices.php
-           └── ExportImport.php
-```
+All fields:
+- save to their own prefixed option
+- support optional `default` values
+  ``- apply defaults only when the option does not exist
+- own their sanitization logic
+- support an optional `description`
+
+### Available field types
+
+#### Text-based
+- **Text**
+- **Textarea**
+- **Email**
+- **RichText** (WordPress WYSIWYG editor)
+
+#### Choice-based
+- **Select**
+- **Radio**
+- **Checkbox** (inline label + description)
+- **MultiCheckbox**
+- **MultiSelect** (searchable via Select2)
+
+#### Date & Time (WordPress-aware)
+- **Date** (stored as `YYYY-MM-DD`)
+- **Time** (stored as `HH:MM`)
+- **DateTime** (stored as Unix timestamp, rendered using WordPress date/time formats and timezone)
+
+#### Media
+- **Media**
+    - Stores attachment IDs only
+    - Single or multiple selection
+    - Drag-to-reorder (multiple only)
+    - Per-item remove buttons
+    - Image thumbnails / file name previews
+    - Media type restriction (image by default)
+      ``
+#### Utility
+- **Number** (with min/max hints)
+- **RawHtml** (custom UI blocks, tools, diagnostics)
+
+See [README-FIELDS.md](README-FIELDS.md) for full field examples.
 
 ---
 
-## Using This Framework for a New Plugin
+## Getting Started
 
 This framework is intended to be **copied and renamed**, not installed directly.
 
@@ -151,12 +175,6 @@ $page = new SettingsPage([
 ]);
 ```
 
-In `Lifecycle.php`:
-
-```php
-const OPTION_PREFIX = 'my_awesome_plugin_';
-```
-
 ---
 
 ### 6. Activate the plugin
@@ -166,30 +184,6 @@ After renaming and adjusting:
 - Activate the plugin from WordPress Admin
 - Settings appear under the configured menu
 - Options are created lazily when users save fields
-
----
-
-## Fields
-
-Each field:
-- Saves to its **own option**
-- Uses the shared option prefix
-- Owns its own sanitization logic
-- Supports an optional `description`
-- Is registered and rendered per tab
-
-### Available field types
-
-- Text
-- Textarea
-- Select
-- Number (with min/max hints)
-- Email
-- Checkbox (with inline label + description)
-- MultiCheckbox
-- MultiSelect (searchable via Select2)
-- Media (IDs only, sortable, removable)
-- RawHtml (for custom UI blocks)
 
 ---
 
@@ -206,28 +200,20 @@ This keeps WordPress queries **out of field classes** and makes fields fully reu
 
 ---
 
-## Media Field
+## Select2 Assets (Required)
 
-The Media field is production-ready:
+The framework uses **Select2** for the searchable `MultiSelect` field.
 
-- Stores **attachment IDs only**
-- Supports single or multiple selection
-- Drag-to-reorder (only when multiple is enabled)
-- Per-item remove buttons
-- Image thumbnails for images
-- Filename previews for non-image media
-- Media type restriction (image by default)
+WordPress does not reliably expose Select2 on all admin pages, so this framework ships with its **own local copy**.
 
----
+You must keep the following files in place:
 
-## Tools Tab
+```text
+assets/vendor/select2/select2.min.js
+assets/vendor/select2/select2.min.css
+```
 
-The Tools tab:
-- Is rendered **outside `<form>`**
-- Does **not** use the Settings API
-- Does **not** show a Save button
-- Is intended for utilities only:
-    - export / import
+These are enqueued automatically by `Bootstrap.php` **only on the plugin settings page**.
 
 ---
 

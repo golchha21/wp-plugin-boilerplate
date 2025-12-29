@@ -6,24 +6,24 @@ class MultiSelect extends Field
 {
     public function render(): void
     {
-        $selected = $this->get_value();
-
-        if (!is_array($selected)) {
-            $selected = [];
-        }
-
+        $value   = $this->get_value();
         $choices = $this->args['choices'] ?? [];
 
+        // Normalize value
+        if (! is_array($value)) {
+            $value = [];
+        }
+
         printf(
-            '<select name="%s[]" multiple="multiple" class="plugin-boilerplate-multiselect" style="width: 100%%;">',
+            '<select name="%s[]" multiple class="plugin-boilerplate-multiselect">',
             esc_attr($this->get_option_name())
         );
 
-        foreach ($choices as $value => $label) {
+        foreach ($choices as $key => $label) {
             printf(
                 '<option value="%s" %s>%s</option>',
-                esc_attr($value),
-                selected(in_array((string) $value, $selected, true), true, false),
+                esc_attr($key),
+                selected(in_array($key, $value, true), true, false),
                 esc_html($label)
             );
         }
@@ -35,17 +35,15 @@ class MultiSelect extends Field
 
     public function sanitize($value): array
     {
-        if (!is_array($value)) {
+        $choices = $this->args['choices'] ?? [];
+
+        if (! is_array($value)) {
             return [];
         }
 
-        $allowed = array_keys($this->args['choices'] ?? []);
-
+        // Keep only allowed values
         return array_values(
-            array_intersect(
-                array_map('strval', $value),
-                array_map('strval', $allowed)
-            )
+            array_intersect($value, array_keys($choices))
         );
     }
 }

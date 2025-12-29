@@ -1,4 +1,5 @@
 <?php
+
 namespace PluginBoilerplate\Admin;
 
 use PluginBoilerplate\Admin\Fields\Field;
@@ -11,7 +12,9 @@ class SettingsPage
     protected string $capability;
     protected string $option_prefix;
 
+    /** @var array<string, Tab> */
     protected array $tabs = [];
+
     protected array $sections = [];
     protected array $fields = [];
 
@@ -27,13 +30,13 @@ class SettingsPage
         add_action('admin_init', [$this, 'register_settings']);
     }
 
-    /* -----------------------------
+    /* ---------------------------------
      * Configuration API
-     * ----------------------------- */
+     * --------------------------------- */
 
-    public function add_tab(string $id, string $label): void
+    public function add_tab(string $id, string $label, bool $is_form_tab = true): void
     {
-        $this->tabs[$id] = $label;
+        $this->tabs[$id] = new Tab($id, $label, $is_form_tab);
     }
 
     public function add_section(string $tab_id, string $section_id, string $title = ''): void
@@ -47,9 +50,9 @@ class SettingsPage
         $this->fields[] = $field;
     }
 
-    /* -----------------------------
+    /* ---------------------------------
      * Admin Menu
-     * ----------------------------- */
+     * --------------------------------- */
 
     public function add_menu(): void
     {
@@ -73,25 +76,34 @@ class SettingsPage
         }
     }
 
-    /* -----------------------------
+    /* ---------------------------------
      * Settings Registration
-     * ----------------------------- */
+     * --------------------------------- */
 
     public function register_settings(): void
     {
-        // 🔒 Determine active tab safely for BOTH GET and POST
         $active_tab = $_POST['_active_tab']
                 ?? $_GET['tab']
                 ?? array_key_first($this->tabs);
 
+        if (! isset($this->tabs[$active_tab])) {
+            return;
+        }
+
+        // Do NOT register settings for non-form tabs
+        if (! $this->tabs[$active_tab]->is_form_tab()) {
+            return;
+        }
+
         $group = $this->menu_slug . '_' . $active_tab;
 
-        /**
-         * Register ONLY fields belonging to the active tab.
-         * WordPress will never touch inactive tabs.
-         */
+        // Register settings-api aware fields ONLY
         foreach ($this->fields as $field) {
             if ($field->tab !== $active_tab) {
+                continue;
+            }
+
+            if (! $field->uses_settings_api()) {
                 continue;
             }
 
@@ -102,8 +114,8 @@ class SettingsPage
             );
         }
 
-        // Sections (active tab only)
-        if (!empty($this->sections[$active_tab])) {
+        // Sections
+        if (! empty($this->sections[$active_tab])) {
             foreach ($this->sections[$active_tab] as $section_id => $title) {
                 add_settings_section(
                         $section_id,
@@ -114,9 +126,13 @@ class SettingsPage
             }
         }
 
-        // Fields (active tab only)
+        // Fields (table-based only)
         foreach ($this->fields as $field) {
             if ($field->tab !== $active_tab) {
+                continue;
+            }
+
+            if ($field->render_outside_table()) {
                 continue;
             }
 
@@ -130,32 +146,52 @@ class SettingsPage
         }
     }
 
-    /* -----------------------------
+    /* ---------------------------------
      * Render Page
-     * ----------------------------- */
+     * --------------------------------- */
 
     public function render(): void
     {
         $active_tab = $_GET['tab'] ?? array_key_first($this->tabs);
-        $group      = $this->menu_slug . '_' . $active_tab;
+
+        if (! isset($this->tabs[$active_tab])) {
+            return;
+        }
+
+        $tab   = $this->tabs[$active_tab];
+        $group = $this->menu_slug . '_' . $active_tab;
         ?>
         <div class="wrap">
             <h1><?php echo esc_html($this->page_title); ?></h1>
 
             <h2 class="nav-tab-wrapper">
-                <?php foreach ($this->tabs as $id => $label): ?>
-                    <a href="?page=<?php echo esc_attr($this->menu_slug); ?>&tab=<?php echo esc_attr($id); ?>"
-                       class="nav-tab <?php echo $id === $active_tab ? 'nav-tab-active' : ''; ?>">
-                        <?php echo esc_html($label); ?>
+                <?php foreach ($this->tabs as $t): ?>
+                    <a href="?page=<?php echo esc_attr($this->menu_slug); ?>&tab=<?php echo esc_attr($t->id); ?>"
+                       class="nav-tab <?php echo $t->id === $active_tab ? 'nav-tab-active' : ''; ?>">
+                        <?php echo esc_html($t->label); ?>
                     </a>
                 <?php endforeach; ?>
             </h2>
 
             <?php
             /**
-             * Tools tab: render OUTSIDE Settings API
+             * 1. Render standalone (single-column) fields
              */
-            if ($active_tab === 'tools') {
+            foreach ($this->fields as $field) {
+                if (
+                        $field->tab === $active_tab &&
+                        $field->render_outside_table()
+                ) {
+                    echo '<div class="plugin-boilerplate-standalone">';
+                    $field->render();
+                    echo '</div>';
+                }
+            }
+
+            /**
+             * 2. Non-form tabs (Tools, About, etc.)
+             */
+            if (! $tab->is_form_tab()) {
                 do_settings_sections($group);
                 return;
             }
@@ -173,5 +209,4 @@ class SettingsPage
         </div>
         <?php
     }
-
 }
