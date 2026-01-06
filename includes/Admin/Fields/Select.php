@@ -6,7 +6,7 @@ class Select extends Field
 {
     public function render(): void
     {
-        $value   = $this->get_value();
+        $value = $this->get_value();
         $choices = $this->args['choices'] ?? [];
 
         if (empty($choices)) {
@@ -17,7 +17,7 @@ class Select extends Field
         <select name="<?php echo esc_attr($this->get_option_name()); ?>">
             <?php foreach ($choices as $key => $label): ?>
                 <option value="<?php echo esc_attr($key); ?>"
-                        <?php selected($value, (string) $key); ?>>
+                        <?php selected($value, (string)$key); ?>>
                     <?php echo esc_html($label); ?>
                 </option>
             <?php endforeach; ?>
@@ -31,7 +31,7 @@ class Select extends Field
     {
         $choices = $this->args['choices'] ?? [];
 
-        if (! array_key_exists($value, $choices)) {
+        if (!array_key_exists($value, $choices)) {
             return $this->default();
         }
 

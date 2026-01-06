@@ -18,7 +18,7 @@ namespace {
         exit;
     }
 
-    define('MY_PLUGIN_VERSION', '1.2.0');
+    define('MY_PLUGIN_VERSION', '1.3.0');
 
     // Constants in the root namespace
     const PLUGIN_FILE = __FILE__;

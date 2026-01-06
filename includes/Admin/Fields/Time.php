@@ -13,7 +13,7 @@ class Time extends Field
                    name="%s"
                    value="%s">',
             esc_attr($this->get_option_name()),
-            esc_attr((string) $value)
+            esc_attr((string)$value)
         );
 
         $this->render_description();

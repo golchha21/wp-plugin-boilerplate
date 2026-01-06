@@ -2,6 +2,8 @@
 
 namespace PluginBoilerplate;
 
+use PluginBoilerplate\Admin\CorePageRegistry;
+use PluginBoilerplate\Admin\Fields\Checkbox;
 use PluginBoilerplate\Admin\Fields\Date;
 use PluginBoilerplate\Admin\Fields\DateTime;
 use PluginBoilerplate\Admin\Fields\Email;
@@ -12,36 +14,19 @@ use PluginBoilerplate\Admin\Fields\Number;
 use PluginBoilerplate\Admin\Fields\Radio;
 use PluginBoilerplate\Admin\Fields\RawHtml;
 use PluginBoilerplate\Admin\Fields\RichText;
+use PluginBoilerplate\Admin\Fields\Select;
 use PluginBoilerplate\Admin\Fields\Text;
+use PluginBoilerplate\Admin\Fields\Textarea;
 use PluginBoilerplate\Admin\Fields\Time;
 use PluginBoilerplate\Admin\Helpers\AboutPage;
 use PluginBoilerplate\Admin\Helpers\Choices;
 use PluginBoilerplate\Admin\Helpers\ToolsPage;
 use PluginBoilerplate\Admin\Services\ToolsService;
 use PluginBoilerplate\Admin\SettingsPage;
-use PluginBoilerplate\Admin\Fields\Checkbox;
-use PluginBoilerplate\Admin\Fields\Select;
-use PluginBoilerplate\Admin\Fields\Textarea;
+use PluginBoilerplate\Admin\Target;
 
 class Bootstrap
 {
-    public function register(): void
-    {
-        // Settings page setup
-        add_action('plugins_loaded', [$this, 'init_settings_page']);
-
-        ToolsService::register();
-
-        // Settings link on plugin page
-        add_filter(
-            'plugin_action_links_' . plugin_basename(PLUGIN_FILE),
-            [$this, 'add_settings_link']
-        );
-
-        // Admin assets
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
-    }
-
     public function init_settings_page(): void
     {
         $page = new SettingsPage([
@@ -85,16 +70,16 @@ class Bootstrap
         |--------------------------------------------------------------------------
         */
 
-        $page->add_field(new Text(
+        $page->add_field((new Text(
             'sample_text',
             'Text',
             'content',
             'text',
             [
-                'default'     => 'Sample text',
+                'default' => 'Sample text',
                 'description' => 'Single-line text input.'
             ]
-        ));
+        )));
 
         $page->add_field(new Textarea(
             'sample_textarea',
@@ -102,7 +87,7 @@ class Bootstrap
             'content',
             'text',
             [
-                'rows'        => 4,
+                'rows' => 4,
                 'description' => 'Multi-line plain text.'
             ]
         ));
@@ -123,9 +108,9 @@ class Bootstrap
             'content',
             'text',
             [
-                'min'         => 1,
-                'max'         => 100,
-                'default'     => 10,
+                'min' => 1,
+                'max' => 100,
+                'default' => 10,
                 'description' => 'Numeric input with constraints.'
             ]
         ));
@@ -136,9 +121,9 @@ class Bootstrap
             'content',
             'text',
             [
-                'rows'           => 6,
-                'media_buttons'  => false,
-                'description'    => 'WordPress WYSIWYG editor.'
+                'rows' => 6,
+                'media_buttons' => false,
+                'description' => 'WordPress WYSIWYG editor.'
             ]
         ));
 
@@ -154,7 +139,7 @@ class Bootstrap
             'choices',
             'single',
             [
-                'default'     => '1',
+                'default' => '1',
                 'description' => 'Boolean on/off toggle.'
             ]
         ));
@@ -169,12 +154,12 @@ class Bootstrap
                     'one' => 'Option One',
                     'two' => 'Option Two',
                 ],
-                'default'     => 'one',
+                'default' => 'one',
                 'description' => 'Mutually exclusive choices.'
             ]
         ));
 
-        $page->add_field(new Select(
+        $page->add_field((new Select(
             'sample_select',
             'Select',
             'choices',
@@ -184,10 +169,10 @@ class Bootstrap
                     'a' => 'Choice A',
                     'b' => 'Choice B',
                 ],
-                'default'     => 'a',
+                'default' => 'a',
                 'description' => 'Dropdown selection.'
             ]
-        ));
+        )));
 
         /*
         |--------------------------------------------------------------------------
@@ -195,7 +180,7 @@ class Bootstrap
         |--------------------------------------------------------------------------
         */
 
-        $page->add_field(new MultiCheckbox(
+        $page->add_field((new MultiCheckbox(
             'sample_multicheckbox',
             'MultiCheckbox',
             'choices',
@@ -205,7 +190,7 @@ class Bootstrap
                 'default' => ['post', 'page'],
                 'description' => 'Multiple checkbox selection.'
             ]
-        ));
+        )));
 
         $page->add_field(new MultiSelect(
             'sample_multiselect',
@@ -231,7 +216,7 @@ class Bootstrap
             'datetime',
             'time',
             [
-                'default'     => wp_date('Y-m-d'),
+                'default' => wp_date('Y-m-d'),
                 'description' => 'Stored as YYYY-MM-DD.'
             ]
         ));
@@ -242,7 +227,7 @@ class Bootstrap
             'datetime',
             'time',
             [
-                'default'     => '09:00',
+                'default' => '09:00',
                 'description' => 'Stored as HH:MM.'
             ]
         ));
@@ -253,7 +238,7 @@ class Bootstrap
             'datetime',
             'time',
             [
-                'default'     => strtotime('tomorrow 09:00', current_time('timestamp')),
+                'default' => strtotime('tomorrow 09:00', current_time('timestamp')),
                 'description' => 'Stored as Unix timestamp, rendered using WP settings.'
             ]
         ));
@@ -270,8 +255,8 @@ class Bootstrap
             'media',
             'files',
             [
-                'multiple'    => true,
-                'mime_types'  => ['image'],
+                'multiple' => true,
+                'mime_types' => ['image'],
                 'description' => 'Attachment IDs only. Drag to reorder.'
             ]
         ));
@@ -282,8 +267,8 @@ class Bootstrap
             'media',
             'files',
             [
-                'type'        => 'application/pdf',
-                'button'      => 'Select PDF'
+                'type' => 'application/pdf',
+                'button' => 'Select PDF'
             ]
         ));
 
@@ -293,14 +278,12 @@ class Bootstrap
         |--------------------------------------------------------------------------
         */
 
-        $page->add_tab('tools', 'Tools', false);
-
         $page->add_field(new RawHtml(
             'tools_page',
             '',
             'tools',
             'tools',
-            fn () => ToolsPage::render(),
+            fn() => ToolsPage::render(),
             ['single_column' => true]
         ));
 
@@ -309,10 +292,161 @@ class Bootstrap
             '',
             'about',
             'about',
-            fn () => AboutPage::render(MY_PLUGIN_VERSION),
+            fn() => AboutPage::render(MY_PLUGIN_VERSION),
             ['single_column' => true]
         ));
 
+        /*
+        |--------------------------------------------------------------------------
+        | User Profile Fields
+        |--------------------------------------------------------------------------
+        */
+
+        $page->add_field(
+            (new Text(
+                'profile_job_title',
+                'Job Title',
+                '',
+                '',
+                [
+                    'description' => 'Displayed on author pages.'
+                ]
+            ))
+                ->attach_to(Target::user_profile())
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Options Fields
+        |--------------------------------------------------------------------------
+        */
+
+        $page->add_field(
+            (new Text(
+                'options_company_name',
+                'Company Name',
+                '',
+                '',
+                [
+                    'description' => 'Appears on the General settings page.'
+                ]
+            ))
+                ->attach_to(Target::options_page('general'))
+        );
+
+        $page->add_field(
+            (new Checkbox(
+                'options_disable_formatting',
+                'Disable Auto Formatting',
+                '',
+                '',
+                [
+                    'description' => 'Appears on the Writing settings page.'
+                ]
+            ))
+                ->attach_to(Target::options_page('writing'))
+        );
+
+        $page->add_field(
+            (new Checkbox(
+                'options_disable_pve',
+                'Disable Post via email',
+                '',
+                '',
+                [
+                    'description' => 'Appears on the Writing settings page under post via email section.'
+                ]
+            ))
+                ->attach_to(Target::options_page('writing', 'post_via_email'))
+        );
+
+        $page->add_field(
+            (new Number(
+                'options_posts_limit',
+                'Custom Posts Limit',
+                '',
+                '',
+                [
+                    'min' => 1,
+                    'max' => 50,
+                    'default' => 10,
+                    'description' => 'Appears on the Reading settings page.'
+                ]
+            ))
+                ->attach_to(Target::options_page('reading'))
+        );
+
+        $page->add_field(
+            (new Select(
+                'options_comment_policy',
+                'Comment Policy',
+                '',
+                '',
+                [
+                    'choices' => [
+                        'open' => 'Allow comments',
+                        'closed' => 'Disable comments'
+                    ],
+                    'default' => 'open',
+                    'description' => 'Appears on the Discussion settings page.'
+                ]
+            ))
+                ->attach_to(Target::options_page('discussion'))
+        );
+
+        $page->add_field(
+            (new Select(
+                'options_avatar_policy',
+                'Avatar Policy',
+                '',
+                '',
+                [
+                    'choices' => [
+                        'open' => 'Allow avatars',
+                        'closed' => 'Disable avatars'
+                    ],
+                    'default' => 'open',
+                    'description' => 'Appears on the Discussion settings page after avatars section.'
+                ]
+            ))
+                ->attach_to(Target::options_page('discussion', 'avatars'))
+        );
+
+        $page->add_field(
+            (new Checkbox(
+                'options_lazyload_images',
+                'Enable Image Lazy Loading',
+                '',
+                '',
+                [
+                    'default' => '1',
+                    'description' => 'Appears on the Media settings page.'
+                ]
+            ))
+                ->attach_to(Target::options_page('media'))
+        );
+
+        /* ---------------- Core Page Integration ---------------- */
+
+        CorePageRegistry::register($page->get_fields());
+
+    }
+
+    public function register(): void
+    {
+        // Settings page setup
+        add_action('plugins_loaded', [$this, 'init_settings_page']);
+
+        ToolsService::register();
+
+        // Settings link on plugin page
+        add_filter(
+            'plugin_action_links_' . plugin_basename(PLUGIN_FILE),
+            [$this, 'add_settings_link']
+        );
+
+        // Admin assets
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
     }
 
     public function add_settings_link(array $links): array
@@ -330,7 +464,7 @@ class Bootstrap
     public function enqueue_admin_assets(string $hook): void
     {
         if (
-            ! isset($_GET['page']) ||
+            !isset($_GET['page']) ||
             $_GET['page'] !== 'plugin-boilerplate'
         ) {
             return;
@@ -386,6 +520,4 @@ class Bootstrap
             });"
         );
     }
-
-
 }

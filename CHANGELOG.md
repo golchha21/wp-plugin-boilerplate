@@ -7,9 +7,46 @@ Keep a Changelog, without unnecessary ceremony.
 
 ---
 
+## [1.3] – Core Targets & Profile Field Support
+
+### Added
+- Support for attaching fields to **WordPress core settings pages**:
+    - General
+    - Writing
+    - Reading
+    - Discussion
+    - Media
+- Support for attaching fields to **user profile pages**
+- Explicit `Target` value object to declare rendering location
+- `CorePageRegistry` to safely integrate with WordPress core pages
+- Context-aware field rendering for user profile fields
+- Strict enforcement that a field can belong to only one target
+- Strict separation between Settings API pages and render-only pages
+
+### Changed
+
+- Field rendering pipeline made context-aware (options vs user meta)
+- Internal save logic adjusted to support core settings pages
+- Bootstrap updated to register external targets explicitly
+- README updated
+
+### Not Supported (by design)
+- Permalink settings page
+- Privacy settings page
+
+### Notes
+
+- No breaking changes to existing plugins using v1.2
+- Existing options remain untouched
+- Profile fields use user meta, not options
+- Core settings fields are saved independently from plugin settings
+
+---
+
 ## [1.2] – New Field Types, Default Support & Framework Stabilization
 
 ### Added
+
 - New field types:
     - Radio
     - RichText (WordPress WYSIWYG)
@@ -24,6 +61,7 @@ Keep a Changelog, without unnecessary ceremony.
 - About and Tools tabs implemented as render-only helpers
 
 ### Changed
+
 - RawHtml fields now render outside the Settings API table
 - Tools and About tabs no longer rely on `do_settings_sections()`
 - Export and Import logic merged into a single service
@@ -33,6 +71,7 @@ Keep a Changelog, without unnecessary ceremony.
 - README updated to reflect the complete field set and default behavior
 
 ### Fixed
+
 - DateTime values not being saved due to incorrect sanitization
 - Select fields not rendering due to mismatched argument keys
 - Tools tab appearing blank because of improper Settings API usage
@@ -40,6 +79,7 @@ Keep a Changelog, without unnecessary ceremony.
 - Layout issues caused by forcing single-column UI inside Settings API tables
 
 ### Notes
+
 - Defaults are applied only when an option does not exist
 - Defaults never overwrite user-saved values
 - No breaking changes to stored data
@@ -56,6 +96,7 @@ Keep a Changelog, without unnecessary ceremony.
 ## [1.1.0] – Field System Expansion & Media UX Improvements
 
 ### Added
+
 - **New field types**
     - `MultiSelect`
         - Supports multiple selections
@@ -85,6 +126,7 @@ Keep a Changelog, without unnecessary ceremony.
     - Label is separate from description text
 
 ### Changed
+
 - Media fields now store **attachment IDs only** (no URLs)
 - Drag handles for Media fields are rendered **only when multiple selection is enabled**
 - Hidden inputs for dynamic Media fields are rebuilt **on form submit** to guarantee correct saving
@@ -98,6 +140,7 @@ Keep a Changelog, without unnecessary ceremony.
 ## [1.0.0] – Initial Stable Framework Release
 
 ### Added
+
 - OOP-based admin settings framework
 - Tab-based settings UI with clean navigation
 - Per-tab Settings API registration (prevents data loss across tabs)

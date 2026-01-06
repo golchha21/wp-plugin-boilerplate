@@ -1,10 +1,11 @@
 <?php
 
 namespace PluginBoilerplate;
-class Autoloader {
+class Autoloader
+{
     public static function register(): void
     {
-        spl_autoload_register(function($class){
+        spl_autoload_register(function ($class) {
             $prefix = 'PluginBoilerplate\\';
             $base_dir = __DIR__ . '/';
 

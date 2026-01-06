@@ -6,10 +6,10 @@ class MultiCheckbox extends Field
 {
     public function render(): void
     {
-        $value   = $this->get_value();
+        $value = $this->get_value();
         $choices = $this->args['choices'] ?? [];
 
-        if (! is_array($value)) {
+        if (!is_array($value)) {
             $value = [];
         }
 
@@ -36,7 +36,7 @@ class MultiCheckbox extends Field
     {
         $choices = $this->args['choices'] ?? [];
 
-        if (! is_array($value)) {
+        if (!is_array($value)) {
             return [];
         }
 

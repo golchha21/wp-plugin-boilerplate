@@ -7,3 +7,39 @@
     display: block;
     width: 100%;
 }
+
+/* Lists – main fix */
+.plugin-boilerplate-single-column ul {
+    margin: 12px 0 20px 20px;
+    padding: 0;
+    list-style: disc;
+}
+
+.plugin-boilerplate-single-column li {
+    margin-bottom: 8px;
+}
+
+/* Nested lists */
+.plugin-boilerplate-single-column ul ul {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-left: 22px;
+    list-style: circle;
+}
+
+/* Remove ugly hyphen bullets from inner list text */
+.plugin-boilerplate-single-column ul ul li {
+    padding-left: 0;
+}
+
+/* Horizontal rule */
+.plugin-boilerplate-single-column hr {
+    margin: 32px 0;
+    border: none;
+    border-top: 1px solid #ccd0d4;
+}
+
+/* Meta info (version, license) */
+.plugin-boilerplate-single-column p strong {
+    color: #000;
+}

@@ -25,7 +25,7 @@ class Checkbox extends Field
 
             <?php
 
-            if (! empty($this->args['label'])) {
+            if (!empty($this->args['label'])) {
                 echo esc_html($this->args['label']);
             } else {
                 echo esc_html($this->label);

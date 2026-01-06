@@ -20,10 +20,10 @@ class SettingsPage
 
     public function __construct(array $args)
     {
-        $this->menu_slug     = $args['menu_slug'];
-        $this->page_title    = $args['page_title'];
-        $this->menu_title    = $args['menu_title'];
-        $this->capability    = $args['capability'] ?? 'manage_options';
+        $this->menu_slug = $args['menu_slug'];
+        $this->page_title = $args['page_title'];
+        $this->menu_title = $args['menu_title'];
+        $this->capability = $args['capability'] ?? 'manage_options';
         $this->option_prefix = $args['option_prefix'];
 
         add_action('admin_menu', [$this, 'add_menu']);
@@ -86,12 +86,12 @@ class SettingsPage
                 ?? $_GET['tab']
                 ?? array_key_first($this->tabs);
 
-        if (! isset($this->tabs[$active_tab])) {
+        if (!isset($this->tabs[$active_tab])) {
             return;
         }
 
         // Do NOT register settings for non-form tabs
-        if (! $this->tabs[$active_tab]->is_form_tab()) {
+        if (!$this->tabs[$active_tab]->is_form_tab()) {
             return;
         }
 
@@ -103,7 +103,7 @@ class SettingsPage
                 continue;
             }
 
-            if (! $field->uses_settings_api()) {
+            if (!$field->uses_settings_api()) {
                 continue;
             }
 
@@ -115,7 +115,7 @@ class SettingsPage
         }
 
         // Sections
-        if (! empty($this->sections[$active_tab])) {
+        if (!empty($this->sections[$active_tab])) {
             foreach ($this->sections[$active_tab] as $section_id => $title) {
                 add_settings_section(
                         $section_id,
@@ -125,7 +125,6 @@ class SettingsPage
                 );
             }
         }
-
         // Fields (table-based only)
         foreach ($this->fields as $field) {
             if ($field->tab !== $active_tab) {
@@ -154,11 +153,11 @@ class SettingsPage
     {
         $active_tab = $_GET['tab'] ?? array_key_first($this->tabs);
 
-        if (! isset($this->tabs[$active_tab])) {
+        if (!isset($this->tabs[$active_tab])) {
             return;
         }
 
-        $tab   = $this->tabs[$active_tab];
+        $tab = $this->tabs[$active_tab];
         $group = $this->menu_slug . '_' . $active_tab;
         ?>
         <div class="wrap">
@@ -191,7 +190,7 @@ class SettingsPage
             /**
              * 2. Non-form tabs (Tools, About, etc.)
              */
-            if (! $tab->is_form_tab()) {
+            if (!$tab->is_form_tab()) {
                 do_settings_sections($group);
                 return;
             }
@@ -208,5 +207,14 @@ class SettingsPage
             </form>
         </div>
         <?php
+    }
+
+    /* ---------------------------------
+     * Read-only access to registered fields.
+     * Used by CorePageRegistry.
+     * --------------------------------- */
+    public function get_fields(): array
+    {
+        return $this->fields;
     }
 }

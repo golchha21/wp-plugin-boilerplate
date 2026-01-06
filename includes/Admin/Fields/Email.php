@@ -9,10 +9,10 @@ class Email extends Field
         $value = $this->get_value();
         ?>
         <input
-            type="email"
-            name="<?php echo esc_attr($this->get_option_name()); ?>"
-            value="<?php echo esc_attr((string) $value); ?>"
-            class="regular-text"
+                type="email"
+                name="<?php echo esc_attr($this->get_option_name()); ?>"
+                value="<?php echo esc_attr((string)$value); ?>"
+                class="regular-text"
         >
         <?php
         $this->render_description();
@@ -24,7 +24,7 @@ class Email extends Field
             return null;
         }
 
-        $value = (string) $value;
+        $value = (string)$value;
         return is_email($value) ? $value : null;
     }
 

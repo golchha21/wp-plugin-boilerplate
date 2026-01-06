@@ -6,8 +6,8 @@ class Media extends Field
 {
     public function render(): void
     {
-        $multiple = (bool) ($this->args['multiple'] ?? false);
-        $type     = $this->args['type'] ?? 'image';
+        $multiple = (bool)($this->args['multiple'] ?? false);
+        $type = $this->args['type'] ?? 'image';
 
         $value = $this->get_value();
 
@@ -30,11 +30,11 @@ class Media extends Field
                 <?php foreach ($ids as $id): ?>
                     <?php
                     $mime = get_post_mime_type($id);
-                    $url  = wp_get_attachment_url($id);
+                    $url = wp_get_attachment_url($id);
                     ?>
                     <div class="plugin-boilerplate-media-item" data-id="<?php echo esc_attr($id); ?>">
                         <?php if ($multiple): ?>
-                        <span class="plugin-boilerplate-media-handle" title="Drag">☰</span>
+                            <span class="plugin-boilerplate-media-handle" title="Drag">☰</span>
                         <?php endif; ?>
                         <?php if ($mime && strpos($mime, 'image/') === 0): ?>
                             <?php echo wp_get_attachment_image($id, 'thumbnail'); ?>
@@ -46,7 +46,8 @@ class Media extends Field
 
                         <button type="button"
                                 class="button-link plugin-boilerplate-media-remove-item"
-                                title="Remove">✕</button>
+                                title="Remove">✕
+                        </button>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -64,10 +65,12 @@ class Media extends Field
             .plugin-boilerplate-media-item {
                 position: relative;
             }
+
             .plugin-boilerplate-media-item img {
                 max-width: 100px;
                 height: auto;
             }
+
             .plugin-boilerplate-media-handle {
                 position: absolute;
                 top: 2px;
@@ -77,6 +80,7 @@ class Media extends Field
                 color: #555;
                 z-index: 10;
             }
+
             .plugin-boilerplate-media-remove-item {
                 position: absolute;
                 top: 2px;
@@ -86,6 +90,7 @@ class Media extends Field
                 z-index: 20;
                 text-decoration: none !important;
             }
+
             .plugin-boilerplate-media-file {
                 display: inline-block;
                 padding: 6px 18px;
@@ -94,6 +99,7 @@ class Media extends Field
                 border-radius: 4px;
                 font-size: 13px;
             }
+
             .plugin-boilerplate-media-item:has(.plugin-boilerplate-media-file) {
                 .plugin-boilerplate-media-handle,
                 .plugin-boilerplate-media-remove-item {
@@ -103,16 +109,16 @@ class Media extends Field
         </style>
 
         <script>
-            jQuery(function($){
-                const wrapper  = $('.plugin-boilerplate-media-field[data-field="<?php echo esc_js($this->id); ?>"]');
-                const preview  = wrapper.find('.plugin-boilerplate-media-preview');
-                const inputs   = wrapper.find('.plugin-boilerplate-media-inputs');
+            jQuery(function ($) {
+                const wrapper = $('.plugin-boilerplate-media-field[data-field="<?php echo esc_js($this->id); ?>"]');
+                const preview = wrapper.find('.plugin-boilerplate-media-preview');
+                const inputs = wrapper.find('.plugin-boilerplate-media-inputs');
                 const multiple = wrapper.data('multiple') === 1;
 
                 function syncInputs() {
                     inputs.empty();
 
-                    preview.find('.plugin-boilerplate-media-item').each(function(){
+                    preview.find('.plugin-boilerplate-media-item').each(function () {
                         inputs.append(
                             '<input type="hidden" name="<?php echo esc_js($this->get_option_name()); ?>' +
                             (multiple ? '[]' : '') +
@@ -129,7 +135,7 @@ class Media extends Field
                     });
                 }
 
-                preview.on('click', '.plugin-boilerplate-media-remove-item', function(e){
+                preview.on('click', '.plugin-boilerplate-media-remove-item', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
 
@@ -137,21 +143,21 @@ class Media extends Field
                     syncInputs();
                 });
 
-                wrapper.find('.plugin-boilerplate-media-select').on('click', function(e){
+                wrapper.find('.plugin-boilerplate-media-select').on('click', function (e) {
                     e.preventDefault();
 
                     const frame = wp.media({
                         title: 'Select Media',
                         multiple: multiple,
-                        library: { type: wrapper.data('type') },
-                        button: { text: 'Use selected' }
+                        library: {type: wrapper.data('type')},
+                        button: {text: 'Use selected'}
                     });
 
-                    frame.on('select', function(){
+                    frame.on('select', function () {
                         const selection = frame.state().get('selection');
                         preview.empty();
 
-                        selection.each(function(attachment){
+                        selection.each(function (attachment) {
                             attachment = attachment.toJSON();
 
                             let html = '<div class="plugin-boilerplate-media-item" data-id="' + attachment.id + '">';
@@ -177,7 +183,7 @@ class Media extends Field
                 });
 
                 // CRITICAL: sync just before form submit
-                wrapper.closest('form').on('submit', function(){
+                wrapper.closest('form').on('submit', function () {
                     syncInputs();
                 });
 

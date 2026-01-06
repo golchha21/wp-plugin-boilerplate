@@ -2,7 +2,8 @@
 
 A lightweight, OOP-based WordPress admin settings framework built for **real plugins**.
 
-Designed to be **copied, renamed, and adapted**, this framework removes the repetitive and error-prone parts of building WordPress settings while staying close to core APIs.
+Designed to be **copied, renamed, and adapted**, this framework removes the repetitive and error-prone parts of building
+WordPress settings while staying close to core APIs.
 
 > This is not a generator and not a dependency.  
 > It’s a foundation you own inside your plugin.
@@ -16,6 +17,7 @@ Designed to be **copied, renamed, and adapted**, this framework removes the repe
 - Clean separation between settings and tools
 - WordPress-aware date, time, and media handling
 - Safe lifecycle cleanup on uninstall
+- Ability to place fields on **core WordPress pages** and **user profiles**
 
 ---
 
@@ -23,33 +25,39 @@ Designed to be **copied, renamed, and adapted**, this framework removes the repe
 
 - One option per field (prefix-based storage)
 - Tab-based settings UI
-- Default value support (applied only when no value exists)
+- Default value support (applied only when an option does not exist)
 - WordPress-native Date, Time, and DateTime fields
 - Media fields with previews, ordering, and MIME control
 - Versioned JSON export / import
 - Nonce-protected Tools tab
 - Safe activate / deactivate / uninstall handling
+- Optional field placement on:
+    - Core WordPress settings pages
+    - User profile screens
 
 ---
 
 ## Fields
 
 All fields:
-- save to their own prefixed option
-- support optional `default` values
-  ``- apply defaults only when the option does not exist
-- own their sanitization logic
-- support an optional `description`
+
+- Save to their own prefixed option
+- Support optional `default` values
+- Own their sanitization logic
+- Support an optional `description`
+- Can belong to **exactly one context** (plugin page, core page, or profile)
 
 ### Available field types
 
 #### Text-based
+
 - **Text**
 - **Textarea**
 - **Email**
 - **RichText** (WordPress WYSIWYG editor)
 
 #### Choice-based
+
 - **Select**
 - **Radio**
 - **Checkbox** (inline label + description)
@@ -57,11 +65,13 @@ All fields:
 - **MultiSelect** (searchable via Select2)
 
 #### Date & Time (WordPress-aware)
+
 - **Date** (stored as `YYYY-MM-DD`)
 - **Time** (stored as `HH:MM`)
 - **DateTime** (stored as Unix timestamp, rendered using WordPress date/time formats and timezone)
 
 #### Media
+
 - **Media**
     - Stores attachment IDs only
     - Single or multiple selection
@@ -70,11 +80,44 @@ All fields:
     - Image thumbnails / file name previews
     - Media type restriction (image by default)
       ``
+
 #### Utility
+
 - **Number** (with min/max hints)
 - **RawHtml** (custom UI blocks, tools, diagnostics)
 
-See [README-FIELDS.md](README-FIELDS.md) for full field examples.
+**See [README-FIELDS.md](README-FIELDS.md) for full field examples.**
+
+---
+
+## Core Settings Page Support (v1.3)
+
+This framework allows fields to be attached to **selected WordPress core settings pages** using the Settings API.
+
+### Supported core pages
+- **General**
+- **Writing**
+- **Reading**
+- **Discussion**
+- **Media**
+- **User Profile (`profile.php`)**
+
+Fields attached to these pages:
+- Render natively using the Settings API
+- Save automatically using WordPress core handling
+- Respect existing sections and page structure
+
+### Not supported in v1.3
+- **Permalink**
+- **Privacy**
+
+These pages are **not fully compatible with the WordPress Settings API** and require custom rendering and save logic.
+
+Attempting to attach fields to these pages will throw a logic exception and will not render.
+
+> Permalink support is intentionally deferred and planned for a future release.
+
+**See [README-FIELDS.md](README-FIELDS.md) for full field examples.**
 
 ---
 
@@ -143,6 +186,7 @@ my_awesome_plugin
 ```
 
 Ensure consistency across:
+
 - Namespaces
 - Class names
 - Autoloader mappings
@@ -220,15 +264,18 @@ These are enqueued automatically by `Bootstrap.php` **only on the plugin setting
 ## Lifecycle Management
 
 ### Activation
+
 - Runtime setup only (cron jobs, rewrites if needed)
 - Does **not** create or modify user settings
 
 ### Deactivation
+
 - Runtime cleanup only
 - Clears cron jobs and transients
 - **Never deletes user options**
 
 ### Uninstall
+
 - Deletes **all options matching the prefix**
 - Clears plugin transients
 - Removes cron jobs

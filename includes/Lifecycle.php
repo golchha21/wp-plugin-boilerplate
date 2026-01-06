@@ -13,7 +13,7 @@ class Lifecycle
     public static function activate(): void
     {
         // Schedule cron if needed
-        if (! wp_next_scheduled('plugin_boilerplate_cron_event')) {
+        if (!wp_next_scheduled('plugin_boilerplate_cron_event')) {
             wp_schedule_event(time(), 'daily', 'plugin_boilerplate_cron_event');
         }
     }
@@ -25,17 +25,6 @@ class Lifecycle
     public static function deactivate(): void
     {
         self::cleanupRuntime();
-    }
-
-    /**
-     * On plugin uninstall.
-     * Full permanent cleanup.
-     * Called from uninstall.php.
-     */
-    public static function uninstall(): void
-    {
-        self::cleanupRuntime();
-        self::cleanupPermanent();
     }
 
     /**
@@ -69,6 +58,17 @@ class Lifecycle
     }
 
     /**
+     * On plugin uninstall.
+     * Full permanent cleanup.
+     * Called from uninstall.php.
+     */
+    public static function uninstall(): void
+    {
+        self::cleanupRuntime();
+        self::cleanupPermanent();
+    }
+
+    /**
      * Permanent cleanup.
      * Delete ALL plugin-owned options.
      */
@@ -81,13 +81,13 @@ class Lifecycle
             $wpdb->prepare(
                 "DELETE FROM {$wpdb->options}
                  WHERE option_name LIKE %s",
-                self::OPTION_PREFIX . '%'
+                OPTION_PREFIX . '%'
             )
         );
 
         // Final cache cleanup
         if (class_exists(Cache::class)) {
-            Cache::clear(self::OPTION_PREFIX);
+            Cache::clear(OPTION_PREFIX);
         }
     }
 }

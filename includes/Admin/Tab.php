@@ -10,8 +10,8 @@ final class Tab
 
     public function __construct(string $id, string $label, bool $is_form_tab = true)
     {
-        $this->id          = $id;
-        $this->label       = $label;
+        $this->id = $id;
+        $this->label = $label;
         $this->is_form_tab = $is_form_tab;
     }
 

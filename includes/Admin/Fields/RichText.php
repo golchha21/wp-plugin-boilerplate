@@ -15,7 +15,7 @@ class RichText extends Field
                 'textarea_name' => $this->get_option_name(),
                 'textarea_rows' => $this->args['rows'] ?? 8,
                 'media_buttons' => $this->args['media_buttons'] ?? false,
-                'teeny'         => $this->args['teeny'] ?? true,
+                'teeny' => $this->args['teeny'] ?? true,
             ]
         );
 

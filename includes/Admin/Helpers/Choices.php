@@ -61,7 +61,7 @@ class Choices
     {
         $wp_roles = wp_roles();
 
-        if (! $wp_roles) {
+        if (!$wp_roles) {
             return [];
         }
 

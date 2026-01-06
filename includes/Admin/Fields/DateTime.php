@@ -16,9 +16,9 @@ class DateTime extends Field
         }
         ?>
         <input
-            type="datetime-local"
-            name="<?php echo esc_attr($this->get_option_name()); ?>"
-            value="<?php echo esc_attr($value); ?>"
+                type="datetime-local"
+                name="<?php echo esc_attr($this->get_option_name()); ?>"
+                value="<?php echo esc_attr($value); ?>"
         >
         <?php
 

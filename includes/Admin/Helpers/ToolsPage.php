@@ -9,7 +9,7 @@ final class ToolsPage
     public static function render(): void
     {
         $payload = ToolsService::get_export_payload();
-        $json    = wp_json_encode($payload, JSON_PRETTY_PRINT);
+        $json = wp_json_encode($payload, JSON_PRETTY_PRINT);
         ?>
         <h2>Export Settings</h2>
         <textarea class="large-text code" rows="8" readonly><?php echo esc_textarea($json); ?></textarea>
@@ -28,7 +28,8 @@ final class ToolsPage
             <?php wp_nonce_field('plugin_boilerplate_tools_import'); ?>
             <input type="hidden" name="action" value="plugin_boilerplate_import">
 
-            <textarea name="import_payload" rows="8" class="large-text code" placeholder="Paste exported JSON here"></textarea>
+            <textarea name="import_payload" rows="8" class="large-text code"
+                      placeholder="Paste exported JSON here"></textarea>
             <p class="description">Paste the exported JSON to restore the plugin boilerplate settings.</p>
 
             <button type="submit" class="button button-secondary">Import Settings</button>

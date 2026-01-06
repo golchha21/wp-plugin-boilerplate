@@ -9,10 +9,10 @@ class Text extends Field
         $value = $this->get_value();
         ?>
         <input
-            type="text"
-            name="<?php echo esc_attr($this->get_option_name()); ?>"
-            value="<?php echo esc_attr((string) $value); ?>"
-            class="regular-text"
+                type="text"
+                name="<?php echo esc_attr($this->get_option_name()); ?>"
+                value="<?php echo esc_attr((string)$value); ?>"
+                class="regular-text"
         >
         <?php
         $this->render_description();
@@ -23,7 +23,7 @@ class Text extends Field
         if ($value === null) {
             return null;
         }
-        return sanitize_text_field((string) $value);
+        return sanitize_text_field((string)$value);
     }
 
 }
