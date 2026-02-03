@@ -138,3 +138,8 @@ See also the list of [contributors](https://github.com/golchha21/wp-plugin-boile
 ## License
 
 [MIT license](LICENSE.md).
+
+---
+
+If this boilerplate has been useful to you, you can support its development here: [Buy me a coffee](https://www.buymeacoffee.com/golchha21)
+
