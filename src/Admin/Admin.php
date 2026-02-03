@@ -2,6 +2,7 @@
 
 namespace WPPluginBoilerplate\Admin;
 
+use WPPluginBoilerplate\Admin\Actions\ResetSettings;
 use WPPluginBoilerplate\Loader;
 use WPPluginBoilerplate\Support\Settings;
 use WPPluginBoilerplate\Support\Settings\Tabs;
@@ -11,6 +12,12 @@ class Admin
     public function register(Loader $loader): void
     {
         $loader->action('admin_menu', $this, 'register_menu');
+
+        $loader->action(
+            'admin_post_wp_plugin_boilerplate_reset',
+            new ResetSettings(),
+            'handle'
+        );
 
         new Settings()->register($loader);
     }
@@ -49,7 +56,22 @@ class Admin
             $active->render();
 
             if ($active->hasActions()) {
-                submit_button();
+                if ($active->hasActions()) {
+                    submit_button();
+
+                    echo '<hr />';
+
+                    $resetUrl = wp_nonce_url(
+                        admin_url(
+                            'admin-post.php?action=wp_plugin_boilerplate_reset&tab=' . $active->id()
+                        ),
+                        'wp_plugin_boilerplate_reset'
+                    );
+
+                    echo "<a href='{$resetUrl}' class='button button-secondary'>";
+                    echo 'Reset to Defaults';
+                    echo '</a>';
+                }
             }
 
             echo '</form>';

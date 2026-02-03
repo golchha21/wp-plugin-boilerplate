@@ -3,18 +3,18 @@
 namespace WPPluginBoilerplate\Support\Settings\Tabs;
 
 use WPPluginBoilerplate\Support\Settings\Contracts\SettingsTabContract;
-use WPPluginBoilerplate\Support\Settings\Schemas\GeneralSchema;
+use WPPluginBoilerplate\Support\Settings\Schemas\AdvancedSchema;
 
-class GeneralTab implements SettingsTabContract
+class AdvancedTab implements SettingsTabContract
 {
     public function id(): string
     {
-        return 'general';
+        return 'advanced';
     }
 
     public function label(): string
     {
-        return 'General';
+        return 'Advanced';
     }
 
     public function hasForm(): bool
@@ -29,17 +29,17 @@ class GeneralTab implements SettingsTabContract
 
     public static function optionKey(): string
     {
-        return 'wp_plugin_boilerplate_general';
+        return 'wp_plugin_boilerplate_advanced';
     }
 
     public static function definition(): array
     {
-        return GeneralSchema::definition();
+        return AdvancedSchema::definition();
     }
 
     public static function defaults(): array
     {
-        return GeneralSchema::defaults();
+        return AdvancedSchema::defaults();
     }
 
     public function render(): void

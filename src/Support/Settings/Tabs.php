@@ -10,6 +10,7 @@ class Tabs
     {
         return [
             new Tabs\GeneralTab(),
+            new Tabs\AdvancedTab(),
             new Tabs\AboutTab(),
         ];
     }
