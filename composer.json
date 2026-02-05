@@ -1,10 +1,10 @@
 {
   "name": "golchha/wp-plugin-boilerplate",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "An opinionated, OOP-first WordPress plugin boilerplate for building long-lived, maintainable plugins.",
   "type": "wordpress-plugin",
   "homepage": "https://github.com/golchha21/wp-plugin-boilerplate",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "authors": [
     {
       "name": "Ulhas Vardhan Golchha",

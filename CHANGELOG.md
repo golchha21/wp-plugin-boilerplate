@@ -10,7 +10,15 @@ This project follows a **foundation-first** release model:
 
 ---
 
-## [0.9.3] – Architecture Consolidation
+## [v0.9.4] — 2026-02-05
+
+### Changed
+- Formalized project licensing as **GPL-2.0-or-later** to align with WordPress ecosystem requirements.
+- Added canonical LICENSE file and aligned README and composer.json.
+
+---
+
+## [0.9.3] — 2026-02-05 – Architecture Consolidation
 
 ### Structural
 - Restructured directories to reflect architectural boundaries:

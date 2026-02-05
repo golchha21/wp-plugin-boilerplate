@@ -1,9 +1,10 @@
 # WP Plugin Boilerplate
 
-![PHP](https://img.shields.io/packagist/php-v/golchha21/wp-plugin-boilerplate?logo=php&logoColor=white&color=777bb4)
-[![Version](https://img.shields.io/packagist/v/golchha21/wp-plugin-boilerplate)](https://packagist.org/packages/golchha21/wp-plugin-boilerplate)
-[![Downloads](https://img.shields.io/packagist/dt/golchha21/wp-plugin-boilerplate)](https://packagist.org/packages/golchha21/wp-plugin-boilerplate)
-[![License](https://img.shields.io/packagist/l/golchha21/wp-plugin-boilerplate)](https://packagist.org/packages/golchha21/wp-plugin-boilerplate)
+![PHP](https://img.shields.io/badge/PHP-%3E%3D7.4-777BB4?logo=php&logoColor=white)
+![Version](https://img.shields.io/github/v/tag/golchha21/wp-plugin-boilerplate)
+![Downloads](https://img.shields.io/github/downloads/golchha21/wp-plugin-boilerplate/total)
+![License](https://img.shields.io/github/license/golchha21/wp-plugin-boilerplate)
+
 
 An opinionated, OOP-first WordPress plugin boilerplate for building long-lived, maintainable plugins.
 
@@ -147,7 +148,14 @@ See also the list of [contributors](https://github.com/golchha21/wp-plugin-boile
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+This project is licensed under the **GNU General Public License v2.0 or later (GPL-2.0-or-later)**.
+
+WordPress is licensed under the GPL, and any plugin that runs within WordPress
+and uses its APIs is required to be GPL-compatible.
+
+You are free to use, modify, and distribute this software under the terms
+of the GPL. See the [LICENSE](LICENSE) file for details.
+
 
 ---
 
