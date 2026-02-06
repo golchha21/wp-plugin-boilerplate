@@ -1,10 +1,12 @@
 <?php
 
+use WPPluginBoilerplate\Plugin;
+
 if (!defined('WP_UNINSTALL_PLUGIN')) {
 	exit;
 }
 
-$prefix = defined('WPPB_PREFIX') ? WPPB_PREFIX : 'wppb_';
+$prefix = Plugin::prefix();
 
 delete_option($prefix . 'settings');
 

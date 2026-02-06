@@ -1,4 +1,0 @@
-﻿<?php
-/**
- * Registers admin menus.
- */

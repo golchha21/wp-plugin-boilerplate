@@ -18,13 +18,13 @@ class Plugin
 
 	protected function register_services(): void
 	{
-		new I18n()->register($this->loader);
+		(new I18n())->register($this->loader);
 
 		if (is_admin()) {
-			new Admin()->register($this->loader);
+			(new Admin())->register($this->loader);
 		}
 
-		new PublicPlugin()->register($this->loader);
+		(new PublicPlugin())->register($this->loader);
 	}
 
 	public static function prefix(): string
@@ -47,9 +47,24 @@ class Plugin
 		return WPPB_VERSION;
 	}
 
+	public static function file(): string
+	{
+		return WPPB_FILE;
+	}
+
 	public static function url(): string
 	{
 		return WPPB_URL;
+	}
+
+	public static function menu_parent(): ?string
+	{
+		return WPPB_MENU_PARENT;
+	}
+
+	public static function tabs_as_submenu(): bool
+	{
+		return WPPB_TABS_AS_SUBMENU;
 	}
 
 	public static function option_key(): string

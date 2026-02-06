@@ -3,7 +3,7 @@
  * Plugin Name: WP Plugin Boilerplate
  * Description: An opinionated, OOP-first WordPress plugin boilerplate for building long-lived, maintainable plugins.
  * Plugin URI: https://www.ulhas.net/labs/wp-plugin-boilerplate/
- * Version: 0.9.4
+ * Version: 0.9.5
  * Author: Ulhas Vardhan Golchha
  * Author URI: https://www.ulhas.net/
  * Text Domain: wp-plugin-boilerplate
@@ -24,7 +24,7 @@ if (!defined('WPPB_PREFIX')) {
 }
 
 if (!defined('WPPB_VERSION')) {
-	define('WPPB_VERSION', '0.9.4');
+	define('WPPB_VERSION', '0.9.5');
 }
 
 if (!defined('WPPB_SLUG')) {
@@ -43,6 +43,16 @@ if (!defined('WPPB_URL')) {
 	define('WPPB_URL', plugin_dir_url(__FILE__));
 }
 
+if (!defined('WPPB_MENU_PARENT')) {
+	define('WPPB_MENU_PARENT', null); // e.g. 'options-general.php'
+}
+
+
+if (!defined('WPPB_TABS_AS_SUBMENU')) {
+	define('WPPB_TABS_AS_SUBMENU', true);
+}
+
+
 /**
  * -------------------------------------------------------------------------
  * Autoload
@@ -52,6 +62,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use WPPluginBoilerplate\Lifecycle\Activator;
 use WPPluginBoilerplate\Lifecycle\Deactivator;
+use WPPluginBoilerplate\Lifecycle\Uninstaller;
 use WPPluginBoilerplate\Plugin;
 
 /**

@@ -10,6 +10,26 @@ This project follows a **foundation-first** release model:
 
 ---
 
+## [v0.9.5] — 2026-02-06
+
+### Changed
+- Consolidated admin menu registration into `Admin` class
+- Removed redundant MenuRegistrar abstraction
+- Menu placement is now fully configuration-driven via entry file
+- Tabs can optionally be exposed as submenu items without UI duplication
+- Plugin admin UX refined (About & Help tabs aligned with documentation)
+
+### Fixed
+- Plugin action links now correctly point to settings screen
+- Removed lifecycle duplication around uninstall handling
+
+### Philosophy
+- Menu structure is code, not state
+- Admin behavior is deterministic and explicit
+- Boilerplate favors clarity over configurability
+
+---
+
 ## [v0.9.4] — 2026-02-05
 
 ### Changed

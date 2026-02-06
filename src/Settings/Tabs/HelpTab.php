@@ -34,7 +34,7 @@ class HelpTab implements TabContract
 
 	public function manageCapability(): string
 	{
-		return 'do_not_allow';
+		return 'read';
 	}
 
 	public function render(): void
@@ -43,7 +43,7 @@ class HelpTab implements TabContract
 
 		echo '<p>';
 		echo esc_html__(
-			'This boilerplate is designed to be predictable and well-documented, with clear boundaries between architecture, configuration, and behavior.',
+			'This boilerplate is designed to be predictable and explicit. Most questions are answered by understanding the architecture rather than memorizing APIs.',
 			'wp-plugin-boilerplate'
 		);
 		echo '</p>';
@@ -61,35 +61,43 @@ class HelpTab implements TabContract
 		echo '<ul style="list-style: disc; margin-left: 20px;">';
 
 		echo '<li>';
-		echo '<a href="https://github.com/golchha21/wp-plugin-boilerplate/blob/main/README.md" target="_blank" rel="noopener noreferrer">';
+		echo '<a href="https://github.com/golchha21/wp-plugin-boilerplate/blob/master/README.md" target="_blank" rel="noopener noreferrer">';
 		echo esc_html__('README', Plugin::text_domain());
 		echo '</a> – ';
-		echo esc_html__('core rules and mental model', Plugin::text_domain());
+		echo esc_html__('architecture rules, principles, and mental model', Plugin::text_domain());
 		echo '</li>';
 
 		echo '<li>';
-		echo '<a href="https://github.com/golchha21/wp-plugin-boilerplate/blob/main/HOW-TO-USE.md" target="_blank" rel="noopener noreferrer">';
+		echo '<a href="https://github.com/golchha21/wp-plugin-boilerplate/blob/master/HOW-TO-USE.md" target="_blank" rel="noopener noreferrer">';
 		echo esc_html__('How to Use', Plugin::text_domain());
 		echo '</a> – ';
-		echo esc_html__('practical guide to building a real plugin', Plugin::text_domain());
+		echo esc_html__('step-by-step guide to building a real plugin', Plugin::text_domain());
 		echo '</li>';
 
 		echo '<li>';
-		echo '<a href="https://github.com/golchha21/wp-plugin-boilerplate/blob/main/ADVANCED-TOPICS.md" target="_blank" rel="noopener noreferrer">';
+		echo '<a href="https://github.com/golchha21/wp-plugin-boilerplate/blob/master/FIELDS.md" target="_blank" rel="noopener noreferrer">';
+		echo esc_html__('Fields Reference', Plugin::text_domain());
+		echo '</a> – ';
+		echo esc_html__('all supported field types and guarantees', Plugin::text_domain());
+		echo '</li>';
+
+		echo '<li>';
+		echo '<a href="https://github.com/golchha21/wp-plugin-boilerplate/blob/master/ADVANCED-TOPICS.md" target="_blank" rel="noopener noreferrer">';
 		echo esc_html__('Advanced Topics', Plugin::text_domain());
 		echo '</a> – ';
-		echo esc_html__('multisite, migrations, capabilities, and tools', Plugin::text_domain());
+		echo esc_html__('multisite behavior, migrations, capabilities, and tools', Plugin::text_domain());
 		echo '</li>';
 
 		echo '</ul>';
 
 		echo '<hr />';
 
-		echo '<h3>Making Changes</h3>';
+		echo '<h3>Making Changes Safely</h3>';
 		echo '<ul style="list-style: disc; margin-left: 20px;">';
 		echo '<li>' . esc_html__('Add new behavior by creating new classes', Plugin::text_domain()) . '</li>';
-		echo '<li>' . esc_html__('Avoid modifying core orchestration unless absolutely necessary', Plugin::text_domain()) . '</li>';
-		echo '<li>' . esc_html__('Keep settings schema-driven and isolated per tab', Plugin::text_domain()) . '</li>';
+		echo '<li>' . esc_html__('Register hooks only via the Loader', Plugin::text_domain()) . '</li>';
+		echo '<li>' . esc_html__('Keep settings tab-owned and schema-driven', Plugin::text_domain()) . '</li>';
+		echo '<li>' . esc_html__('Avoid modifying core orchestration unless unavoidable', Plugin::text_domain()) . '</li>';
 		echo '</ul>';
 
 		echo '<hr />';
@@ -97,20 +105,20 @@ class HelpTab implements TabContract
 		echo '<h3>Contributing and Feedback</h3>';
 		echo '<p>';
 		echo esc_html__(
-			'If you plan to contribute or propose changes, please review the contribution guidelines first.',
+			'Contributions are welcome if they strengthen the architecture without diluting its constraints.',
 			'wp-plugin-boilerplate'
 		);
 		echo '</p>';
 
 		echo '<p>';
-		echo '<a href="https://github.com/golchha21/wp-plugin-boilerplate/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">';
+		echo '<a href="https://github.com/golchha21/wp-plugin-boilerplate/blob/master/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">';
 		echo esc_html__('Read CONTRIBUTING.md', Plugin::text_domain());
 		echo '</a>';
 		echo '</p>';
 
 		echo '<p style="font-style: italic; color: #555;">';
 		echo esc_html__(
-			'This boilerplate favors clarity and long-term maintainability over flexibility. When in doubt, choose the more explicit solution.',
+			'When in doubt, choose the more explicit and restrictive solution. Clarity scales better than flexibility.',
 			'wp-plugin-boilerplate'
 		);
 		echo '</p>';
@@ -130,4 +138,5 @@ class HelpTab implements TabContract
 		echo '</a>';
 		echo '</p>';
 	}
+
 }

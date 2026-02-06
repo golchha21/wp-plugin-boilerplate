@@ -8,14 +8,13 @@ use WPPluginBoilerplate\Admin\Actions\ResetSettings;
 use WPPluginBoilerplate\Loader;
 use WPPluginBoilerplate\Plugin;
 use WPPluginBoilerplate\Settings\Registry\SettingsRegistrar;
-use WPPluginBoilerplate\Settings\Settings;
 use WPPluginBoilerplate\Settings\Tabs;
 
 class Admin
 {
 	public function register(Loader $loader): void
 	{
-		$loader->action('admin_menu', $this, 'register_menu');
+		$loader->action('admin_menu', $this, 'register_menus');
 
 		$loader->action('admin_init', new SettingsRegistrar(), 'register');
 
@@ -26,18 +25,20 @@ class Admin
 		$loader->action('admin_post_'. Plugin::prefix() .'import', new ImportSettings(), 'handle');
 
 		$loader->action('admin_enqueue_scripts', $this, 'enqueue_assets');
+
+		$loader->filter('plugin_action_links_' . plugin_basename(Plugin::file()), $this, 'add_settings_link');
+
 	}
 
-	public function register_menu(): void
+	public function register_menus(): void
 	{
-		add_menu_page(
-			'WP Plugin Boilerplate',
-			'WP Boilerplate',
-			'manage_options',
-			'wp-plugin-boilerplate',
-			array($this, 'render_page'),
-			'dashicons-admin-generic'
-		);
+		if (Plugin::menu_parent()) {
+			self::register_as_submenu();
+		} else {
+			self::register_as_top_level();
+		}
+
+		self::register_tab_submenus();
 	}
 
 	public function render_page(): void
@@ -104,5 +105,72 @@ class Admin
 		wp_add_inline_script('wp-color-picker', "jQuery('.wppb-color-field').wpColorPicker();");
 
 		wp_enqueue_style(Plugin::prefix() . 'admin', Plugin::url() . 'assets/admin/css/admin.css', [], Plugin::version());
+	}
+
+	public function add_settings_link(array $links): array
+	{
+		$url = admin_url('admin.php?page=' . Plugin::slug());
+
+		array_unshift(
+			$links,
+			sprintf(
+				'<a href="%s">%s</a>',
+				esc_url($url),
+				esc_html__('Settings', Plugin::text_domain())
+			)
+		);
+
+		return $links;
+	}
+
+	/**
+	 * Register as a top-level admin menu.
+	 */
+	private function register_as_top_level(): void
+	{
+		add_menu_page(
+			'WP Plugin Boilerplate',
+			'WP Boilerplate',
+			'manage_options',
+			Plugin::slug(),
+			[ $this, 'render_page' ],
+			'dashicons-admin-generic'
+		);
+	}
+
+	/**
+	 * Register under a core WordPress menu.
+	 */
+	private function register_as_submenu(): void
+	{
+		add_submenu_page(
+			Plugin::menu_parent(),
+			'WP Plugin Boilerplate',
+			'WP Boilerplate',
+			'manage_options',
+			Plugin::slug(),
+			[ $this, 'render_page' ]
+		);
+	}
+
+	/**
+	 * Optionally expose tabs as submenu items.
+	 */
+	private function register_tab_submenus(): void
+	{
+		if (!Plugin::tabs_as_submenu()) {
+			return;
+		}
+
+		foreach (Tabs::all() as $tab) {
+			add_submenu_page(
+				Plugin::slug(),
+				$tab->label(),
+				$tab->label(),
+				$tab->manageCapability(),
+				Plugin::slug() . '&tab=' . $tab->id(),
+				[ $this, 'render_page' ]
+			);
+		}
 	}
 }
