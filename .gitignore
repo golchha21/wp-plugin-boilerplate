@@ -8,8 +8,8 @@ Thumbs.db
 *.sublime-*
 
 # Composer
-/vendor/
-composer.lock
+#/vendor/
+#composer.lock
 
 # Node (if added later)
 node_modules/

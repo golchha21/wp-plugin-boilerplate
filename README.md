@@ -31,6 +31,23 @@ This boilerplate is designed for plugins that are expected to live for years, ev
 | `src/Support`    | Shared infrastructure |
 | `src/Lifecycle`  | Activation and deactivation |
 | `assets`         | CSS, JS, static assets |
+| `vendor`         | Bundled dependencies (shipped with the plugin) |
+
+The `vendor/` directory is part of the distributed plugin and must not be removed.
+It exists to support internal architecture and requires no action from plugin authors.
+
+---
+
+## Dependencies & Setup
+
+This boilerplate is distributed as a **fully self-contained WordPress plugin**.
+
+All required dependencies are already included in the repository.
+You do **not** need to run Composer, install build tools, or perform any setup beyond installing and activating the plugin.
+
+If you are extending the boilerplate to build a plugin, you can start writing code immediately inside the `src/` directory.
+
+If the plugin is not working after cloning the repository, ensure the `vendor/` directory is present. If it is missing, reinstall the plugin from a clean copy.
 
 ---
 
@@ -86,6 +103,7 @@ Starting with v1.0.0, this boilerplate guarantees:
 - Plugin lifecycle behavior is predictable and safe
 - Uninstall cleans up all plugin-owned data
 - Renaming the plugin does not break behavior
+- The plugin is distributed as a self-contained package with all required dependencies bundled
 
 Breaking these guarantees requires a major version bump.
 

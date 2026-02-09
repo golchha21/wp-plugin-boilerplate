@@ -38,6 +38,33 @@ If a change makes the system easier to misuse, it will be rejected.
 
 ---
 
+## Dependencies & Tooling
+
+This boilerplate uses Composer internally for autoloading and dependency management.
+
+Composer is a **maintainer concern**, not a user-facing requirement.
+
+### Development Setup
+
+If you are working on the boilerplate itself:
+
+```bash
+composer install
+```
+
+This installs dependencies into the `vendor/` directory.
+
+### Non-Negotiable Rules
+
+- The `vendor/` directory is **part of the plugin** and must be committed
+- `composer.lock` must always be committed
+- End users must never be instructed to run Composer
+- Composer must not be required at runtime in production environments
+
+If dependencies are updated, the plugin must continue to work in a clean WordPress installation with no additional setup steps.
+
+---
+
 ## Ground Rules (Non-Negotiable)
 
 ### 1. Entry file discipline
@@ -77,6 +104,20 @@ If a change makes the system easier to misuse, it will be rejected.
 
 - `uninstall.php` must remain procedural and self-contained
 - Plugin classes and autoloaders must never be referenced during uninstall
+
+---
+
+## Release Checklist
+
+Before tagging a release or publishing a distribution package, verify:
+
+- `vendor/` directory is present and committed
+- `composer.lock` is committed and up to date
+- No build steps are required after download
+- Plugin works in a clean WordPress install with no setup
+- No documentation instructs users to run Composer
+
+Releases that require manual setup steps are considered broken.
 
 ---
 

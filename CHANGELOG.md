@@ -10,7 +10,21 @@ This project follows a **foundation-first** release model:
 
 ---
 
-# Changelog
+## [1.0.1] – 2026-02-09
+
+### Added
+- Explicit documentation for bundled dependencies
+- `vendor/` directory listed as a first-class plugin component
+- Release checklist enforcing dependency inclusion
+
+### Changed
+- Plugin bootstrap now guards against missing bundled dependencies
+
+### Notes
+This release does not change the public API or plugin behavior.
+It reinforces distribution guarantees and architectural contracts.
+
+---
 
 ## [1.0.0] — 2026-02-06 – Stable Foundation Release
 
