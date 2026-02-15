@@ -10,14 +10,52 @@ This project follows a **foundation-first** release model:
 
 ---
 
+## v1.1.1 – 2026-02-15
+
+### Documentation
+
+-   Updated README to reflect v1.1 features
+-   Updated FIELDS reference with Repeater, Media (multiple), Editor,
+    and Grid layout
+-   Updated HOW-TO-USE guide with new examples
+-   Updated ADVANCED-TOPICS with architectural guarantees for v1.1
+-   Updated CHANGELOG
+
+This release contains documentation updates only. No runtime or storage
+changes.
+
+---
+
 ## v1.1.0 – 2026-02-15
 
-- Refactored field architecture
-- Added Repeater field
-- Added Multiple Media support
-- Migrated admin layout to CSS Grid
-- Introduced semantic design tokens
-- Improved admin UI consistency
+### Added
+-   Repeater field with:
+    -   Collapsible rows (collapsed by default)
+    -   Drag & drop sorting
+    -   Duplicate row support
+    -   Min / max enforcement
+    -   Template-based rendering
+-   Multiple media selection support (`multiple: true`)
+-   Square media preview system
+-   Per-item media removal (multiple mode)
+-   12-column CSS Grid admin layout
+-   Scoped admin design system (`.wppb-admin`)
+-   Semantic design tokens (surface, accent, danger)
+-   Editor field (`wp_editor`) support inside repeaters
+
+### Improved
+-   Centralized field rendering architecture
+-   Schema-driven `FieldDefinition`
+-   Deterministic nested sanitization
+-   Media sorting persistence
+-   Checkbox and radio layout handling
+-   Admin CSS conflict hardening
+-   Safer TinyMCE ID handling (no bracket warnings)
+
+### Stability
+-   Storage format remains deterministic
+-   No breaking changes to existing simple fields
+-   Layout system migration does not affect stored data
 
 ---
 

@@ -1,214 +1,245 @@
 # Fields Reference
 
-This document defines the **complete field definition structure** supported by the WP Plugin Boilerplate as of **v1.0**.
+This document defines the complete field definition structure supported
+by the WP Plugin Boilerplate as of v1.1.
 
-Fields are **tab-owned**, **explicit**, and **deterministic**.
-There is no schema layer and no implicit behavior.
+Fields are tab-owned, explicit, and deterministic. There is no implicit
+behavior and no hidden schema magic.
 
----
+------------------------------------------------------------------------
 
 ## General Rules
 
-- Fields are defined inside a **settings tab**
-- Each field is keyed by a unique string
-- Defaults are mandatory
-- Storage format is predictable
-- Validation is enforced on **save and import**
-- Frontend reads must tolerate missing or empty values
+-   Fields are defined inside a settings tab
+-   Each field must have a unique key
+-   Defaults are mandatory
+-   Storage format is predictable
+-   Validation is enforced on save
+-   Frontend reads must tolerate missing or empty values
 
----
+------------------------------------------------------------------------
 
 ## Canonical Field Definition
 
-This example shows **all supported options**.
-Most fields only need a subset.
+This example shows all supported options. Most fields only require a
+subset.
 
-```php
+``` php
 public static function fields(): array
 {
-	return [
-		'example_field' => [
+    return [
+        'example_field' => [
 
-			// Data type (sanitization & normalization)
-			'type' => 'string', // string | int | bool | array
+            'type' => 'string', // string | int | bool | array
+            'field' => 'text',
 
-			// UI renderer
-			'field' => 'text',
-			// text | textarea | checkbox | select | radio
-			// number | email | url | password | color
-			// image | audio | video | document
+            'label' => 'Example Field',
+            'description' => 'Displayed below the field.',
+            'default' => '',
 
-			// Human-readable label
-			'label' => 'Example Field',
+            'placeholder' => 'Enter a value',
+            'required' => false,
 
-			// Optional helper text
-			'description' => 'Displayed below the field.',
+            'options' => [
+                'option_1' => 'Option One',
+                'option_2' => 'Option Two',
+            ],
 
-			// Default value (required)
-			'default' => '',
+            'conditions' => [
+                [
+                    'field' => 'another_field',
+                    'operator' => '==',
+                    'value' => 'yes',
+                ],
+            ],
 
-			// Placeholder (text-like fields only)
-			'placeholder' => 'Enter a value',
+            'capability' => 'manage_options',
+            'class' => 'width-6', // width-1 → width-12
+            'readonly' => false,
+            'disabled' => false,
 
-			// Required flag (UI-level only)
-			'required' => false,
-
-			// Select / radio options
-			'options' => [
-				'option_1' => 'Option One',
-				'option_2' => 'Option Two',
-			],
-
-			// Conditional visibility (admin UI only)
-			'conditions' => [
-				[
-					'field' => 'another_field',
-					'operator' => '==', // == | != | in | not_in
-					'value' => 'yes',
-				],
-			],
-
-			// Optional capability override
-			// Falls back to tab capability
-			'capability' => 'manage_options',
-
-			// Custom CSS class
-			'class' => 'widefat',
-
-			// Field state flags
-			'readonly' => false,
-			'disabled' => false,
-
-			// Optional sanitization callback
-			// Receives raw value, must return sanitized value
-			'sanitize_callback' => function ($value) {
-				return sanitize_text_field($value);
-			},
-		],
-	];
+            'sanitize_callback' => function ($value) {
+                return sanitize_text_field($value);
+            },
+        ],
+    ];
 }
 ```
 
----
+------------------------------------------------------------------------
+
+## Layout Width System
+
+Fields support a 12-column CSS Grid layout.
+
+``` php
+'class' => 'width-6',
+```
+
+Available:
+
+-   width-1 → width-12
+-   width (default full width)
+
+------------------------------------------------------------------------
 
 ## Supported Field Types
 
 ### Text-Based Fields
 
 #### text
-```php
+
+``` php
 'type'  => 'string',
 'field' => 'text',
 ```
 
 #### textarea
-```php
+
+``` php
 'type'  => 'string',
 'field' => 'textarea',
+'rows'  => 5, // optional
 ```
 
-#### email
-```php
+#### editor
+
+``` php
 'type'  => 'string',
-'field' => 'email',
+'field' => 'editor',
+'rows'  => 8,              // optional
+'media_buttons' => false,  // optional
 ```
 
-#### url
-```php
-'type'  => 'string',
-'field' => 'url',
-```
+Notes: - Powered by wp_editor() - Editor IDs are sanitized internally -
+Safe for use inside repeaters
 
-#### password
-```php
-'type'  => 'string',
-'field' => 'password',
-```
-
----
+------------------------------------------------------------------------
 
 ### Boolean & Numeric Fields
 
 #### checkbox
-```php
+
+``` php
 'type'    => 'bool',
 'field'   => 'checkbox',
 'default' => false,
 ```
 
 #### number
-```php
+
+``` php
 'type'    => 'int',
 'field'   => 'number',
 'default' => 0,
 ```
 
----
+------------------------------------------------------------------------
 
 ### Choice Fields
 
 #### select
-```php
+
+``` php
 'type'    => 'string',
 'field'   => 'select',
 'options' => [
-	'key' => 'Label',
+    'key' => 'Label',
 ],
 ```
 
 #### radio
-```php
+
+``` php
 'type'    => 'string',
 'field'   => 'radio',
 'options' => [
-	'key' => 'Label',
+    'key' => 'Label',
 ],
 ```
 
----
+------------------------------------------------------------------------
 
-### Media Fields
+### Media Field
 
-All media fields store **attachment IDs**.
+All media fields store attachment IDs only.
 
-#### image
-```php
+#### Single Mode
+
+``` php
 'type'  => 'int',
-'field' => 'image',
+'field' => 'media',
+'default' => 0,
 ```
 
-#### audio
-```php
-'type'  => 'int',
-'field' => 'audio',
+#### Multiple Mode
+
+``` php
+'type'     => 'array',
+'field'    => 'media',
+'default'  => [],
+'multiple' => true,
 ```
 
-#### video
-```php
-'type'  => 'int',
-'field' => 'video',
+Multiple mode supports:
+
+-   Drag sorting
+-   Per-item removal
+-   Order persistence
+
+Single mode disables drag UI automatically.
+
+------------------------------------------------------------------------
+
+### Repeater Field
+
+Repeaters store structured nested arrays.
+
+``` php
+'type'   => 'array',
+'field'  => 'repeater',
+'default' => [],
+'min'    => 0,
+'max'    => 5,
+'fields' => [
+    'title' => [
+        'type'  => 'string',
+        'field' => 'text',
+        'default' => '',
+    ],
+    'image' => [
+        'type'  => 'int',
+        'field' => 'media',
+        'default' => 0,
+    ],
+],
 ```
 
-#### document
-```php
-'type'  => 'int',
-'field' => 'document',
-```
+Features:
 
----
+-   Collapsible rows (collapsed by default)
+-   Drag sorting
+-   Duplicate support
+-   Min / max enforcement
+-   Independent row sanitization
+-   Template-based rendering
 
-## Notes and Guarantees
+Repeaters always store ordered arrays.
 
-- `type` controls data safety, not UI
-- `field` controls rendering, not storage
-- Conditions affect admin visibility only
-- Frontend code must never rely on conditions
-- Missing values must always fall back to defaults
-- Unknown keys are ignored safely
+------------------------------------------------------------------------
 
----
+## Guarantees
+
+-   `type` controls data safety, not UI
+-   `field` controls rendering, not storage
+-   Conditions affect admin visibility only
+-   Missing values always fall back to defaults
+-   Unknown keys are ignored safely
+-   Storage format is stable and deterministic
+
+------------------------------------------------------------------------
 
 ## Final Rule
 
-If a field definition is unclear, make it explicit.
-Explicit configuration always wins over convenience.
+If a field definition is unclear, make it explicit. Explicit
+configuration always wins over convenience.
