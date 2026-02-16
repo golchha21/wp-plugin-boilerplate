@@ -10,6 +10,15 @@ This project follows a **foundation-first** release model:
 
 ---
 
+## 1.1.2 – 2026-02-16
+
+- Fix: Media field (multiple) removing all items when deleting one
+- Fix: Repeater index synchronization inconsistencies
+- Fix: Media field data-name handling inside repeater
+- Improve: Repeater row title initialization on load
+
+---
+
 ## v1.1.1 – 2026-02-15
 
 ### Documentation

@@ -377,7 +377,6 @@
   cursor: not-allowed;
 }
 
-
 /* =========================================
    Responsive
 ========================================= */
@@ -392,4 +391,11 @@
   .wppb-admin .wppb-field {
     grid-column: span 12 !important;
   }
+}
+
+/* =========================================
+   wp-editor fixes
+========================================= */
+.quicktags-toolbar input[type="button"] {
+  width: auto !important;
 }

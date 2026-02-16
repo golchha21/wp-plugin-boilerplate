@@ -52,10 +52,12 @@ class FeatureFieldsTab implements TabContract, SettingsContract
 				'fields' => [
 					'title' => [
 						'field' => 'text',
+						'label' => 'Title',
 						'class' => 'width',
 					],
 					'subtitle' => [
 						'field' => 'text',
+						'label' => 'Sub-Title',
 						'class' => 'width-6',
 					],
 				],
@@ -67,13 +69,13 @@ class FeatureFieldsTab implements TabContract, SettingsContract
 					'image' => array(
 						'type' => 'integer',
 						'field' => 'image',
-//						'multiple' => true,
+						'multiple' => false,
 						'class' => 'width-2',
 					),
 					'description' => array(
 						'type' => 'string',
-						'field' => 'editor',
-						'rows' => 8,
+						'field' => 'textarea',
+						'rows' => 5,
 						'media_buttons' => false,
 						'class' => 'width-10',
 					),

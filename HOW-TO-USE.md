@@ -122,6 +122,8 @@ Behavior:
 
 Repeaters always store ordered arrays.
 
+Note: The `editor` field type is not supported inside repeaters.
+
 ------------------------------------------------------------------------
 
 ## Step 6: Using Media Fields

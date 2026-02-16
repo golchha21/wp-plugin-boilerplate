@@ -17,16 +17,11 @@ class EditorField extends AbstractField
 		$rows         = $this->meta['rows'] ?? 8;
 		$mediaButtons = $this->meta['media_buttons'] ?? false;
 
-		// TinyMCE-safe ID (no brackets allowed)
-		$editor_id = sanitize_key(
-			str_replace(['[', ']'], '_', $id)
-		);
-
 		wp_editor(
 			$value,
-			$editor_id,
+			$id,
 			[
-				'textarea_name' => $name,   // KEEP brackets here
+				'textarea_name' => $name,
 				'textarea_rows' => $rows,
 				'media_buttons' => $mediaButtons,
 			]
@@ -40,5 +35,4 @@ class EditorField extends AbstractField
 	{
 		return $this->meta['class'] ?? 'width';
 	}
-
 }

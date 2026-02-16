@@ -111,8 +111,12 @@ Available:
 'media_buttons' => false,  // optional
 ```
 
-Notes: - Powered by wp_editor() - Editor IDs are sanitized internally -
-Safe for use inside repeaters
+Notes:
+
+- Powered by `wp_editor()`
+- Editor IDs are sanitized internally
+- Not supported inside `repeater` fields (due to wp_editor lifecycle constraints)
+
 
 ------------------------------------------------------------------------
 

@@ -95,15 +95,18 @@ class Admin
 		// Media
 		wp_enqueue_media();
 
-		wp_enqueue_script(Plugin::prefix() . 'media', Plugin::url() . 'assets/admin/js/media.js', ['jquery'], Plugin::version(), true);
-		wp_enqueue_script(Plugin::prefix() . 'tools', Plugin::url() . 'assets/admin/js/tools.js', ['jquery'], Plugin::version(), true);
-		wp_enqueue_script(Plugin::prefix() . 'repeater', Plugin::url() . 'assets/admin/js/repeater.js', ['jquery'], Plugin::version(), true);
+		// Editor
+		wp_enqueue_editor();
 
 		// Color picker
 		wp_enqueue_style('wp-color-picker');
 		wp_enqueue_script('wp-color-picker');
 
 		wp_add_inline_script('wp-color-picker', "jQuery('.wppb-color-field').wpColorPicker();");
+
+		wp_enqueue_script(Plugin::prefix() . 'media', Plugin::url() . 'assets/admin/js/media.js', ['jquery'], Plugin::version(), true);
+		wp_enqueue_script(Plugin::prefix() . 'tools', Plugin::url() . 'assets/admin/js/tools.js', ['jquery'], Plugin::version(), true);
+		wp_enqueue_script(Plugin::prefix() . 'repeater', Plugin::url() . 'assets/admin/js/repeater.js', ['jquery'], Plugin::version(), true);
 
 		wp_enqueue_style(Plugin::prefix() . 'admin', Plugin::url() . 'assets/admin/css/admin.css', [], Plugin::version());
 	}

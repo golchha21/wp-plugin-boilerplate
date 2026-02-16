@@ -41,7 +41,7 @@ class RepeaterField extends AbstractField
 		--------------------------------- */
 
 		echo '<template class="wppb-repeater-template">';
-		$this->renderRow($optionKey, '__INDEX__', []);
+		$this->renderRow($optionKey, '__index__', []);
 		echo '</template>';
 
 		/* ---------------------------------
@@ -144,7 +144,7 @@ class RepeaterField extends AbstractField
 		foreach ($value as $key => $row) {
 
 			// Skip template placeholder
-			if ($key === '__INDEX__') {
+			if ($key === '__index__') {
 				continue;
 			}
 
@@ -172,7 +172,7 @@ class RepeaterField extends AbstractField
 				continue;
 			}
 
-			$sanitized[] = $cleanRow;
+			$sanitized[$key] = $cleanRow;
 		}
 
 		// Ensure clean numeric indexing
@@ -184,4 +184,19 @@ class RepeaterField extends AbstractField
 		return $this->meta['class'] ?? 'width';
 	}
 
+	private function isEmptyRow(array $row): bool
+	{
+		foreach ($row as $value) {
+
+			if (is_array($value) && !empty($value)) {
+				return false;
+			}
+
+			if (!is_array($value) && $value !== null && $value !== '' && $value !== 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

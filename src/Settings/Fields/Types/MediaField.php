@@ -39,10 +39,6 @@ class MediaField extends AbstractField
 		   Build Preview + Hidden Inputs
 		--------------------------------- */
 
-		/* ---------------------------------
-   Build Preview
---------------------------------- */
-
 		if ($multiple) {
 
 			foreach ($value as $id) {
@@ -67,6 +63,7 @@ class MediaField extends AbstractField
 						$preview .= '<code>' . esc_html(basename($file)) . '</code>';
 					}
 				}
+				$preview .= '<input type="hidden" name="' . esc_attr($name) . '[]" value="' . esc_attr($id) . '" />';
 
 				$preview .= '</div>';
 				$preview .= '</div>';
@@ -163,10 +160,4 @@ class MediaField extends AbstractField
 	{
 		return $this->meta['class'] ?? 'width';
 	}
-
-	protected function isMultiple(): bool
-	{
-		return !empty($this->meta['multiple']);
-	}
-
 }

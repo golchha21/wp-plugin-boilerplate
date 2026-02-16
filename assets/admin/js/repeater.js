@@ -4,7 +4,7 @@ document.addEventListener('click', function (e) {
   if (!wrapper) return;
 
   const repeater = wrapper.querySelector('.wppb-repeater');
-  const template = repeater.querySelector('[data-index="__INDEX__"]');
+  const template = repeater.querySelector('[data-index="__index__"]');
 
   /* ---------------------------------
      ADD ROW
@@ -25,9 +25,19 @@ document.addEventListener('click', function (e) {
 
     item.dataset.index = index;
 
-    // Replace __INDEX__ in all name attributes
-    clone.querySelectorAll('[name]').forEach(input => {
-      input.name = input.name.replace(/\[(\d+|__INDEX__)\]/g, '[' + index + ']');
+    // Replace __index__ in id attributes
+    clone.querySelectorAll('[id]').forEach(el => {
+      el.id = el.id.replace(/__index___/g, index);
+    });
+
+    // Replace __index__ in name attributes
+    clone.querySelectorAll('[name]').forEach(el => {
+      el.name = el.name.replace(/__index__/g, index);
+    });
+
+    // 🔥 Replace __index__ in data-name attributes
+    clone.querySelectorAll('[data-name]').forEach(el => {
+      el.dataset.name = el.dataset.name.replace(/__index__/g, index);
     });
 
     repeater.appendChild(clone);
@@ -147,13 +157,12 @@ document.addEventListener('dragend', function () {
 });
 
 
-
 /* =====================================
    HELPERS
 ===================================== */
 
 function getItems(repeater) {
-  return repeater.querySelectorAll('.wppb-repeater-item:not([data-index="__INDEX__"])');
+  return repeater.querySelectorAll('.wppb-repeater-item:not([data-index="__index__"])');
 }
 
 function isMaxReached(wrapper) {
@@ -183,11 +192,24 @@ function reindexRows(repeater) {
 
     item.dataset.index = index;
 
+    // Update name attributes safely
     item.querySelectorAll('[name]').forEach(input => {
-      input.name = input.name.replace(/\[\d+\]/, '[' + index + ']');
+      input.name = input.name.replace(
+        /(\[[^\]]+\])\[\d+\](\[[^\]]+\])/,
+        `$1[${index}]$2`
+      );
     });
 
-    const title = item.querySelector('.wppb-repeater-title');
+    // 🔥 Keep media data-name in sync
+    item.querySelectorAll('.wppb-media-field').forEach(field => {
+      if (field.dataset.name) {
+        field.dataset.name = field.dataset.name.replace(
+          /(\[[^\]]+\])\[\d+\](\[[^\]]+\])/,
+          `$1[${index}]$2`
+        );
+      }
+    });
+
     updateRowTitle(item);
   });
 }
@@ -224,7 +246,18 @@ function updateRowTitle(item) {
 document.addEventListener('DOMContentLoaded', function () {
 
   document.querySelectorAll('.wppb-repeater-wrapper').forEach(wrapper => {
+
     updateAddState(wrapper);
+
+    const repeater = wrapper.querySelector('.wppb-repeater');
+    if (!repeater) return;
+
+    const items = getItems(repeater);
+
+    items.forEach(item => {
+      updateRowTitle(item);
+    });
+
   });
 });
 

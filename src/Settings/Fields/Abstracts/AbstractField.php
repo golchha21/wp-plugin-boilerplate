@@ -43,7 +43,9 @@ abstract class AbstractField implements FieldInterface
 
 	protected function id(string $optionKey): string
 	{
-		return $optionKey . '_' . $this->key;
+		return sanitize_key(
+			preg_replace('/[\[\]]+/', '_', $optionKey . '_' . $this->key)
+		);
 	}
 
 	public function sanitize(mixed $value): mixed

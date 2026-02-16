@@ -75,7 +75,10 @@
      REMOVE SINGLE ITEM (Multiple Mode)
   ========================================= */
 
-  $(document).on('click', '.wppb-media-item-remove', function () {
+  $(document).on('click', '.wppb-media-item-remove', function (e) {
+
+    e.preventDefault();
+    e.stopPropagation(); // 🔥 important
 
     const item = $(this).closest('.wppb-media-item');
     const wrap = item.closest('.wppb-media-field');
@@ -90,7 +93,7 @@
      REMOVE ALL
   ========================================= */
 
-  $(document).on('click', '.wppb-media-remove', function (e) {
+  $(document).on('click', '.wppb-media-field > .wppb-media-actions .wppb-media-remove', function (e) {
     e.preventDefault();
 
     const wrap = $(this).closest('.wppb-media-field');

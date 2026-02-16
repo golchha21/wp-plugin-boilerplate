@@ -48,7 +48,8 @@ Guarantees:
 -   Each row is sanitized independently
 -   Template rows are rendered using `<template>`
 -   Template markup never leaks into runtime DOM
--   Reindexing is explicit after drag operations
+-   Reindexing is explicit after drag operations 
+-   Fields that rely on server-rendered lifecycle (e.g., wp_editor) are not supported inside repeaters
 
 Repeaters do not alter storage format dynamically.
 
