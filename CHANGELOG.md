@@ -10,7 +10,15 @@ This project follows a **foundation-first** release model:
 
 ---
 
-## 1.1.2 – 2026-02-16
+## v1.2.0 - 2026-02-18
+
+### Added
+- Granular settings access methods: `getValue()`, `setValue()`, `deleteValue()`
+- Documentation for full option vs granular key access in HOW-TO-USE.md
+
+---
+
+## v1.1.2 – 2026-02-16
 
 - Fix: Media field (multiple) removing all items when deleting one
 - Fix: Repeater index synchronization inconsistencies

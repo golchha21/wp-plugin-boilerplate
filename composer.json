@@ -1,6 +1,6 @@
 {
   "name": "golchha/wp-plugin-boilerplate",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "An opinionated WordPress plugin boilerplate for building long-lived plugins with explicit structure and predictable lifecycle behavior.",
   "type": "wordpress-plugin",
   "homepage": "https://github.com/golchha21/wp-plugin-boilerplate",

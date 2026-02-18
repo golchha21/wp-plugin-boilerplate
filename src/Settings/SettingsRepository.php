@@ -32,4 +32,32 @@ final class SettingsRepository
 
 		\delete_option($optionKey);
 	}
+
+	public static function getValue(string $optionKey, string $valueKey, string $scope = 'site', mixed $default = null): mixed {
+		$values = self::get($optionKey, $scope);
+
+		return $values[$valueKey] ?? $default;
+	}
+
+	public static function setValue(string $optionKey, string $valueKey, mixed $value, string $scope = 'site'): void {
+		$values = self::get($optionKey, $scope);
+
+		$values[$valueKey] = $value;
+
+		self::update($optionKey, $values, $scope);
+	}
+
+	public static function deleteValue(string $optionKey, string $valueKey, string $scope = 'site'): void {
+		$values = self::get($optionKey, $scope);
+
+		if (!array_key_exists($valueKey, $values)) {
+			return;
+		}
+
+		unset($values[$valueKey]);
+
+		self::update($optionKey, $values, $scope);
+	}
+
+
 }

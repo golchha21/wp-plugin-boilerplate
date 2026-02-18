@@ -160,7 +160,112 @@ Single mode disables drag behavior automatically.
 
 ------------------------------------------------------------------------
 
-## Step 7: Add Runtime Behavior
+## Step 7: Accessing Stored Settings
+
+Settings are stored as arrays using the `SettingsRepository`.
+
+You can retrieve or modify either the full option array or a single key,
+depending on your use case.
+
+### Full Option Access
+
+Use full access when working with entire forms or replacing all values.
+
+#### Get entire option
+
+``` php
+use WPPluginBoilerplate\Settings\SettingsRepository;
+
+$settings = SettingsRepository::get('my_plugin_settings');
+```
+
+#### Update entire option
+
+``` php
+SettingsRepository::update('my_plugin_settings', [
+    'enable_feature' => true,
+    'api_key'        => '123456',
+]);
+```
+
+#### Delete entire option
+
+``` php
+SettingsRepository::delete('my_plugin_settings');
+```
+
+Network scope example:
+
+``` php
+SettingsRepository::get('my_plugin_settings', 'network');
+```
+
+------------------------------------------------------------------------
+
+### Granular Key Access
+
+Use granular access when you only need to modify or retrieve a single
+value inside the stored option array.
+
+#### Get single value
+
+``` php
+$enabled = SettingsRepository::getValue(
+    'my_plugin_settings',
+    'enable_feature',
+    false
+);
+```
+
+The third parameter is the default value returned if the key does not
+exist.
+
+Network scope example:
+
+``` php
+SettingsRepository::getValue(
+    'my_plugin_settings',
+    'enable_feature',
+    false,
+    'network'
+);
+```
+
+------------------------------------------------------------------------
+
+#### Set single value
+
+``` php
+SettingsRepository::setValue(
+    'my_plugin_settings',
+    'enable_feature',
+    true
+);
+```
+
+Only the specified key is updated. Other stored values remain untouched.
+
+------------------------------------------------------------------------
+
+#### Delete single value
+
+``` php
+SettingsRepository::deleteValue(
+    'my_plugin_settings',
+    'enable_feature'
+);
+```
+
+Only the specified key is removed. The rest of the option is preserved.
+
+------------------------------------------------------------------------
+
+Both full and granular access methods are multisite-aware and respect
+the `site` and `network` scope parameter.
+
+------------------------------------------------------------------------
+
+## Step 8: Add Runtime Behavior
 
 Runtime behavior lives in `PublicPlugin` (or equivalent).
 
@@ -172,7 +277,7 @@ inside callbacks instead.
 
 ------------------------------------------------------------------------
 
-## Step 8: Admin Configuration Rules
+## Step 9: Admin Configuration Rules
 
 Admin is responsible only for:
 
@@ -184,7 +289,7 @@ Admin must never contain runtime logic.
 
 ------------------------------------------------------------------------
 
-## Step 9: Import, Export, and Reset
+## Step 10: Import, Export, and Reset
 
 Not all actions have the same scope.
 
@@ -195,7 +300,7 @@ Capability enforcement must match scope.
 
 ------------------------------------------------------------------------
 
-## Step 10: Lifecycle
+## Step 11: Lifecycle
 
 -   Activation must be side-effect free
 -   Deactivation pauses behavior but keeps data
