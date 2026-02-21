@@ -18,22 +18,8 @@ class EnhancedFieldsTab implements TabContract, SettingsContract
 		return 'Enhanced Fields';
 	}
 
-	public function hasForm(): bool
-	{
-		return true;
-	}
 
-	public function hasActions(): bool
-	{
-		return true; // if you want Reset
-	}
-
-	public function viewCapability(): string
-	{
-		return 'manage_options';
-	}
-
-	public function manageCapability(): string
+	public function capability(): string
 	{
 		return 'manage_options';
 	}

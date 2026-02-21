@@ -105,6 +105,16 @@ If dependencies are updated, the plugin must continue to work in a clean WordPre
 - `uninstall.php` must remain procedural and self-contained
 - Plugin classes and autoloaders must never be referenced during uninstall
 
+### 7. Field Engine Integrity
+
+- Field save logic must remain field-type-aware
+- Repeater sanitization must not be bypassed
+- Numeric option arrays must be normalized
+- Template markup must never leak into storage
+- Empty scalar values must not be auto-deleted
+
+Changes to field behavior require documentation updates.
+
 ---
 
 ## Release Checklist

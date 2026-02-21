@@ -2,46 +2,72 @@
 
 namespace WPPluginBoilerplate\Admin\Actions;
 
+use WPPluginBoilerplate\Core\Support\ScopeResolver;
 use WPPluginBoilerplate\Plugin;
+use WPPluginBoilerplate\Settings\Contracts\SettingsContract;
 use WPPluginBoilerplate\Settings\SettingsRepository;
 use WPPluginBoilerplate\Settings\Tabs;
-use WPPluginBoilerplate\Settings\Contracts\SettingsContract;
 
 class ResetSettings
 {
 	public function handle(): void
 	{
-		// Resolve active tab from request context
-		$tab = Tabs::active();
-
-		// Tab must provide settings
-		if (! $tab instanceof SettingsContract) {
-			wp_die(__('This tab does not support settings.', Plugin::text_domain()));
+		if (!\current_user_can('manage_options')) {
+			\wp_die(
+				__('Sorry, you are not allowed to reset settings.', Plugin::text_domain())
+			);
 		}
 
-		// Capability check MUST match tab capability
-		if (! current_user_can($tab->manageCapability())) {
-			wp_die(__('Sorry, you are not allowed to access this page.', Plugin::text_domain()));
+		\check_admin_referer(Plugin::prefix() . 'reset');
+
+		$tab_id = $_GET['tab'] ?? null;
+
+		if (!$tab_id) {
+			\wp_die(__('No tab specified.', Plugin::text_domain()));
 		}
 
-		// Nonce check (must match the one used in the button)
-		check_admin_referer( Plugin::prefix() . 'reset');
+		$matched_tab = null;
 
-		// Build defaults from fields (single source of truth)
+		foreach (Tabs::all() as $tab) {
+			if ($tab->id() === $tab_id) {
+				$matched_tab = $tab;
+				break;
+			}
+		}
+
+		if (!$matched_tab) {
+			\wp_die(__('Invalid tab.', Plugin::text_domain()));
+		}
+
+		if (!$matched_tab instanceof SettingsContract) {
+			\wp_die(__('This tab does not support settings.', Plugin::text_domain()));
+		}
+
+		if (!\current_user_can($matched_tab->capability())) {
+			\wp_die(__('You do not have permission to reset this tab.', Plugin::text_domain()));
+		}
+
+		// 🔥 Resolve scope properly
+		$scope = ScopeResolver::resolve($matched_tab);
+
+		// Build defaults from schema
 		$defaults = [];
 
-		foreach ($tab::fields() as $key => $definition) {
+		foreach ($matched_tab->fields() as $key => $definition) {
 			$defaults[$key] = $definition['default'] ?? null;
 		}
 
-		// Persist defaults
 		SettingsRepository::update(
-			$tab::optionKey(),
-			$defaults
+			$matched_tab->optionKey(),
+			$defaults,
+			$scope
 		);
 
-		// Redirect back to the tab
-		wp_safe_redirect(admin_url('admin.php?page='. Plugin::slug() .'&tab=' . $tab->id()));
+		\wp_safe_redirect(
+			\admin_url(
+				'admin.php?page=' . Plugin::slug() . '&tab=' . $matched_tab->id()
+			)
+		);
 
 		exit;
 	}

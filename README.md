@@ -20,45 +20,57 @@ accidental complexity.
 
 ## Core Principles
 
--   Clear separation between admin, settings, and public runtime
--   Settings treated as a domain boundary
--   Predictable lifecycle behavior
--   Minimal magic and no hidden side effects
--   Constraints designed for long-term maintainability
+- Clear separation between admin, settings, and public runtime
+- Settings treated as a domain boundary
+- Predictable lifecycle behavior
+- Minimal magic and no hidden side effects
+- Constraints designed for long-term maintainability
 
 ------------------------------------------------------------------------
 
-## Settings System (v1.1+)
+## Settings System (v1.3+)
 
 The settings layer is now a structured, extensible system.
 
 ### Field Architecture
 
--   Schema-driven `FieldDefinition`
--   Centralized `FieldRenderer`
--   Deterministic sanitization per field
--   Nested option handling
--   Extensible field pattern
+- Schema-driven `FieldDefinition`
+- Centralized `FieldRenderer`
+- Deterministic sanitization per field
+- Nested option handling
+- Extensible field pattern
+
+### MetaBox Support (v1.3+)
+
+The field engine now powers both Settings and MetaBox modules.
+
+- Shared rendering layer
+- Shared sanitization pipeline
+- Field-type-aware save logic
+- Stable nested meta structure
+- Repeater fully supported in MetaBox context
+
+Meta and Settings use the same core field abstraction.
 
 ### Supported Fields
 
--   text
--   textarea
--   email
--   url
--   password
--   hidden
--   date
--   time
--   datetime-local
--   number
--   checkbox
--   radio
--   select
--   color
--   editor (wp_editor powered)
--   media (single & multiple)
--   repeater (nested structured fields)
+- text
+- textarea
+- email
+- url
+- password
+- hidden
+- date
+- time
+- datetime-local
+- number
+- checkbox
+- radio
+- select
+- color
+- editor (wp_editor powered)
+- media (single & multiple)
+- repeater (nested structured fields)
 
 ------------------------------------------------------------------------
 
@@ -66,18 +78,24 @@ The settings layer is now a structured, extensible system.
 
 The repeater allows structured, sortable nested data.
 
-Features:
+### Features
 
--   Collapsible rows (collapsed by default)
--   Drag & drop sorting
--   Duplicate row support
--   Min / max limits
--   Independent row sanitization
--   Template-based rendering
--   Dashicon controls
+- Collapsible rows (collapsed by default)
+- Drag & drop sorting with order persistence
+- Duplicate row support
+- Min / max limits
+- Independent row sanitization
+- Template-based rendering
+- Dashicon controls
 
-Repeaters always store ordered arrays and never leak template markup
-into runtime DOM.
+Repeaters always store ordered arrays and never leak template markup into the runtime DOM.
+
+### Storage Guarantees (v1.3+)
+
+- Template placeholder rows (`__index__`) are never persisted
+- Completely empty rows are removed automatically
+- Rows are reindexed numerically before persistence
+- Nested data structure remains deterministic and stable
 
 ------------------------------------------------------------------------
 
@@ -87,12 +105,12 @@ Stores attachment IDs only.
 
 Supports:
 
--   Single selection (integer)
--   Multiple selection (ordered array)
--   Drag sorting (multiple mode)
--   Per-item removal (multiple mode)
--   MIME restriction support
--   Square preview layout
+- Single selection (integer)
+- Multiple selection (ordered array)
+- Drag sorting (multiple mode)
+- Per-item removal (multiple mode)
+- MIME restriction support
+- Square preview layout
 
 Behavior adapts automatically based on `multiple: true`.
 
@@ -102,10 +120,10 @@ Behavior adapts automatically based on `multiple: true`.
 
 The admin interface is:
 
--   Fully scoped under `.wppb-admin`
--   Built on a 12-column CSS Grid layout
--   Powered by semantic design tokens
--   Safe from wp-admin style conflicts
+- Fully scoped under `.wppb-admin`
+- Built on a 12-column CSS Grid layout
+- Powered by semantic design tokens
+- Safe from wp-admin style conflicts
 
 Example:
 
@@ -115,8 +133,8 @@ Example:
 
 Available widths:
 
--   width-1 → width-12
--   Default: width (full width)
+- width-1 → width-12
+- Default: width (full width)
 
 ------------------------------------------------------------------------
 
@@ -140,12 +158,12 @@ Each directory represents a deliberate boundary.
 
 Starting with v1.0:
 
--   Public behavior is registered unconditionally
--   Admin configuration flows cleanly into runtime
--   Lifecycle behavior is predictable
--   Uninstall cleans up plugin-owned data
--   Plugin renaming does not break behavior
--   Distributed as a self-contained package
+- Public behavior is registered unconditionally
+- Admin configuration flows cleanly into runtime
+- Lifecycle behavior is predictable
+- Uninstall cleans up plugin-owned data
+- Plugin renaming does not break behavior
+- Distributed as a self-contained package
 
 Breaking these guarantees requires a major version bump.
 
@@ -155,9 +173,9 @@ Breaking these guarantees requires a major version bump.
 
 Semantic Versioning is followed:
 
--   Patch → internal fixes
--   Minor → new field types or UI features
--   Major → structural or storage changes
+- Patch → internal fixes
+- Minor → new field types or UI features
+- Major → structural or storage changes
 
 ------------------------------------------------------------------------
 

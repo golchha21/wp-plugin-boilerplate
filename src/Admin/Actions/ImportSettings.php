@@ -2,82 +2,91 @@
 
 namespace WPPluginBoilerplate\Admin\Actions;
 
+use WPPluginBoilerplate\Core\Support\ScopeResolver;
 use WPPluginBoilerplate\Plugin;
-use WPPluginBoilerplate\Settings\SettingsRepository;
-use WPPluginBoilerplate\Settings\Support\ScopeResolver;
-use WPPluginBoilerplate\Settings\Tabs;
 use WPPluginBoilerplate\Settings\Contracts\SettingsContract;
+use WPPluginBoilerplate\Settings\SettingsRepository;
+use WPPluginBoilerplate\Settings\Tabs;
 
 class ImportSettings
 {
 	public function handle(): void
 	{
-		// Resolve active tab
-		$tab = Tabs::active();
-
-		// Tab must support settings
-		if (! $tab instanceof SettingsContract) {
-			wp_die(
-				__('This tab does not support settings.', Plugin::text_domain())
+		// Global capability check
+		if (!\current_user_can('manage_options')) {
+			\wp_die(
+				__('Sorry, you are not allowed to import settings.', Plugin::text_domain())
 			);
 		}
 
-		// Capability must match tab
-		if (! current_user_can($tab->manageCapability())) {
-			wp_die(
-				__('Sorry, you are not allowed to access this page.', Plugin::text_domain())
-			);
-		}
-
-		// Nonce must be tab-scoped
-		check_admin_referer(Plugin::prefix() . 'import_all');
+		// Global nonce check
+		\check_admin_referer(Plugin::prefix() . 'import_all');
 
 		$file = $_FILES['import_file'] ?? null;
 
-		if (! $file || $file['error'] !== UPLOAD_ERR_OK) {
-			wp_die(__('Invalid upload.', Plugin::text_domain()));
+		if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
+			\wp_die(__('Invalid upload.', Plugin::text_domain()));
 		}
 
-		$payload = json_decode(
-			file_get_contents($file['tmp_name']),
+		$payload = \json_decode(
+			\file_get_contents($file['tmp_name']),
 			true
 		);
 
-		if (($payload['plugin'] ?? null) !== Plugin::slug()) {
-			wp_die(__('This settings file does not belong to this plugin.', Plugin::text_domain()));
+		if (!\is_array($payload) || !isset($payload['tabs']) || !\is_array($payload['tabs'])) {
+			\wp_die(__('Invalid settings file.', Plugin::text_domain()));
 		}
 
-		if (! is_array($payload) || ! isset($payload['tabs']) || ! is_array($payload['tabs'])) {
-			wp_die(__('Invalid settings file.', Plugin::text_domain()));
+		if (($payload['plugin'] ?? null) !== Plugin::slug()) {
+			\wp_die(__('This settings file does not belong to this plugin.', Plugin::text_domain()));
 		}
+
+		$tabs = Tabs::all();
 
 		foreach ($payload['tabs'] as $tab_id => $tab_data) {
 
-			$tab = Tabs::find($tab_id);
+			// Find matching tab in current install
+			$matched_tab = null;
 
-			if (! $tab) {
-				// Tab not present in this install → skip safely
+			foreach ($tabs as $tab) {
+				if ($tab->id() === $tab_id) {
+					$matched_tab = $tab;
+					break;
+				}
+			}
+
+			if (!$matched_tab) {
+				continue; // tab not present in this install
+			}
+
+			if (!$matched_tab instanceof SettingsContract) {
 				continue;
 			}
 
-			if (! $tab instanceof SettingsContract) {
+			if (!\current_user_can($matched_tab->capability())) {
 				continue;
 			}
 
-			if (! current_user_can($tab->manageCapability())) {
+			if (!isset($tab_data['data']) || !\is_array($tab_data['data'])) {
 				continue;
 			}
 
-			if (! isset($tab_data['data']) || ! is_array($tab_data['data'])) {
-				continue;
-			}
+			$scope = ScopeResolver::resolve($matched_tab);
 
-			$scope = ScopeResolver::resolve($tab);
-
-			SettingsRepository::update($tab::optionKey(), $tab_data['data'], $scope);
+			SettingsRepository::update(
+				$matched_tab->optionKey(),
+				$tab_data['data'],
+				$scope
+			);
 		}
 
-		wp_safe_redirect(add_query_arg(Plugin::prefix() .'notice', 'imported', admin_url('admin.php?page='. Plugin::slug() .'&tab=tools')));
+		\wp_safe_redirect(
+			\add_query_arg(
+				Plugin::prefix() . 'notice',
+				'imported',
+				\admin_url('admin.php?page=' . Plugin::slug() . '&tab=tools')
+			)
+		);
 
 		exit;
 	}

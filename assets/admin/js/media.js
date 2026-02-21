@@ -207,6 +207,17 @@
       wrap.find('.wppb-media-single').length > 0;
 
     wrap.find('.wppb-media-remove').prop('disabled', !hasItems);
+
+    wrap.toggleClass('has-media', hasItems);
   }
+
+
+  $(document).ready(function () {
+
+    $('.wppb-media-field').each(function () {
+      updateRemoveState($(this));
+    });
+
+  });
 
 })(jQuery);

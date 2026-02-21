@@ -17,22 +17,7 @@ class AboutTab implements TabContract
 		return 'About';
 	}
 
-	public function hasForm(): bool
-	{
-		return false;
-	}
-
-	public function hasActions(): bool
-	{
-		return false;
-	}
-
-	public function viewCapability(): string
-	{
-		return 'read';
-	}
-
-	public function manageCapability(): string
+	public function capability(): string
 	{
 		return 'read';
 	}

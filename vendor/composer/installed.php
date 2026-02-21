@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'golchha/wp-plugin-boilerplate',
-        'pretty_version' => '1.0.1',
-        'version' => '1.0.1.0',
+        'pretty_version' => '1.2.0',
+        'version' => '1.2.0.0',
         'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'golchha/wp-plugin-boilerplate' => array(
-            'pretty_version' => '1.0.1',
-            'version' => '1.0.1.0',
+            'pretty_version' => '1.2.0',
+            'version' => '1.2.0.0',
             'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',

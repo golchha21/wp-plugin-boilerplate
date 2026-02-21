@@ -1,7 +1,7 @@
 # Fields Reference
 
 This document defines the complete field definition structure supported
-by the WP Plugin Boilerplate as of v1.1.
+by the WP Plugin Boilerplate as of v1.3.
 
 Fields are tab-owned, explicit, and deterministic. There is no implicit
 behavior and no hidden schema magic.
@@ -10,12 +10,12 @@ behavior and no hidden schema magic.
 
 ## General Rules
 
--   Fields are defined inside a settings tab
--   Each field must have a unique key
--   Defaults are mandatory
--   Storage format is predictable
--   Validation is enforced on save
--   Frontend reads must tolerate missing or empty values
+- Fields are defined inside a settings tab
+- Each field must have a unique key
+- Defaults are mandatory
+- Storage format is predictable
+- Validation is enforced on save
+- Frontend reads must tolerate missing or empty values
 
 ------------------------------------------------------------------------
 
@@ -78,8 +78,8 @@ Fields support a 12-column CSS Grid layout.
 
 Available:
 
--   width-1 → width-12
--   width (default full width)
+- width-1 → width-12
+- width (default full width)
 
 ------------------------------------------------------------------------
 
@@ -161,6 +161,24 @@ Notes:
     'key' => 'Label',
 ],
 ```
+### Option Normalization (v1.3+)
+
+If options are defined using a numeric array:
+
+``` php
+'options' => ['Red', 'Green']
+```
+
+They are automatically normalized internally to:
+
+``` php
+[
+  'Red' => 'Red',
+  'Green' => 'Green',
+]
+```
+
+This ensures semantic values are stored instead of numeric indexes.
 
 ------------------------------------------------------------------------
 
@@ -187,9 +205,9 @@ All media fields store attachment IDs only.
 
 Multiple mode supports:
 
--   Drag sorting
--   Per-item removal
--   Order persistence
+- Drag sorting
+- Per-item removal
+- Order persistence
 
 Single mode disables drag UI automatically.
 
@@ -221,25 +239,32 @@ Repeaters store structured nested arrays.
 
 Features:
 
--   Collapsible rows (collapsed by default)
--   Drag sorting
--   Duplicate support
--   Min / max enforcement
--   Independent row sanitization
--   Template-based rendering
+- Collapsible rows (collapsed by default)
+- Drag sorting with order persistence
+- Duplicate support
+- Min / max enforcement
+- Independent row sanitization
+- Template-based rendering
 
 Repeaters always store ordered arrays.
+
+### Repeater Storage Guarantees (v1.3+)
+
+- Template placeholder rows (`__index__`) are never saved.
+- Completely empty rows are removed automatically.
+- Rows are reindexed numerically before persistence.
+- Nested data structure is deterministic and stable.
 
 ------------------------------------------------------------------------
 
 ## Guarantees
 
--   `type` controls data safety, not UI
--   `field` controls rendering, not storage
--   Conditions affect admin visibility only
--   Missing values always fall back to defaults
--   Unknown keys are ignored safely
--   Storage format is stable and deterministic
+- `type` controls data safety, not UI
+- `field` controls rendering, not storage
+- Conditions affect admin visibility only
+- Missing values always fall back to defaults
+- Unknown keys are ignored safely
+- Storage format is stable and deterministic
 
 ------------------------------------------------------------------------
 

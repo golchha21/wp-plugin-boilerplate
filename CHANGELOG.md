@@ -10,6 +10,39 @@ This project follows a **foundation-first** release model:
 
 ---
 
+## v1.3.0 -- 2026-02-21
+
+### Added
+
+- MetaBox system with tab support
+- Shared field engine between Settings and MetaBox modules
+- Modular Admin architecture (Settings + MetaBox modules)
+
+### Fixed
+
+- Scalar fields incorrectly deleted when empty
+- Checkbox false state not persisting
+- MultiSelect rendering mismatch
+- Radio/Select storing numeric index instead of semantic value
+- Broken repeater input name structure
+- Template repeater row being saved
+- Empty repeater rows being persisted
+- Incorrect delete logic for array-based fields
+
+### Improved
+
+- Schema option normalization (numeric → semantic keys)
+- Field-type-aware save pipeline
+- Proper repeater sanitization integration
+- Stable nested meta structure
+- Clean numeric reindexing for repeater rows
+- Consistent meta key prefix handling
+- Predictable POST → sanitize → persist lifecycle
+
+This release stabilizes the field engine and introduces a unified MetaBox system.
+
+---
+
 ## v1.2.0 - 2026-02-18
 
 ### Added
@@ -31,12 +64,12 @@ This project follows a **foundation-first** release model:
 
 ### Documentation
 
--   Updated README to reflect v1.1 features
--   Updated FIELDS reference with Repeater, Media (multiple), Editor,
+- Updated README to reflect v1.1 features
+- Updated FIELDS reference with Repeater, Media (multiple), Editor,
     and Grid layout
--   Updated HOW-TO-USE guide with new examples
--   Updated ADVANCED-TOPICS with architectural guarantees for v1.1
--   Updated CHANGELOG
+- Updated HOW-TO-USE guide with new examples
+- Updated ADVANCED-TOPICS with architectural guarantees for v1.1
+- Updated CHANGELOG
 
 This release contains documentation updates only. No runtime or storage
 changes.
@@ -46,33 +79,33 @@ changes.
 ## v1.1.0 – 2026-02-15
 
 ### Added
--   Repeater field with:
-    -   Collapsible rows (collapsed by default)
-    -   Drag & drop sorting
-    -   Duplicate row support
-    -   Min / max enforcement
-    -   Template-based rendering
--   Multiple media selection support (`multiple: true`)
--   Square media preview system
--   Per-item media removal (multiple mode)
--   12-column CSS Grid admin layout
--   Scoped admin design system (`.wppb-admin`)
--   Semantic design tokens (surface, accent, danger)
--   Editor field (`wp_editor`) support inside repeaters
+- Repeater field with:
+    - Collapsible rows (collapsed by default)
+    - Drag & drop sorting
+    - Duplicate row support
+    - Min / max enforcement
+    - Template-based rendering
+- Multiple media selection support (`multiple: true`)
+- Square media preview system
+- Per-item media removal (multiple mode)
+- 12-column CSS Grid admin layout
+- Scoped admin design system (`.wppb-admin`)
+- Semantic design tokens (surface, accent, danger)
+- Editor field (`wp_editor`) support inside repeaters
 
 ### Improved
--   Centralized field rendering architecture
--   Schema-driven `FieldDefinition`
--   Deterministic nested sanitization
--   Media sorting persistence
--   Checkbox and radio layout handling
--   Admin CSS conflict hardening
--   Safer TinyMCE ID handling (no bracket warnings)
+- Centralized field rendering architecture
+- Schema-driven `FieldDefinition`
+- Deterministic nested sanitization
+- Media sorting persistence
+- Checkbox and radio layout handling
+- Admin CSS conflict hardening
+- Safer TinyMCE ID handling (no bracket warnings)
 
 ### Stability
--   Storage format remains deterministic
--   No breaking changes to existing simple fields
--   Layout system migration does not affect stored data
+- Storage format remains deterministic
+- No breaking changes to existing simple fields
+- Layout system migration does not affect stored data
 
 ---
 

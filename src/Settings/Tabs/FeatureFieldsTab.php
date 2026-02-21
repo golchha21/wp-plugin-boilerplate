@@ -18,22 +18,7 @@ class FeatureFieldsTab implements TabContract, SettingsContract
 		return 'Feature Fields';
 	}
 
-	public function hasForm(): bool
-	{
-		return true;
-	}
-
-	public function hasActions(): bool
-	{
-		return true; // if you want Reset
-	}
-
-	public function viewCapability(): string
-	{
-		return 'manage_options';
-	}
-
-	public function manageCapability(): string
+	public function capability(): string
 	{
 		return 'manage_options';
 	}
@@ -53,12 +38,12 @@ class FeatureFieldsTab implements TabContract, SettingsContract
 					'title' => [
 						'field' => 'text',
 						'label' => 'Title',
-						'class' => 'width',
+						'class' => 'width-10',
 					],
 					'subtitle' => [
 						'field' => 'text',
 						'label' => 'Sub-Title',
-						'class' => 'width-6',
+						'class' => 'width-10',
 					],
 				],
 			],

@@ -4,7 +4,28 @@ document.addEventListener('click', function (e) {
   if (!wrapper) return;
 
   const repeater = wrapper.querySelector('.wppb-repeater');
-  const template = repeater.querySelector('[data-index="__index__"]');
+
+  /* ---------------------------------
+   TOGGLE MAIN REPEATER
+  --------------------------------- */
+
+  if (e.target.closest('.wppb-repeater-main-toggle')) {
+
+    const toggle = wrapper.querySelector('.wppb-repeater-main-toggle');
+    const icon = toggle.querySelector('.dashicons');
+
+    wrapper.classList.toggle('is-collapsed');
+
+    const collapsed = wrapper.classList.contains('is-collapsed');
+
+    toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+
+    icon.classList.remove('dashicons-plus', 'dashicons-minus');
+    icon.classList.add(collapsed ? 'dashicons-plus' : 'dashicons-minus');
+
+    return;
+  }
+
 
   /* ---------------------------------
      ADD ROW
@@ -44,6 +65,7 @@ document.addEventListener('click', function (e) {
 
     reindexRows(repeater);
     updateAddState(wrapper);
+    updateRepeaterState(wrapper);
 
     return;
   }
@@ -60,6 +82,8 @@ document.addEventListener('click', function (e) {
 
     reindexRows(repeater);
     updateAddState(wrapper);
+    updateRepeaterState(wrapper);
+
     return;
   }
 
@@ -78,6 +102,8 @@ document.addEventListener('click', function (e) {
 
     reindexRows(repeater);
     updateAddState(wrapper);
+    updateRepeaterState(repeater.closest('.wppb-repeater-wrapper'));
+
     return;
   }
 
@@ -152,6 +178,7 @@ document.addEventListener('dragend', function () {
 
   draggedItem.classList.remove('is-dragging');
   reindexRows(repeater);
+  updateRepeaterState(wrapper);
 
   draggedItem = null;
 });
@@ -238,6 +265,17 @@ function updateRowTitle(item) {
   titleElement.textContent = value || `Item ${index}`;
 }
 
+function updateRepeaterState(wrapper) {
+
+  const repeater = wrapper.querySelector('.wppb-repeater');
+  if (!repeater) return;
+
+  const hasItems = getItems(repeater).length > 0;
+
+  wrapper.classList.toggle('has-items', hasItems);
+
+}
+
 
 /* =====================================
    INITIALIZE STATE ON LOAD
@@ -248,6 +286,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.wppb-repeater-wrapper').forEach(wrapper => {
 
     updateAddState(wrapper);
+    updateRepeaterState(wrapper);
 
     const repeater = wrapper.querySelector('.wppb-repeater');
     if (!repeater) return;

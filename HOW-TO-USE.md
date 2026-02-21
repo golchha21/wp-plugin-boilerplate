@@ -9,13 +9,13 @@ It assumes familiarity with WordPress and PHP.
 
 Start by making the boilerplate yours.
 
--   Rename the plugin directory
--   Rename the main plugin file
--   Update the namespace, prefix, and text domain by replacing all
+- Rename the plugin directory
+- Rename the main plugin file
+- Update the namespace, prefix, and text domain by replacing all
     boilerplate identifiers: (`wp-plugin-boilerplate`,
     `WPPluginBoilerplate`, `WP Plugin Boilerplate`, `WPPB_`, `wppb_`,
     `WPPB-`, `wppb-`)
--   Regenerate the autoloader:
+- Regenerate the autoloader:
 
 ``` bash
 composer dump-autoload
@@ -32,11 +32,11 @@ Settings are defined directly by tabs.
 
 A settings tab owns:
 
--   Its option key
--   Default values
--   Sanitization rules
--   Storage scope (site or network)
--   Capability enforcement
+- Its option key
+- Default values
+- Sanitization rules
+- Storage scope (site or network)
+- Capability enforcement
 
 There is no hidden schema abstraction layer.
 
@@ -67,6 +67,15 @@ public static function fields(): array
 The `type` defines storage safety. The `field` defines rendering
 behavior.
 
+Choice fields automatically normalize numeric option arrays into
+semantic key/value pairs.
+
+``` php
+'options' => ['Red', 'Green']
+```
+
+The stored value will be 'Red', not 0.
+
 ------------------------------------------------------------------------
 
 ## Step 4: Using the Grid Layout
@@ -79,8 +88,8 @@ The admin UI uses a 12-column CSS Grid layout.
 
 Available:
 
--   width-1 → width-12
--   width (default full width)
+- width-1 → width-12
+- width (default full width)
 
 Layout is purely visual and does not affect storage.
 
@@ -114,13 +123,25 @@ Repeaters allow structured, sortable nested fields.
 
 Behavior:
 
--   Rows are collapsed by default
--   Rows are sortable
--   Duplicate is supported
--   Min and max are enforced
--   Each row is sanitized independently
+- Rows are collapsed by default
+- Rows are sortable
+- Duplicate is supported
+- Min and max are enforced
+- Each row is sanitized independently
 
 Repeaters always store ordered arrays.
+
+### Repeater Save Behavior (v1.3+)
+
+Repeater fields are sanitized before persistence.
+
+This guarantees:
+
+- Template placeholder rows are never saved
+- Completely empty rows are removed
+- Rows are stored as clean ordered arrays
+
+No additional save handling is required.
 
 Note: The `editor` field type is not supported inside repeaters.
 
@@ -151,10 +172,10 @@ Note: The `editor` field type is not supported inside repeaters.
 
 Multiple mode:
 
--   Supports drag sorting
--   Stores ordered attachment IDs
--   Allows per-item removal
--   Uses square preview layout
+- Supports drag sorting
+- Stores ordered attachment IDs
+- Allows per-item removal
+- Uses square preview layout
 
 Single mode disables drag behavior automatically.
 
@@ -281,9 +302,9 @@ inside callbacks instead.
 
 Admin is responsible only for:
 
--   Rendering UI
--   Validating input
--   Triggering admin-only actions
+- Rendering UI
+- Validating input
+- Triggering admin-only actions
 
 Admin must never contain runtime logic.
 
@@ -293,8 +314,8 @@ Admin must never contain runtime logic.
 
 Not all actions have the same scope.
 
--   Import and Export are global operations
--   Reset is tab-scoped
+- Import and Export are global operations
+- Reset is tab-scoped
 
 Capability enforcement must match scope.
 
@@ -302,9 +323,9 @@ Capability enforcement must match scope.
 
 ## Step 11: Lifecycle
 
--   Activation must be side-effect free
--   Deactivation pauses behavior but keeps data
--   Uninstall deletes all plugin-owned data
+- Activation must be side-effect free
+- Deactivation pauses behavior but keeps data
+- Uninstall deletes all plugin-owned data
 
 ------------------------------------------------------------------------
 
