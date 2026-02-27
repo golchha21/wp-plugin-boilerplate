@@ -1,11 +1,11 @@
 <?php
 
-namespace WPPluginBoilerplate\Public;
+namespace WPPluginBoilerplate\Frontend;
 
 use WPPluginBoilerplate\Loader;
 use WPPluginBoilerplate\Plugin;
 
-class PublicPlugin
+class Frontend
 {
 	public function register(Loader $loader): void
 	{
@@ -16,6 +16,6 @@ class PublicPlugin
 
 	public function enqueue_assets(): void
 	{
-		wp_enqueue_script(Plugin::prefix() . 'public', Plugin::url() . 'assets/public/public.js', [], Plugin::version(), true);
+		wp_enqueue_script(Plugin::prefix() . 'public', Plugin::url() . 'assets/frontend/public.js', [], Plugin::version(), true);
 	}
 }

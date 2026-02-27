@@ -10,6 +10,23 @@ This project follows a **foundation-first** release model:
 
 ---
 
+## v1.4.0 -- 2026-02-28
+
+### Changed
+
+- Renamed `Public/` runtime layer to `Frontend/`
+- Updated namespaces to reflect architectural intent
+- Improved structural clarity between Admin and Frontend layers
+
+### Notes
+
+- No runtime behavior changes
+- No storage format changes
+- No public API changes
+- This is a structural refactor for long-term maintainability
+
+---
+
 ## v1.3.0 -- 2026-02-21
 
 ### Added

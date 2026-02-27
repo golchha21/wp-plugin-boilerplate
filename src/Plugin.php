@@ -4,7 +4,7 @@ namespace WPPluginBoilerplate;
 
 use WPPluginBoilerplate\Admin\Admin;
 use WPPluginBoilerplate\I18n\I18n;
-use WPPluginBoilerplate\Public\PublicPlugin;
+use WPPluginBoilerplate\Frontend\Frontend;
 
 class Plugin
 {
@@ -24,7 +24,7 @@ class Plugin
 			(new Admin())->register($this->loader);
 		}
 
-		(new PublicPlugin())->register($this->loader);
+		(new Frontend())->register($this->loader);
 	}
 
 	public static function prefix(): string
