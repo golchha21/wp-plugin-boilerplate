@@ -1,14 +1,16 @@
 <?php
 
-namespace WPPluginBoilerplate\PostMeta\Tabs;
+namespace WPPluginBoilerplate\Settings\Tabs;
 
-use WPPluginBoilerplate\PostMeta\Contracts\MetaBoxTabContract;
+use WPPluginBoilerplate\Plugin;
+use WPPluginBoilerplate\Settings\Contracts\SettingsContract;
+use WPPluginBoilerplate\Settings\Contracts\SettingsTabContract;
 
-class EnhancedFieldsTab implements MetaBoxTabContract
+class EnhancedFieldsSettingsTab implements SettingsTabContract, SettingsContract
 {
 	public function id(): string
 	{
-		return 'enhanced-fields';
+		return 'enhanced_fields';
 	}
 
 	public function label(): string
@@ -16,57 +18,60 @@ class EnhancedFieldsTab implements MetaBoxTabContract
 		return 'Enhanced Fields';
 	}
 
-	public function fields(): array
+
+	public function capability(): string
+	{
+		return 'manage_options';
+	}
+
+	public static function optionKey(): string
+	{
+		return Plugin::option_key() . 'ef';
+	}
+
+	public static function fields(): array
 	{
 		return array(
 			'media' => array(
 				'type' => 'integer',
 				'field' => 'media',
 				'multiple' => true,
-				'class' => 'width-10',
 			),
 
 			'file' => array(
 				'type' => 'integer',
 				'field' => 'file',
-				'class' => 'width-10',
 			),
 
 			'image' => array(
 				'type' => 'integer',
 				'field' => 'image',
-				'class' => 'width-10',
 			),
 
 			'document' => array(
 				'type' => 'integer',
 				'field' => 'document',
-				'class' => 'width-10',
 			),
 
 			'audio' => array(
 				'type' => 'integer',
 				'field' => 'audio',
-				'class' => 'width-10',
 			),
 
 			'video' => array(
 				'type' => 'integer',
 				'field' => 'video',
-				'class' => 'width-10',
 			),
 
 			'archive' => array(
 				'type' => 'integer',
 				'field' => 'archive',
-				'class' => 'width-10',
 			),
 
 			'color' => array(
 				'type' => 'string',
 				'field' => 'color',
 				// hex color value.
-				'class' => 'width-10',
 			),
 
 			'editor' => array(
@@ -74,8 +79,15 @@ class EnhancedFieldsTab implements MetaBoxTabContract
 				'field' => 'editor',
 				'rows' => 8,
 				'media_buttons' => true,
-				'class' => 'width-10',
+				'class' => 'width-8',
 			),
 		);
 	}
+
+	public function render(): void
+	{
+		settings_fields(static::optionKey());
+		do_settings_sections(static::optionKey());
+	}
+
 }

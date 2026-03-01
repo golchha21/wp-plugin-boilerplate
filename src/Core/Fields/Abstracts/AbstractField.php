@@ -52,7 +52,7 @@ abstract class AbstractField implements FieldInterface
 			return $this->key;
 		}
 
-		return sanitize_key(
+		return \sanitize_key(
 			preg_replace('/[\[\]]+/', '_', $optionKey . '_' . $this->key)
 		);
 	}
@@ -106,7 +106,7 @@ abstract class AbstractField implements FieldInterface
 	protected function description(): void
 	{
 		if (!empty($this->description)) {
-			echo '<p class="description">' . esc_html($this->description) . '</p>';
+			echo '<p class="description">' . \esc_html($this->description) . '</p>';
 		}
 	}
 
@@ -119,7 +119,7 @@ abstract class AbstractField implements FieldInterface
 	{
 		printf(
 			'<div class="wppb-field %s">',
-			esc_attr($this->fieldClass())
+			\esc_attr($this->fieldClass())
 		);
 	}
 

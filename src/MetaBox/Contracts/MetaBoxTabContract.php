@@ -1,6 +1,6 @@
 <?php
 
-namespace WPPluginBoilerplate\PostMeta\Contracts;
+namespace WPPluginBoilerplate\MetaBox\Contracts;
 
 interface MetaBoxTabContract
 {

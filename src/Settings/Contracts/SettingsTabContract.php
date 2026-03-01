@@ -2,7 +2,7 @@
 
 namespace WPPluginBoilerplate\Settings\Contracts;
 
-interface TabContract
+interface SettingsTabContract
 {
 	public function id(): string;
 	public function label(): string;

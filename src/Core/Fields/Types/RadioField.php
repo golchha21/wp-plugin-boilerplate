@@ -14,7 +14,7 @@ class RadioField extends AbstractField
 				'<label>
 					<input type="radio" name="%s" value="%s" %s />
 					%s
-				</label><br>',
+				</label>',
 				esc_attr($this->name($optionKey)),
 				esc_attr($value),
 				checked($this->value, $value, false),

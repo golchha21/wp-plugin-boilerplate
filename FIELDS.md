@@ -3,7 +3,7 @@
 This document defines the complete field definition structure supported
 by the WP Plugin Boilerplate as of v1.3.
 
-Fields are tab-owned, explicit, and deterministic. There is no implicit
+Fields are owner-scoped (tab or MetaBox), explicit, and deterministic. There is no implicit
 behavior and no hidden schema magic.
 
 ------------------------------------------------------------------------
@@ -265,6 +265,22 @@ Repeaters always store ordered arrays.
 - Missing values always fall back to defaults
 - Unknown keys are ignored safely
 - Storage format is stable and deterministic
+
+------------------------------------------------------------------------
+
+## MetaBox Field Behavior (v1.5+)
+
+MetaBox fields are automatically namespaced using:
+
+_{PREFIX}{BOX_ID}_{FIELD_KEY}
+
+Field definitions remain identical to Settings fields.
+
+Rendering injects the field type as a CSS class on the wrapper:
+
+.wppb-meta-field.{field_type}
+
+This allows layout targeting without affecting storage.
 
 ------------------------------------------------------------------------
 

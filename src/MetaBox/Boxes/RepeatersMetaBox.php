@@ -1,19 +1,23 @@
 <?php
 
-namespace WPPluginBoilerplate\PostMeta\Tabs;
+namespace WPPluginBoilerplate\MetaBox\Boxes;
 
-use WPPluginBoilerplate\PostMeta\Contracts\MetaBoxTabContract;
-
-class FeatureFieldsTab implements MetaBoxTabContract
+use WPPluginBoilerplate\MetaBox\Abstracts\AbstractMetaBox;
+class RepeatersMetaBox extends AbstractMetaBox
 {
 	public function id(): string
 	{
-		return 'feature-fields';
+		return 'repeater_meta';
 	}
 
-	public function label(): string
+	public function title(): string
 	{
-		return 'Feature Fields';
+		return 'Repeater Example';
+	}
+
+	public function templates(): array
+	{
+		return ['template-customer-stories.php'];
 	}
 
 	public function fields(): array
@@ -58,4 +62,5 @@ class FeatureFieldsTab implements MetaBoxTabContract
 			]
 		);
 	}
+
 }

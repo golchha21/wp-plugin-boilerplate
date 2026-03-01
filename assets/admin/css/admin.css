@@ -80,8 +80,8 @@
 }
 
 .wppb-admin .wppb-field label {
-  display: inline-flex;
-  align-items: center;
+  /*display: inline-flex;*/
+  /*align-items: center;*/
   gap: var(--space-1);
 }
 
@@ -104,22 +104,19 @@
   gap: var(--space-4);
 }
 
-.wppb-meta-field:has(.wppb-field > .wppb-repeater-wrapper) .wppb-label {
-  display: none;
-}
-
-.wppb-meta-field:has(.wppb-field > .wppb-repeater-wrapper),
-.wppb-admin .wppb-repeater-row {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
 .wppb-admin:has( > .wppb-meta-field) {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   padding: var(--space-4);
+}
+
+#side-sortables .wppb-admin .wppb-meta-field {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+#side-sortables .wppb-admin {
+  padding: 0;
 }
 
 .wppb-admin .wppb-field.width,
@@ -139,6 +136,29 @@
 .wppb-admin .width-10 { grid-column: span 10; }
 .wppb-admin .width-11 { grid-column: span 11; }
 .wppb-admin .width-12 { grid-column: span 12; }
+
+.wppb-meta-field:has(.wppb-field > .wppb-repeater-wrapper) .wppb-label {
+  display: none;
+}
+
+.wppb-meta-field:has(.wppb-field > .wppb-repeater-wrapper),
+.wppb-admin .wppb-repeater-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.wppb-fields-row.radio .wppb-field,
+.wppb-meta-field.radio .wppb-field {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.wppb-fields-row.radio .wppb-field.column,
+.wppb-meta-field.radio .wppb-field.column {
+  flex-direction: column;
+  gap: var(--space-1);
+}
 
 
 /* =========================================
@@ -437,14 +457,25 @@
 
 @media (max-width: 782px) {
 
+  .wppb-admin .wppb-meta-field,
+  .wppb-admin .wppb-fields-row,
+  .wppb-admin .wppb-repeater-field {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
   .wppb-admin .wppb-fields-row,
   .wppb-admin .wppb-repeater-row {
     grid-template-columns: 1fr;
   }
 
-  .wppb-admin .wppb-field {
-    grid-column: span 12 !important;
+  .wppb-admin .wppb-meta-tab.active {
+    border: none;
+    border-top: 3px solid var(--accent);
   }
+
+  /*.wppb-admin .wppb-field {*/
+  /*  grid-column: span 12 !important;*/
+  /*}*/
 }
 
 /* =========================================

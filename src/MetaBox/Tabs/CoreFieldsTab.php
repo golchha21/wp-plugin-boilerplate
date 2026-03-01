@@ -1,16 +1,14 @@
 <?php
 
-namespace WPPluginBoilerplate\Settings\Tabs;
+namespace WPPluginBoilerplate\MetaBox\Tabs;
 
-use WPPluginBoilerplate\Plugin;
-use WPPluginBoilerplate\Settings\Contracts\SettingsContract;
-use WPPluginBoilerplate\Settings\Contracts\TabContract;
+use WPPluginBoilerplate\MetaBox\Contracts\MetaBoxTabContract;
 
-class CoreFieldsTab implements TabContract, SettingsContract
+class CoreFieldsTab implements MetaBoxTabContract
 {
 	public function id(): string
 	{
-		return 'core-fields';
+		return 'core_fields';
 	}
 
 	public function label(): string
@@ -18,17 +16,7 @@ class CoreFieldsTab implements TabContract, SettingsContract
 		return 'Core Fields';
 	}
 
-	public function capability(): string
-	{
-		return 'manage_options';
-	}
-
-	public static function optionKey(): string
-	{
-		return Plugin::option_key() . 'cf';
-	}
-
-	public static function fields(): array
+	public function fields(): array
 	{
 		return array(
 			'text' => array(
@@ -36,11 +24,11 @@ class CoreFieldsTab implements TabContract, SettingsContract
 				'field' => 'text',
 			),
 
-			'textarea' => array(
+			'textarea1' => array(
 				'type' => 'string',
 				'field' => 'textarea',
 				'rows' => 8,
-				'class' => 'width-8',
+				'class' => 'width-10',
 			),
 
 			'email' => array(
@@ -100,6 +88,7 @@ class CoreFieldsTab implements TabContract, SettingsContract
 				'type' => 'string',
 				'field' => 'radio',
 				'options' => array('Red', 'Green', 'Blue', 'Yellow'),
+				'class' => 'width-10',
 			),
 
 			'date' => array(
@@ -118,11 +107,4 @@ class CoreFieldsTab implements TabContract, SettingsContract
 			),
 		);
 	}
-
-	public function render(): void
-	{
-		settings_fields(static::optionKey());
-		do_settings_sections(static::optionKey());
-	}
-
 }

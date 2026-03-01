@@ -4,13 +4,13 @@ namespace WPPluginBoilerplate\Settings\Tabs;
 
 use WPPluginBoilerplate\Plugin;
 use WPPluginBoilerplate\Settings\Contracts\SettingsContract;
-use WPPluginBoilerplate\Settings\Contracts\TabContract;
+use WPPluginBoilerplate\Settings\Contracts\SettingsTabContract;
 
-class FeatureFieldsTab implements TabContract, SettingsContract
+class FeatureFieldsSettingsTab implements SettingsTabContract, SettingsContract
 {
 	public function id(): string
 	{
-		return 'feature-fields';
+		return 'feature_fields';
 	}
 
 	public function label(): string

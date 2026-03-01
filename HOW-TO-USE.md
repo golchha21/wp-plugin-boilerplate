@@ -9,13 +9,13 @@ It assumes familiarity with WordPress and PHP.
 
 Start by making the boilerplate yours.
 
-- Rename the plugin directory
-- Rename the main plugin file
-- Update the namespace, prefix, and text domain by replacing all
+-   Rename the plugin directory
+-   Rename the main plugin file
+-   Update the namespace, prefix, and text domain by replacing all
     boilerplate identifiers: (`wp-plugin-boilerplate`,
     `WPPluginBoilerplate`, `WP Plugin Boilerplate`, `WPPB_`, `wppb_`,
     `WPPB-`, `wppb-`)
-- Regenerate the autoloader:
+-   Regenerate the autoloader:
 
 ``` bash
 composer dump-autoload
@@ -32,11 +32,11 @@ Settings are defined directly by tabs.
 
 A settings tab owns:
 
-- Its option key
-- Default values
-- Sanitization rules
-- Storage scope (site or network)
-- Capability enforcement
+-   Its option key
+-   Default values
+-   Sanitization rules
+-   Storage scope (site or network)
+-   Capability enforcement
 
 There is no hidden schema abstraction layer.
 
@@ -88,8 +88,8 @@ The admin UI uses a 12-column CSS Grid layout.
 
 Available:
 
-- width-1 → width-12
-- width (default full width)
+-   width-1 → width-12
+-   width (default full width)
 
 Layout is purely visual and does not affect storage.
 
@@ -123,11 +123,11 @@ Repeaters allow structured, sortable nested fields.
 
 Behavior:
 
-- Rows are collapsed by default
-- Rows are sortable
-- Duplicate is supported
-- Min and max are enforced
-- Each row is sanitized independently
+-   Rows are collapsed by default
+-   Rows are sortable
+-   Duplicate is supported
+-   Min and max are enforced
+-   Each row is sanitized independently
 
 Repeaters always store ordered arrays.
 
@@ -137,9 +137,9 @@ Repeater fields are sanitized before persistence.
 
 This guarantees:
 
-- Template placeholder rows are never saved
-- Completely empty rows are removed
-- Rows are stored as clean ordered arrays
+-   Template placeholder rows are never saved
+-   Completely empty rows are removed
+-   Rows are stored as clean ordered arrays
 
 No additional save handling is required.
 
@@ -147,7 +147,26 @@ Note: The `editor` field type is not supported inside repeaters.
 
 ------------------------------------------------------------------------
 
-## Step 6: Using Media Fields
+## Step 6: Using MetaBoxes (v1.3+)
+
+MetaBoxes use the same field engine as Settings.
+
+Each MetaBox:
+
+-   Must have a unique lowercase ID
+-   Can define post types
+-   Can optionally restrict rendering to specific templates
+-   May contain tabs
+
+Meta keys are automatically namespaced as:
+
+*{PREFIX}{BOX_ID}*{FIELD_KEY}
+
+Do not manually construct meta keys.
+
+------------------------------------------------------------------------
+
+## Step 7: Using Media Fields
 
 ### Single Media
 
@@ -172,16 +191,16 @@ Note: The `editor` field type is not supported inside repeaters.
 
 Multiple mode:
 
-- Supports drag sorting
-- Stores ordered attachment IDs
-- Allows per-item removal
-- Uses square preview layout
+-   Supports drag sorting
+-   Stores ordered attachment IDs
+-   Allows per-item removal
+-   Uses square preview layout
 
 Single mode disables drag behavior automatically.
 
 ------------------------------------------------------------------------
 
-## Step 7: Accessing Stored Settings
+## Step 8: Accessing Stored Settings
 
 Settings are stored as arrays using the `SettingsRepository`.
 
@@ -190,17 +209,11 @@ depending on your use case.
 
 ### Full Option Access
 
-Use full access when working with entire forms or replacing all values.
-
-#### Get entire option
-
 ``` php
 use WPPluginBoilerplate\Settings\SettingsRepository;
 
 $settings = SettingsRepository::get('my_plugin_settings');
 ```
-
-#### Update entire option
 
 ``` php
 SettingsRepository::update('my_plugin_settings', [
@@ -208,8 +221,6 @@ SettingsRepository::update('my_plugin_settings', [
     'api_key'        => '123456',
 ]);
 ```
-
-#### Delete entire option
 
 ``` php
 SettingsRepository::delete('my_plugin_settings');
@@ -221,14 +232,7 @@ Network scope example:
 SettingsRepository::get('my_plugin_settings', 'network');
 ```
 
-------------------------------------------------------------------------
-
 ### Granular Key Access
-
-Use granular access when you only need to modify or retrieve a single
-value inside the stored option array.
-
-#### Get single value
 
 ``` php
 $enabled = SettingsRepository::getValue(
@@ -238,24 +242,6 @@ $enabled = SettingsRepository::getValue(
 );
 ```
 
-The third parameter is the default value returned if the key does not
-exist.
-
-Network scope example:
-
-``` php
-SettingsRepository::getValue(
-    'my_plugin_settings',
-    'enable_feature',
-    false,
-    'network'
-);
-```
-
-------------------------------------------------------------------------
-
-#### Set single value
-
 ``` php
 SettingsRepository::setValue(
     'my_plugin_settings',
@@ -264,12 +250,6 @@ SettingsRepository::setValue(
 );
 ```
 
-Only the specified key is updated. Other stored values remain untouched.
-
-------------------------------------------------------------------------
-
-#### Delete single value
-
 ``` php
 SettingsRepository::deleteValue(
     'my_plugin_settings',
@@ -277,18 +257,59 @@ SettingsRepository::deleteValue(
 );
 ```
 
-Only the specified key is removed. The rest of the option is preserved.
-
-------------------------------------------------------------------------
-
 Both full and granular access methods are multisite-aware and respect
 the `site` and `network` scope parameter.
 
 ------------------------------------------------------------------------
 
-## Step 8: Add Runtime Behavior
+## Step 9: Accessing MetaBox Data (v1.5+)
 
-Runtime behavior lives in `PublicPlugin` (or equivalent).
+MetaBox fields must be accessed using `MetaBoxRepository`.
+
+Never use `get_post_meta()` directly for MetaBox fields. Never manually
+build prefixed keys.
+
+### Get Value
+
+``` php
+use WPPluginBoilerplate\MetaBox\MetaBoxRepository;
+
+$value = MetaBoxRepository::get(
+    $postId,
+    'customer_stories',
+    'title',
+    ''
+);
+```
+
+### Update Value
+
+``` php
+MetaBoxRepository::update(
+    $postId,
+    'customer_stories',
+    'title',
+    'New Title'
+);
+```
+
+### Delete Value
+
+``` php
+MetaBoxRepository::delete(
+    $postId,
+    'customer_stories',
+    'title'
+);
+```
+
+Repository guarantees deterministic namespacing and storage integrity.
+
+------------------------------------------------------------------------
+
+## Step 10: Add Runtime Behavior
+
+Runtime behavior lives in `Frontend` (or equivalent).
 
 Public behavior must always be registered unconditionally by the Plugin
 orchestrator.
@@ -298,34 +319,32 @@ inside callbacks instead.
 
 ------------------------------------------------------------------------
 
-## Step 9: Admin Configuration Rules
+## Step 11: Admin Configuration Rules
 
 Admin is responsible only for:
 
-- Rendering UI
-- Validating input
-- Triggering admin-only actions
+-   Rendering UI
+-   Validating input
+-   Triggering admin-only actions
 
 Admin must never contain runtime logic.
 
 ------------------------------------------------------------------------
 
-## Step 10: Import, Export, and Reset
+## Step 12: Import, Export, and Reset
 
-Not all actions have the same scope.
-
-- Import and Export are global operations
-- Reset is tab-scoped
+-   Import and Export are global operations
+-   Reset is tab-scoped
 
 Capability enforcement must match scope.
 
 ------------------------------------------------------------------------
 
-## Step 11: Lifecycle
+## Step 13: Lifecycle
 
-- Activation must be side-effect free
-- Deactivation pauses behavior but keeps data
-- Uninstall deletes all plugin-owned data
+-   Activation must be side-effect free
+-   Deactivation pauses behavior but keeps data
+-   Uninstall deletes all plugin-owned data
 
 ------------------------------------------------------------------------
 

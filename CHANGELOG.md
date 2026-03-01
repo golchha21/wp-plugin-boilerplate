@@ -10,6 +10,35 @@ This project follows a **foundation-first** release model:
 
 ---
 
+## v1.5.0 -- 2026-02-28
+
+### Added
+- MetaBox ID validation (format and uniqueness enforcement)
+- Settings Tab ID validation
+- Template-based MetaBox filtering (classic and block theme support)
+- Field-type CSS class injection for layout targeting
+- Responsive admin grid improvements
+- Vertical tab layout for MetaBoxes
+
+### Changed
+- Meta keys are now namespaced as: _{PREFIX}{BOX_ID}_{FIELD_KEY}
+- Repository methods accept box ID and raw field key — never full meta keys.
+- Prefix generation centralized inside MetaBoxRepository
+- MetaBox registration skips unmatched templates before add_meta_box()
+
+### Improved
+- Stronger namespace isolation between MetaBoxes
+- Cleaner repository abstraction
+- Deterministic meta key ownership
+- Responsive admin styling consistency
+
+### Internal
+- Removed direct meta key construction outside repository
+- Registry-level validation enforcement
+- Refined template resolution logic
+
+---
+
 ## v1.4.0 -- 2026-02-28
 
 ### Changed

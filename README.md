@@ -48,9 +48,24 @@ The field engine now powers both Settings and MetaBox modules.
 - Shared sanitization pipeline
 - Field-type-aware save logic
 - Stable nested meta structure
-- Repeater fully supported in MetaBox context
+- Repeater fully supported in MetaBox context 
+- Deterministic meta key namespacing per MetaBox
+- Registry-level ID validation
+- Template-scoped MetaBox registration
 
 Meta and Settings use the same core field abstraction.
+
+### MetaBoxRepository (v1.5+)
+
+MetaBox persistence must go through `MetaBoxRepository`.
+
+Direct use of `get_post_meta()` or manual meta key construction is not supported.
+
+Meta keys are automatically namespaced as:
+
+_{PREFIX}{BOX_ID}_{FIELD_KEY}
+
+Repository guarantees deterministic key ownership and collision safety.
 
 ### Supported Fields
 
@@ -124,6 +139,7 @@ The admin interface is:
 - Built on a 12-column CSS Grid layout
 - Powered by semantic design tokens
 - Safe from wp-admin style conflicts
+- Field type is injected as a CSS class on field wrappers
 
 Example:
 
@@ -141,12 +157,13 @@ Available widths:
 ## Folder Responsibilities
 
 Directory       Responsibility
-  --------------- -----------------------------
-src/Admin       Admin UI & menus
-src/Settings    Settings tabs & persistence
-src/Public      Frontend/runtime behavior
-src/Lifecycle   Activation & deactivation
-src/Support     Shared infrastructure
+--------------- ----------------------------------------
+src/Admin       Admin UI, menus, and admin-only modules
+src/Settings    Settings tabs and option persistence
+src/MetaBox     MetaBox definitions, registry, repository
+src/Frontend    Frontend/runtime behavior
+src/Core        Field engine, definitions, rendering, support utilities
+src/Lifecycle   Activation & deactivation logic
 assets          CSS, JS, static assets
 vendor          Bundled dependencies
 
@@ -174,8 +191,8 @@ Breaking these guarantees requires a major version bump.
 Semantic Versioning is followed:
 
 - Patch → internal fixes
-- Minor → new field types or UI features
-- Major → structural or storage changes
+- Minor → new features or backward-compatible structural improvements
+- Major → breaking changes to storage, APIs, or architectural guarantees
 
 ------------------------------------------------------------------------
 

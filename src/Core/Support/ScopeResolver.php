@@ -1,5 +1,5 @@
 <?php
-// src/Settings/Support/ScopeResolver.php
+
 namespace WPPluginBoilerplate\Core\Support;
 
 use WPPluginBoilerplate\Settings\Contracts\ScopedContract;

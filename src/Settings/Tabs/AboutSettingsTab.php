@@ -3,9 +3,9 @@
 namespace WPPluginBoilerplate\Settings\Tabs;
 
 use WPPluginBoilerplate\Plugin;
-use WPPluginBoilerplate\Settings\Contracts\TabContract;
+use WPPluginBoilerplate\Settings\Contracts\SettingsTabContract;
 
-class AboutTab implements TabContract
+class AboutSettingsTab implements SettingsTabContract
 {
 	public function id(): string
 	{

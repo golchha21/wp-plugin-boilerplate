@@ -112,6 +112,8 @@ If dependencies are updated, the plugin must continue to work in a clean WordPre
 - Numeric option arrays must be normalized
 - Template markup must never leak into storage
 - Empty scalar values must not be auto-deleted
+- Meta keys must be namespaced by MetaBox ID
+- Direct meta key construction outside MetaBoxRepository is forbidden
 
 Changes to field behavior require documentation updates.
 

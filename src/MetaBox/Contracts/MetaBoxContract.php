@@ -1,6 +1,6 @@
 <?php
 
-namespace WPPluginBoilerplate\PostMeta\Contracts;
+namespace WPPluginBoilerplate\MetaBox\Contracts;
 
 interface MetaBoxContract
 {
@@ -9,6 +9,8 @@ interface MetaBoxContract
 	public function title(): string;
 
 	public function postTypes(): array;
+
+	public function templates(): array;
 
 	public function context(): string;
 

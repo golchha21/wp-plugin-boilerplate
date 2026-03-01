@@ -6,10 +6,9 @@ use WPPluginBoilerplate\Admin\Contracts\AdminModule;
 use WPPluginBoilerplate\Core\Fields\FieldDefinition;
 use WPPluginBoilerplate\Core\Fields\Types\RepeaterField;
 use WPPluginBoilerplate\Loader;
-use WPPluginBoilerplate\PostMeta\MetaBoxes;
-use WPPluginBoilerplate\PostMeta\PostMetaRepository;
-use WPPluginBoilerplate\PostMeta\Contracts\MetaBoxContract;
-use WPPluginBoilerplate\Core\Fields\FieldFactory;
+use WPPluginBoilerplate\MetaBox\MetaBoxes;
+use WPPluginBoilerplate\MetaBox\MetaBoxRepository;
+use WPPluginBoilerplate\MetaBox\Contracts\MetaBoxContract;
 use WPPluginBoilerplate\Core\Fields\FieldRenderer;
 
 class MetaBoxModule implements AdminModule
@@ -22,9 +21,18 @@ class MetaBoxModule implements AdminModule
 
 	public function registerMetaBoxes(): void
 	{
+		global $post;
+
 		foreach (MetaBoxes::all() as $box) {
 
 			foreach ($box->postTypes() as $postType) {
+
+				// If we're editing a post, check template before registering
+				if ($post instanceof \WP_Post) {
+					if (!$this->templateMatches($box, $post->ID)) {
+						continue; // skip registration entirely
+					}
+				}
 
 				\add_meta_box(
 					$box->id(),
@@ -46,18 +54,19 @@ class MetaBoxModule implements AdminModule
 		$tabs = $box->tabs();
 
 		if (!empty($tabs)) {
-			$this->renderTabs($tabs, $postId);
-			return;
+			$this->renderTabs($box, $tabs, $postId);
+		} else {
+			$this->renderFields($box, $box->fields(), $postId);
 		}
-		$this->renderFields($box->fields(), $postId);
-		echo '</div>'; // admin wrapper
+
+		echo '</div>'; // always close wrapper
 	}
 
-	private function renderTabs(array $tabs, int $postId): void
+	private function renderTabs(MetaBoxContract $box, array $tabs, int $postId): void
 	{
 		$instanceId = uniqid('wppb_meta_');
 
-		echo '<div class="wppb-meta-tabs" data-instance="' . esc_attr($instanceId) . '">';
+		echo '<div class="wppb-meta-tabs" data-instance="' . \esc_attr($instanceId) . '">';
 
 		// Navigation
 		echo '<div class="wppb-meta-tabs-nav">';
@@ -69,11 +78,11 @@ class MetaBoxModule implements AdminModule
 
 			echo '<button
                 type="button"
-                class="wppb-meta-tab ' . esc_attr($active) . '"
-                data-target="' . esc_attr($panelId) . '"
+                class="wppb-meta-tab ' . \esc_attr($active) . '"
+                data-target="' . \esc_attr($panelId) . '"
               >';
 
-			echo esc_html($tab->label());
+			echo \esc_html($tab->label());
 
 			echo '</button>';
 		}
@@ -89,11 +98,11 @@ class MetaBoxModule implements AdminModule
 			$panelId = $instanceId . '_' . $tab->id();
 
 			echo '<div
-                class="wppb-meta-tab-panel ' . esc_attr($active) . '"
-                id="' . esc_attr($panelId) . '"
+                class="wppb-meta-tab-panel ' . \esc_attr($active) . '"
+                id="' . \esc_attr($panelId) . '"
               >';
 
-			$this->renderFields($tab->fields(), $postId);
+			$this->renderFields($box, $tab->fields(), $postId);
 
 			echo '</div>';
 		}
@@ -102,23 +111,23 @@ class MetaBoxModule implements AdminModule
 		echo '</div>'; // tabs
 	}
 
-	private function renderFields(array $fields, int $postId): void
+	private function renderFields(MetaBoxContract $box, array $fields, int $postId): void
 	{
 		foreach ($fields as $key => $definition) {
 
-			$metaKey = $this->prefixed($key);
+			$metaKey = $this->prefixed($box, $key);
 
-			$value = PostMetaRepository::get($postId, $metaKey);
+			$value = MetaBoxRepository::get($postId, $box->id(), $key);
 
 			$field = FieldDefinition::fromSchema($metaKey, $definition);
 
-			echo '<div class="wppb-meta-field">';
+			echo '<div class="wppb-meta-field ' . \esc_attr($field->field) .  '">';
 
 			// Label column (2 cols)
 			if (!empty($field->label)) {
 				echo '<div class="wppb-label width-2">';
-				echo '<label for="' . esc_attr($metaKey) . '"><strong>';
-				echo esc_html($field->label);
+				echo '<label for="' . \esc_attr($metaKey) . '"><strong>';
+				echo \esc_html($field->label);
 				echo '</strong></label>';
 				echo '</div>';
 			}
@@ -132,7 +141,7 @@ class MetaBoxModule implements AdminModule
 
 	public function save(int $postId): void
 	{
-		if (\defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+		if (\defined('DOING_AUTOSAVE') && \DOING_AUTOSAVE) {
 			return;
 		}
 
@@ -162,25 +171,25 @@ class MetaBoxModule implements AdminModule
 
 			if (!empty($tabs)) {
 				foreach ($tabs as $tab) {
-					$this->saveFields($tab->fields(), $postId);
+					$this->saveFields($box, $tab->fields(), $postId);
 				}
 			} else {
-				$this->saveFields($box->fields(), $postId);
+				$this->saveFields($box, $box->fields(), $postId);
 			}
 		}
 	}
 
-	private function saveFields(array $fields, int $postId): void
+	private function saveFields(MetaBoxContract $box, array $fields, int $postId): void
 	{
 		foreach ($fields as $key => $definition) {
 
-			$metaKey = $this->prefixed($key);
+			$metaKey = $this->prefixed($box, $key);
 			$fieldType = $definition['field'] ?? 'text';
 
 			// Checkbox
 			if ($fieldType === 'checkbox') {
 				$value = isset($_POST[$metaKey]) ? 1 : 0;
-				PostMetaRepository::update($postId, $metaKey, $value);
+				MetaBoxRepository::update($postId, $box->id(), $key, $value);
 				continue;
 			}
 
@@ -193,24 +202,58 @@ class MetaBoxModule implements AdminModule
 
 				$value = $repeater->sanitize($raw);
 
-				PostMetaRepository::update($postId, $metaKey, $value);
+				MetaBoxRepository::update($postId, $box->id(), $key, $value);
 				continue;
 			}
 
 			// Scalar fields
 			if (!array_key_exists($metaKey, $_POST)) {
-				PostMetaRepository::delete($postId, $metaKey);
+				MetaBoxRepository::delete($postId, $box->id(), $key);
 				continue;
 			}
 
 			$value = $_POST[$metaKey];
 
-			PostMetaRepository::update($postId, $metaKey, $value);
+			MetaBoxRepository::update($postId, $box->id(), $key, $value);
 		}
 	}
 
-	private function prefixed(string $key): string
+	private function prefixed(MetaBoxContract $box, string $key): string
 	{
-		return '_' . WPPB_PREFIX . $key;
+		return '_' . WPPB_PREFIX . $box->id() . '_' . $key;
+	}
+
+	private function templateMatches(MetaBoxContract $box, int $postId): bool
+	{
+		$templates = $box->templates();
+
+		if (empty($templates)) {
+			return true;
+		}
+
+		// 1️⃣ Classic theme template
+		$classic = get_post_meta($postId, '_wp_page_template', true);
+
+		if ($classic && in_array($classic, $templates, true)) {
+			return true;
+		}
+
+		// 2️⃣ Block theme template
+		$block = get_post_meta($postId, '_wp_template', true);
+
+		if ($block) {
+			// Extract template slug from "theme//template-slug"
+			if (str_contains($block, '//')) {
+				[, $slug] = explode('//', $block, 2);
+			} else {
+				$slug = $block;
+			}
+
+			if (in_array($slug, $templates, true)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

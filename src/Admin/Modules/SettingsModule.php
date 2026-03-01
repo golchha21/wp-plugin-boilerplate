@@ -9,7 +9,7 @@ use WPPluginBoilerplate\Admin\Contracts\AdminModule;
 use WPPluginBoilerplate\Loader;
 use WPPluginBoilerplate\Plugin;
 use WPPluginBoilerplate\Settings\Contracts\SettingsContract;
-use WPPluginBoilerplate\Settings\Contracts\TabContract;
+use WPPluginBoilerplate\Settings\Contracts\SettingsTabContract;
 use WPPluginBoilerplate\Settings\Tabs;
 use WPPluginBoilerplate\Settings\SettingsRepository;
 use WPPluginBoilerplate\Core\Fields\FieldDefinition;
@@ -67,7 +67,7 @@ class SettingsModule implements AdminModule
 						? $field->resolvedDefault()
 						: $raw;
 
-					echo '<div class="wppb-fields-row">';
+					echo '<div class="wppb-fields-row ' . \esc_attr($field->field) .  '">';
 					FieldRenderer::render(
 						$tab->optionKey(),
 						$field,
@@ -194,7 +194,7 @@ class SettingsModule implements AdminModule
 		echo '</div>';
 	}
 
-	private function resolveActiveTab(array $tabs): ?TabContract
+	private function resolveActiveTab(array $tabs): ?SettingsTabContract
 	{
 		if (empty($tabs)) {
 			return null;

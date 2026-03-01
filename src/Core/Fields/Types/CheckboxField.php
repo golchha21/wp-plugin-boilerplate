@@ -10,6 +10,7 @@ class CheckboxField extends AbstractField
 	public function render(?string $optionKey): void
 	{
 		$this->openFieldWrapper();
+		$boxLabel = $this->meta['box_label'] ?? __('Enable', Plugin::text_domain());
 		printf(
 			'<label>
 				<input type="checkbox" id="%s" name="%s" value="1" %s />
@@ -18,7 +19,7 @@ class CheckboxField extends AbstractField
 			esc_attr($this->id($optionKey)),
 			esc_attr($this->name($optionKey)),
 			checked($this->value, true, false),
-			esc_html__('Enabled', Plugin::text_domain())
+			esc_html__($boxLabel)
 		);
 
 		$this->description();

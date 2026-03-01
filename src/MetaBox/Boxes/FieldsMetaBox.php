@@ -1,13 +1,10 @@
 <?php
 
-namespace WPPluginBoilerplate\PostMeta\Boxes;
+namespace WPPluginBoilerplate\MetaBox\Boxes;
 
-use WPPluginBoilerplate\PostMeta\Contracts\MetaBoxContract;
-use WPPluginBoilerplate\PostMeta\Tabs\CoreFieldsTab;
-use WPPluginBoilerplate\PostMeta\Tabs\EnhancedFieldsTab;
-use WPPluginBoilerplate\PostMeta\Tabs\FeatureFieldsTab;
+use WPPluginBoilerplate\MetaBox\Abstracts\AbstractMetaBox;
 
-class FieldsMetaBox implements MetaBoxContract
+class FieldsMetaBox extends AbstractMetaBox
 {
 	public function id(): string
 	{
@@ -17,26 +14,6 @@ class FieldsMetaBox implements MetaBoxContract
 	public function title(): string
 	{
 		return 'Fields Example';
-	}
-
-	public function postTypes(): array
-	{
-		return ['post'];
-	}
-
-	public function context(): string
-	{
-		return 'normal';
-	}
-
-	public function priority(): string
-	{
-		return 'default';
-	}
-
-	public function capability(): string
-	{
-		return 'edit_posts';
 	}
 
 	public function fields(): array
@@ -123,6 +100,7 @@ class FieldsMetaBox implements MetaBoxContract
 				'field' => 'radio',
 				'options' => array('Red', 'Green', 'Blue', 'Yellow'),
 				'label' => 'Radio',
+				'class' => 'column',
 			),
 
 			'date' => array(
@@ -143,15 +121,6 @@ class FieldsMetaBox implements MetaBoxContract
 				'label' => 'Date-Time',
 			),
 		);
-	}
-
-	public function tabs(): array
-	{
-		return [
-			new CoreFieldsTab(),
-			new EnhancedFieldsTab(),
-			new FeatureFieldsTab(),
-		];
 	}
 
 }
