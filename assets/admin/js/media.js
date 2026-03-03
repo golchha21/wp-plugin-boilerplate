@@ -19,12 +19,12 @@
 
     const frame = wp.media({
       title: 'Select file',
-      button: { text: 'Use this file' },
+      button: {text: 'Use this file'},
       multiple: multiple,
       library: (() => {
-        if (fieldType === 'image') return { type: 'image' };
-        if (fieldType === 'audio') return { type: 'audio' };
-        if (fieldType === 'video') return { type: 'video' };
+        if (fieldType === 'image') return {type: 'image'};
+        if (fieldType === 'audio') return {type: 'audio'};
+        if (fieldType === 'video') return {type: 'video'};
         return {};
       })()
     });
@@ -40,7 +40,11 @@
         const attachment = selection.first().toJSON();
 
         if (Array.isArray(mimes) && !mimes.includes(attachment.mime)) {
-          alert('This file type is not allowed.');
+          showNotice(
+            wrap,
+            `File type not allowed: ${attachment.filename}`,
+            'error'
+          );
           return;
         }
 
@@ -52,18 +56,49 @@
       } else {
 
         // MULTIPLE MODE
+        const existingIds = getExistingIds(wrap);
+        const duplicates = [];
+        const invalidTypes = [];
+
         selection.each(function (model) {
 
           const attachment = model.toJSON();
 
           if (Array.isArray(mimes) && !mimes.includes(attachment.mime)) {
+            invalidTypes.push(attachment.filename);
+            return;
+          }
+
+          if (existingIds.includes(attachment.id)) {
+            duplicates.push(attachment.filename);
             return;
           }
 
           preview.append(renderItem(attachment, fieldType, true, baseName));
         });
+
+        if (duplicates.length) {
+          showNotice(
+            wrap,
+            duplicates.length === 1
+              ? `Already selected: ${duplicates[0]}`
+              : `Already selected: ${duplicates.join(', ')}`,
+            'warning'
+          );
+        }
+
+        if (invalidTypes.length) {
+          showNotice(
+            wrap,
+            invalidTypes.length === 1
+              ? `File type not allowed: ${invalidTypes[0]}`
+              : `File types not allowed: ${invalidTypes.join(', ')}`,
+            'error'
+          );
+        }
       }
 
+      getExistingIds(wrap);
       updateRemoveState(wrap);
     });
 
@@ -211,6 +246,42 @@
     wrap.toggleClass('has-media', hasItems);
   }
 
+  function getExistingIds(wrap) {
+    return wrap
+      .find('input[type="hidden"]')
+      .map(function () {
+        return parseInt($(this).val(), 10);
+      })
+      .get();
+  }
+
+  function showNotice(wrap, message, type = 'warning') {
+
+    const typeClass =
+      type === 'error'
+        ? 'notice-error'
+        : type === 'success'
+          ? 'notice-success'
+          : 'notice-warning';
+
+    const notice = $(`
+    <div class="wppb-media-notice notice ${typeClass} inline is-dismissible">
+      <p>${message}</p>
+    </div>
+  `);
+
+    wrap.prepend(notice);
+
+    notice.on('click', '.notice-dismiss', function () {
+      notice.remove();
+    });
+
+    setTimeout(function () {
+      notice.fadeOut(150, function () {
+        $(this).remove();
+      });
+    }, 3000);
+  }
 
   $(document).ready(function () {
 

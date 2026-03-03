@@ -10,6 +10,25 @@ This project follows a **foundation-first** release model:
 
 ---
 
+## [1.5.1] - 2026-03-03
+
+### Fixed
+- Prevent duplicate media selection within media field (multiple mode)
+
+### Improved
+- Replaced alert() with WordPress core-styled admin notices
+- Added `notice-warning` for duplicate selections
+- Added `notice-error` for invalid file types
+- Support stacked dismissible notices per field
+- Improved overall media field UX consistency
+
+### Notes
+- No breaking changes
+- No API changes
+- Backwards compatible
+
+---
+
 ## v1.5.0 -- 2026-02-28
 
 ### Added
