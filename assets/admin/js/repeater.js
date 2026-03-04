@@ -61,6 +61,17 @@ document.addEventListener('click', function (e) {
       el.dataset.name = el.dataset.name.replace(/__index__/g, index);
     });
 
+    // 🔥 Replace __index__ in data-conditions
+    clone.querySelectorAll('[data-conditions]').forEach(el => {
+      const conditions = el.getAttribute('data-conditions');
+      if (conditions && conditions.includes('__index__')) {
+        el.setAttribute(
+          'data-conditions',
+          conditions.replace(/__index__/g, index)
+        );
+      }
+    });
+
     repeater.appendChild(clone);
 
     reindexRows(repeater);
@@ -101,8 +112,19 @@ document.addEventListener('click', function (e) {
     repeater.appendChild(clone);
 
     reindexRows(repeater);
+
+    // reset conditional flag
+    clone.querySelectorAll('[data-conditional-init]').forEach(el => {
+      el.removeAttribute('data-conditional-init');
+    });
+
+    // // reinitialize conditionals for this clone
+    // if (typeof initConditionalFields === 'function') {
+    //   initConditionalFields(clone);
+    // }
+
     updateAddState(wrapper);
-    updateRepeaterState(repeater.closest('.wppb-repeater-wrapper'));
+    updateRepeaterState(wrapper);
 
     return;
   }
@@ -219,12 +241,45 @@ function reindexRows(repeater) {
 
     item.dataset.index = index;
 
+    // 🔥 Update id attributes to match new index
+    item.querySelectorAll('[id]').forEach(el => {
+      el.id = el.id.replace(
+        /(_features_)(\d+)(_)/,
+        `$1${index}$3`
+      );
+    });
+
     // Update name attributes safely
     item.querySelectorAll('[name]').forEach(input => {
       input.name = input.name.replace(
-        /(\[[^\]]+\])\[\d+\](\[[^\]]+\])/,
-        `$1[${index}]$2`
+        /\[(\d+)\](?=\[[^\]]+\]$)/,
+        `[${index}]`
       );
+    });
+
+    // 🔥 Update data-conditions index safely
+    item.querySelectorAll('[data-conditions]').forEach(el => {
+
+      const conditions = el.getAttribute('data-conditions');
+      if (!conditions) return;
+
+      let parsed;
+
+      try {
+        parsed = JSON.parse(conditions);
+      } catch (e) {
+        return;
+      }
+
+      parsed.forEach(cond => {
+        cond.field = cond.field.replace(
+          /\[(\d+)\](?=\[)/,
+          `[${index}]`
+        );
+      });
+
+      el.setAttribute('data-conditions', JSON.stringify(parsed));
+
     });
 
     // 🔥 Keep media data-name in sync

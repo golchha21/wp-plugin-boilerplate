@@ -78,6 +78,52 @@ The stored value will be 'Red', not 0.
 
 ------------------------------------------------------------------------
 
+### Using Conditional Fields (v1.6+)
+
+Fields may define a `conditions` key to control admin visibility.
+
+``` php
+'subtitle' => [
+    'type'    => 'string',
+    'field'   => 'text',
+    'default' => '',
+    'conditions' => [
+        [
+            'field'    => 'enable_subtitle',
+            'operator' => '==',
+            'value'    => '1',
+        ],
+    ],
+],
+```
+
+Multiple conditions default to AND logic.
+
+To use OR:
+
+``` php
+'conditions' => [
+    'relation' => 'OR',
+    'conditions' => [
+        [
+            'field' => 'enable_feature',
+            'operator' => '==',
+            'value' => '1',
+        ],
+        [
+            'field' => 'mode',
+            'operator' => 'in',
+            'value' => ['advanced', 'pro'],
+        ],
+    ],
+],
+```
+
+Conditions affect rendering only.\
+They do not alter storage structure.
+
+------------------------------------------------------------------------
+
 ## Step 4: Using the Grid Layout
 
 The admin UI uses a 12-column CSS Grid layout.
@@ -197,6 +243,23 @@ Multiple mode:
 -   Uses square preview layout
 
 Single mode disables drag behavior automatically.
+
+### Duplicate Protection (v1.5.1+)
+
+In multiple mode, the same attachment cannot be selected more than once.
+
+Duplicate attempts trigger a WordPress `notice-warning`.
+
+### File Type Validation
+
+If MIME restrictions are configured:
+
+-   Invalid selections trigger a `notice-error`
+-   Notices use WordPress core admin styling
+-   Multiple notices may stack per field
+
+These safeguards affect admin UX only.\
+Storage format remains unchanged.
 
 ------------------------------------------------------------------------
 

@@ -6,13 +6,14 @@ use WPPluginBoilerplate\Core\Fields\Abstracts\AbstractField;
 
 class MultiSelectField extends AbstractField
 {
-	public function render(?string $optionKey): void
+	public function render(?string $optionKey, string $context = 'settings'): void
 	{
+		$this->setContext($context, $optionKey);
 		$this->openFieldWrapper();
 		printf(
 			'<select id="%s" name="%s[]" multiple>',
-			esc_attr($this->id($optionKey)),
-			esc_attr($this->name($optionKey))
+			esc_attr($this->id()),
+			esc_attr($this->name())
 		);
 
 		$values = array_map('strval', (array) $this->value);

@@ -6,12 +6,13 @@ use WPPluginBoilerplate\Core\Fields\Abstracts\AbstractField;
 
 class EditorField extends AbstractField
 {
-	public function render(?string $optionKey): void
+	public function render(?string $optionKey, string $context = 'settings'): void
 	{
+		$this->setContext($context, $optionKey);
 		$this->openFieldWrapper();
 
-		$name  = $this->name($optionKey);
-		$id    = $this->id($optionKey);
+		$name  = $this->name();
+		$id    = $this->id();
 		$value = $this->value;
 
 		$rows         = $this->meta['rows'] ?? 8;

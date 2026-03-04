@@ -3,19 +3,19 @@
 This document defines the complete field definition structure supported
 by the WP Plugin Boilerplate as of v1.3.
 
-Fields are owner-scoped (tab or MetaBox), explicit, and deterministic. There is no implicit
-behavior and no hidden schema magic.
+Fields are owner-scoped (tab or MetaBox), explicit, and deterministic.
+There is no implicit behavior and no hidden schema magic.
 
 ------------------------------------------------------------------------
 
 ## General Rules
 
-- Fields are defined inside a settings tab
-- Each field must have a unique key
-- Defaults are mandatory
-- Storage format is predictable
-- Validation is enforced on save
-- Frontend reads must tolerate missing or empty values
+-   Fields are defined inside a settings tab
+-   Each field must have a unique key
+-   Defaults are mandatory
+-   Storage format is predictable
+-   Validation is enforced on save
+-   Frontend reads must tolerate missing or empty values
 
 ------------------------------------------------------------------------
 
@@ -68,6 +68,79 @@ public static function fields(): array
 
 ------------------------------------------------------------------------
 
+## Conditional Fields (v1.6+)
+
+Fields may define a `conditions` key to control admin visibility.
+
+Conditional logic affects rendering only.\
+Storage format remains unchanged.
+
+### Default Behavior (AND)
+
+Multiple conditions default to AND logic.
+
+``` php
+'conditions' => [
+    [
+        'field' => 'enable_feature',
+        'operator' => '==',
+        'value' => '1',
+    ],
+    [
+        'field' => 'mode',
+        'operator' => '!=',
+        'value' => 'basic',
+    ],
+],
+```
+
+### OR Logic
+
+Explicit OR relations are supported.
+
+``` php
+'conditions' => [
+    'relation' => 'OR',
+    'conditions' => [
+        [
+            'field' => 'enable_feature',
+            'operator' => '==',
+            'value' => '1',
+        ],
+        [
+            'field' => 'mode',
+            'operator' => 'in',
+            'value' => ['advanced', 'pro'],
+        ],
+    ],
+],
+```
+
+### Supported Operators
+
+-   `==`
+-   `!=`
+-   `>`
+-   `<`
+-   `>=`
+-   `<=`
+-   `in`
+-   `not_in`
+-   `empty`
+-   `not_empty`
+
+### Scope Support
+
+Conditional evaluation works consistently in:
+
+-   Settings
+-   MetaBoxes
+-   Repeater rows
+
+Nested grouped conditions are intentionally not supported.
+
+------------------------------------------------------------------------
+
 ## Layout Width System
 
 Fields support a 12-column CSS Grid layout.
@@ -78,8 +151,8 @@ Fields support a 12-column CSS Grid layout.
 
 Available:
 
-- width-1 → width-12
-- width (default full width)
+-   width-1 → width-12
+-   width (default full width)
 
 ------------------------------------------------------------------------
 
@@ -113,10 +186,10 @@ Available:
 
 Notes:
 
-- Powered by `wp_editor()`
-- Editor IDs are sanitized internally
-- Not supported inside `repeater` fields (due to wp_editor lifecycle constraints)
-
+-   Powered by `wp_editor()`
+-   Editor IDs are sanitized internally
+-   Not supported inside `repeater` fields (due to wp_editor lifecycle
+    constraints)
 
 ------------------------------------------------------------------------
 
@@ -161,6 +234,7 @@ Notes:
     'key' => 'Label',
 ],
 ```
+
 ### Option Normalization (v1.3+)
 
 If options are defined using a numeric array:
@@ -205,9 +279,9 @@ All media fields store attachment IDs only.
 
 Multiple mode supports:
 
-- Drag sorting
-- Per-item removal
-- Order persistence
+-   Drag sorting
+-   Per-item removal
+-   Order persistence
 
 Single mode disables drag UI automatically.
 
@@ -239,32 +313,32 @@ Repeaters store structured nested arrays.
 
 Features:
 
-- Collapsible rows (collapsed by default)
-- Drag sorting with order persistence
-- Duplicate support
-- Min / max enforcement
-- Independent row sanitization
-- Template-based rendering
+-   Collapsible rows (collapsed by default)
+-   Drag sorting with order persistence
+-   Duplicate support
+-   Min / max enforcement
+-   Independent row sanitization
+-   Template-based rendering
 
 Repeaters always store ordered arrays.
 
 ### Repeater Storage Guarantees (v1.3+)
 
-- Template placeholder rows (`__index__`) are never saved.
-- Completely empty rows are removed automatically.
-- Rows are reindexed numerically before persistence.
-- Nested data structure is deterministic and stable.
+-   Template placeholder rows (`__index__`) are never saved.
+-   Completely empty rows are removed automatically.
+-   Rows are reindexed numerically before persistence.
+-   Nested data structure is deterministic and stable.
 
 ------------------------------------------------------------------------
 
 ## Guarantees
 
-- `type` controls data safety, not UI
-- `field` controls rendering, not storage
-- Conditions affect admin visibility only
-- Missing values always fall back to defaults
-- Unknown keys are ignored safely
-- Storage format is stable and deterministic
+-   `type` controls data safety, not UI
+-   `field` controls rendering, not storage
+-   Conditions affect admin visibility only
+-   Missing values always fall back to defaults
+-   Unknown keys are ignored safely
+-   Storage format is stable and deterministic
 
 ------------------------------------------------------------------------
 
@@ -272,7 +346,7 @@ Repeaters always store ordered arrays.
 
 MetaBox fields are automatically namespaced using:
 
-_{PREFIX}{BOX_ID}_{FIELD_KEY}
+*{PREFIX}{BOX_ID}*{FIELD_KEY}
 
 Field definitions remain identical to Settings fields.
 

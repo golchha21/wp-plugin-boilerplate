@@ -6,8 +6,9 @@ use WPPluginBoilerplate\Core\Fields\Abstracts\AbstractField;
 
 class RangeField extends AbstractField
 {
-	public function render(?string $optionKey): void
+	public function render(?string $optionKey, string $context = 'settings'): void
 	{
+		$this->setContext($context, $optionKey);
 		$this->openFieldWrapper();
 		$min = $this->meta['min'] ?? 0;
 		$max = $this->meta['max'] ?? 100;
@@ -15,8 +16,8 @@ class RangeField extends AbstractField
 
 		printf(
 			'<input type="range" id="%s" name="%s" value="%s" min="%d" max="%d" step="%d" />',
-			esc_attr($this->id($optionKey)),
-			esc_attr($this->name($optionKey)),
+			esc_attr($this->id()),
+			esc_attr($this->name()),
 			esc_attr($this->value),
 			$min,
 			$max,

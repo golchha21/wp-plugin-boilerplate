@@ -29,6 +29,10 @@ class RepeatersMetaBox extends AbstractMetaBox
 				'max'   => 5,
 				'class' => 'width-10',
 				'fields' => [
+					'enable_subtitle' => array(
+						'type' => 'boolean',
+						'field' => 'checkbox',
+					),
 					'title' => [
 						'field' => 'text',
 						'title' => 'Title',
@@ -38,6 +42,13 @@ class RepeatersMetaBox extends AbstractMetaBox
 						'field' => 'text',
 						'label' => 'Sub-Title',
 						'class' => 'width-6',
+						'conditions' => [
+							[
+								'field' => 'enable_subtitle',
+								'operator' => '==',
+								'value' => '1'
+							]
+						],
 					],
 				],
 			],

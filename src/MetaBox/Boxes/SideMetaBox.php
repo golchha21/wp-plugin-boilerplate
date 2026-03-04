@@ -40,27 +40,35 @@ class SideMetaBox extends AbstractMetaBox
 	public function fields(): array
 	{
 		return array(
-			'text' => array(
-				'type' => 'string',
-				'field' => 'text',
-				'label' => 'Text',
-			),
 
-			'textarea' => array(
-				'type' => 'string',
-				'field' => 'textarea',
-				'rows' => 8,
-				'class' => 'width-10',
-				'label' => 'Textarea',
-			),
-
-			'checkbox' => array(
+			'checkbox' => [
 				'type' => 'boolean',
 				'field' => 'checkbox',
 				'class' => 'width',
 				'label' => '',
 				'box_label' => 'Exclude this post from manifest output.',
-			),
+			],
+
+			'text' => [
+				'type' => 'string',
+				'field' => 'text',
+				'label' => 'Text',
+				'conditions' => [
+					[
+						'field' => 'checkbox',
+						'operator' => '==',
+						'value' => '1'
+					]
+				],
+			],
+
+			'textarea' => [
+				'type' => 'string',
+				'field' => 'textarea',
+				'rows' => 8,
+				'class' => 'width-10',
+				'label' => 'Textarea',
+			],
 
 		);
 	}

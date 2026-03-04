@@ -25,8 +25,9 @@ class InputField extends AbstractField
 		return in_array($type, $allowed, true) ? $type : 'text';
 	}
 
-	public function render(?string $optionKey): void
+	public function render(?string $optionKey, string $context = 'settings'): void
 	{
+		$this->setContext($context, $optionKey);
 		$this->openFieldWrapper();
 		$placeholder = $this->meta['placeholder'] ?? '';
 
@@ -38,8 +39,8 @@ class InputField extends AbstractField
 			placeholder="%s"
 			class="regular-text" />',
 			esc_attr($this->inputType()),
-			esc_attr($this->id($optionKey)),
-			esc_attr($this->name($optionKey)),
+			esc_attr($this->id()),
+			esc_attr($this->name()),
 			esc_attr($this->value),
 			esc_attr($placeholder)
 		);

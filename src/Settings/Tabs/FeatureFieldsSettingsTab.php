@@ -35,6 +35,10 @@ class FeatureFieldsSettingsTab implements SettingsTabContract, SettingsContract
 				'field' => 'repeater',
 				'max'   => 5,
 				'fields' => [
+					'enable_subtitle' => array(
+						'type' => 'boolean',
+						'field' => 'checkbox',
+					),
 					'title' => [
 						'field' => 'text',
 						'label' => 'Title',
@@ -44,6 +48,13 @@ class FeatureFieldsSettingsTab implements SettingsTabContract, SettingsContract
 						'field' => 'text',
 						'label' => 'Sub-Title',
 						'class' => 'width-10',
+						'conditions' => [
+							[
+								'field' => 'enable_subtitle',
+								'operator' => '==',
+								'value' => '1'
+							]
+						],
 					],
 				],
 			],

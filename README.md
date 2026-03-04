@@ -20,11 +20,11 @@ accidental complexity.
 
 ## Core Principles
 
-- Clear separation between admin, settings, and public runtime
-- Settings treated as a domain boundary
-- Predictable lifecycle behavior
-- Minimal magic and no hidden side effects
-- Constraints designed for long-term maintainability
+-   Clear separation between admin, settings, and public runtime
+-   Settings treated as a domain boundary
+-   Predictable lifecycle behavior
+-   Minimal magic and no hidden side effects
+-   Constraints designed for long-term maintainability
 
 ------------------------------------------------------------------------
 
@@ -34,24 +34,24 @@ The settings layer is now a structured, extensible system.
 
 ### Field Architecture
 
-- Schema-driven `FieldDefinition`
-- Centralized `FieldRenderer`
-- Deterministic sanitization per field
-- Nested option handling
-- Extensible field pattern
+-   Schema-driven `FieldDefinition`
+-   Centralized `FieldRenderer`
+-   Deterministic sanitization per field
+-   Nested option handling
+-   Extensible field pattern
 
 ### MetaBox Support (v1.3+)
 
 The field engine now powers both Settings and MetaBox modules.
 
-- Shared rendering layer
-- Shared sanitization pipeline
-- Field-type-aware save logic
-- Stable nested meta structure
-- Repeater fully supported in MetaBox context 
-- Deterministic meta key namespacing per MetaBox
-- Registry-level ID validation
-- Template-scoped MetaBox registration
+-   Shared rendering layer
+-   Shared sanitization pipeline
+-   Field-type-aware save logic
+-   Stable nested meta structure
+-   Repeater fully supported in MetaBox context
+-   Deterministic meta key namespacing per MetaBox
+-   Registry-level ID validation
+-   Template-scoped MetaBox registration
 
 Meta and Settings use the same core field abstraction.
 
@@ -59,33 +59,51 @@ Meta and Settings use the same core field abstraction.
 
 MetaBox persistence must go through `MetaBoxRepository`.
 
-Direct use of `get_post_meta()` or manual meta key construction is not supported.
+Direct use of `get_post_meta()` or manual meta key construction is not
+supported.
 
 Meta keys are automatically namespaced as:
 
-_{PREFIX}{BOX_ID}_{FIELD_KEY}
+*{PREFIX}{BOX_ID}*{FIELD_KEY}
 
 Repository guarantees deterministic key ownership and collision safety.
 
 ### Supported Fields
 
-- text
-- textarea
-- email
-- url
-- password
-- hidden
-- date
-- time
-- datetime-local
-- number
-- checkbox
-- radio
-- select
-- color
-- editor (wp_editor powered)
-- media (single & multiple)
-- repeater (nested structured fields)
+-   text
+-   textarea
+-   email
+-   url
+-   password
+-   hidden
+-   date
+-   time
+-   datetime-local
+-   number
+-   checkbox
+-   radio
+-   select
+-   color
+-   editor (wp_editor powered)
+-   media (single & multiple)
+-   repeater (nested structured fields)
+
+------------------------------------------------------------------------
+
+## Conditional Fields (v1.6+)
+
+Fields support structured conditional visibility.
+
+### Capabilities
+
+-   Multiple conditions
+-   AND / OR relation logic
+-   Operators: `==`, `!=`, `>`, `<`, `>=`, `<=`, `in`, `not_in`,
+    `empty`, `not_empty`
+-   Fully supported inside Settings, MetaBoxes, and Repeaters
+
+Conditional visibility affects admin rendering only.\
+Storage format remains unchanged.
 
 ------------------------------------------------------------------------
 
@@ -95,22 +113,24 @@ The repeater allows structured, sortable nested data.
 
 ### Features
 
-- Collapsible rows (collapsed by default)
-- Drag & drop sorting with order persistence
-- Duplicate row support
-- Min / max limits
-- Independent row sanitization
-- Template-based rendering
-- Dashicon controls
+-   Collapsible rows (collapsed by default)
+-   Drag & drop sorting with order persistence
+-   Duplicate row support
+-   Min / max limits
+-   Independent row sanitization
+-   Template-based rendering
+-   Dashicon controls
+-   Conditional Fields
 
-Repeaters always store ordered arrays and never leak template markup into the runtime DOM.
+Repeaters always store ordered arrays and never leak template markup
+into the runtime DOM.
 
 ### Storage Guarantees (v1.3+)
 
-- Template placeholder rows (`__index__`) are never persisted
-- Completely empty rows are removed automatically
-- Rows are reindexed numerically before persistence
-- Nested data structure remains deterministic and stable
+-   Template placeholder rows (`__index__`) are never persisted
+-   Completely empty rows are removed automatically
+-   Rows are reindexed numerically before persistence
+-   Nested data structure remains deterministic and stable
 
 ------------------------------------------------------------------------
 
@@ -120,14 +140,27 @@ Stores attachment IDs only.
 
 Supports:
 
-- Single selection (integer)
-- Multiple selection (ordered array)
-- Drag sorting (multiple mode)
-- Per-item removal (multiple mode)
-- MIME restriction support
-- Square preview layout
+-   Single selection (integer)
+-   Multiple selection (ordered array)
+-   Drag sorting (multiple mode)
+-   Per-item removal (multiple mode)
+-   MIME restriction support
+-   Square preview layout
 
 Behavior adapts automatically based on `multiple: true`.
+
+### Duplicate Protection (v1.5.1)
+
+-   Duplicate selections are prevented in multiple mode
+-   Duplicate attempts trigger a WordPress `notice-warning`
+
+### File Type Validation
+
+-   Invalid file types trigger a `notice-error`
+-   Notices use WordPress core admin styling
+-   Multiple notices may stack per field instance
+
+These safeguards affect admin UX only. Storage format remains unchanged.
 
 ------------------------------------------------------------------------
 
@@ -135,11 +168,11 @@ Behavior adapts automatically based on `multiple: true`.
 
 The admin interface is:
 
-- Fully scoped under `.wppb-admin`
-- Built on a 12-column CSS Grid layout
-- Powered by semantic design tokens
-- Safe from wp-admin style conflicts
-- Field type is injected as a CSS class on field wrappers
+-   Fully scoped under `.wppb-admin`
+-   Built on a 12-column CSS Grid layout
+-   Powered by semantic design tokens
+-   Safe from wp-admin style conflicts
+-   Field type is injected as a CSS class on field wrappers
 
 Example:
 
@@ -149,15 +182,15 @@ Example:
 
 Available widths:
 
-- width-1 → width-12
-- Default: width (full width)
+-   width-1 → width-12
+-   Default: width (full width)
 
 ------------------------------------------------------------------------
 
 ## Folder Responsibilities
 
 Directory       Responsibility
---------------- ----------------------------------------
+  --------------- ---------------------------------------------------------
 src/Admin       Admin UI, menus, and admin-only modules
 src/Settings    Settings tabs and option persistence
 src/MetaBox     MetaBox definitions, registry, repository
@@ -175,12 +208,12 @@ Each directory represents a deliberate boundary.
 
 Starting with v1.0:
 
-- Public behavior is registered unconditionally
-- Admin configuration flows cleanly into runtime
-- Lifecycle behavior is predictable
-- Uninstall cleans up plugin-owned data
-- Plugin renaming does not break behavior
-- Distributed as a self-contained package
+-   Public behavior is registered unconditionally
+-   Admin configuration flows cleanly into runtime
+-   Lifecycle behavior is predictable
+-   Uninstall cleans up plugin-owned data
+-   Plugin renaming does not break behavior
+-   Distributed as a self-contained package
 
 Breaking these guarantees requires a major version bump.
 
@@ -190,9 +223,10 @@ Breaking these guarantees requires a major version bump.
 
 Semantic Versioning is followed:
 
-- Patch → internal fixes
-- Minor → new features or backward-compatible structural improvements
-- Major → breaking changes to storage, APIs, or architectural guarantees
+-   Patch → internal fixes
+-   Minor → new features or backward-compatible structural improvements
+-   Major → breaking changes to storage, APIs, or architectural
+    guarantees
 
 ------------------------------------------------------------------------
 
@@ -202,11 +236,12 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on recent changes.
 
 ## Security
 
-If you discover any security-related issues, please email **vardhans@ulhas.net** instead of using the issue tracker.
+If you discover any security-related issues, please email
+**vardhans@ulhas.net** instead of using the issue tracker.
 
 ## Credits
 
-- [Ulhas Vardhan Golchha](https://github.com/golchha21) — *Initial work*
+-   [Ulhas Vardhan Golchha](https://github.com/golchha21) --- *Initial work*
 
 See also the list of [contributors](https://github.com/golchha21/wp-plugin-boilerplate/graphs/contributors).
 
@@ -214,15 +249,16 @@ See also the list of [contributors](https://github.com/golchha21/wp-plugin-boile
 
 ## License
 
-This project is licensed under the **GNU General Public License v2.0 or later (GPL-2.0-or-later)**.
+This project is licensed under the **GNU General Public License v2.0 or
+later (GPL-2.0-or-later)**.
 
-WordPress is licensed under the GPL, and any plugin that runs within WordPress
-and uses its APIs is required to be GPL-compatible.
+WordPress is licensed under the GPL, and any plugin that runs within
+WordPress and uses its APIs is required to be GPL-compatible.
 
-You are free to use, modify, and distribute this software under the terms
-of the GPL. See the [LICENSE](LICENSE) file for details.
+You are free to use, modify, and distribute this software under the
+terms of the GPL. See the [LICENSE](LICENSE) file for details.
 
 ------------------------------------------------------------------------
 
-If this boilerplate has been useful to you, you can support its development here:  
-[Buy me a coffee](https://www.buymeacoffee.com/golchha21)
+If this boilerplate has been useful to you, you can support its
+development here: [Buy me a coffee](https://www.buymeacoffee.com/golchha21)

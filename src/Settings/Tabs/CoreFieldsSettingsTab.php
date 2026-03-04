@@ -74,6 +74,19 @@ class CoreFieldsSettingsTab implements SettingsTabContract, SettingsContract
 				'min' => 0,
 				'max' => 100,
 				'step' => 10,
+				'conditions' => [
+					'relation' => 'OR',
+					[
+						'field' => 'checkbox',
+						'operator' => '==',
+						'value' => '1'
+					],
+					[
+						'field' => 'url',
+						'operator' => '!=',
+						'value' => ''
+					]
+				],
 			),
 
 			'range' => array(

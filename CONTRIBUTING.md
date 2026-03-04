@@ -114,6 +114,16 @@ If dependencies are updated, the plugin must continue to work in a clean WordPre
 - Empty scalar values must not be auto-deleted
 - Meta keys must be namespaced by MetaBox ID
 - Direct meta key construction outside MetaBoxRepository is forbidden
+- Conditional visibility must remain a rendering-layer concern
+- Conditional evaluation must never mutate stored values
+- Conditional normalization must remain deterministic
+- Repeater-scoped conditions must remain index-safe
+- Media fields must store attachment IDs only
+- Duplicate selections in multiple mode must be prevented at the UI layer
+- Admin notices must use WordPress core notice classes
+- Duplicate selections trigger `notice-warning`
+- Invalid file types trigger `notice-error`
+- UI safeguards must never alter the stored data structure
 
 Changes to field behavior require documentation updates.
 

@@ -18,14 +18,14 @@ use WPPluginBoilerplate\Core\Fields\Types\TextareaField;
 
 class FieldRenderer
 {
-	public static function render(?string $optionKey, FieldDefinition $field, mixed $value): void {
-
+	public static function render(?string $optionKey, FieldDefinition $field, mixed $value, string $context = 'settings'): void
+	{
 		$instance = self::resolve($field, $value);
-
-		$instance->render($optionKey);
+		$instance->render($optionKey, $context);
 	}
 
-	protected static function resolve(FieldDefinition $field, mixed $value) {
+	protected static function resolve(FieldDefinition $field, mixed $value)
+	{
 
 		$type = $field->field ?? $field->type ?? null;
 
@@ -59,15 +59,15 @@ class FieldRenderer
 			=> new InputField($field->key, $field->meta, $value),
 
 			// Distinct types
-			'textarea'    => new TextareaField($field->key, $field->meta, $value),
-			'checkbox'    => new CheckboxField($field->key, $field->meta, $value),
-			'select'      => new SelectField($field->key, $field->meta, $value),
+			'textarea' => new TextareaField($field->key, $field->meta, $value),
+			'checkbox' => new CheckboxField($field->key, $field->meta, $value),
+			'select' => new SelectField($field->key, $field->meta, $value),
 			'multiselect' => new MultiSelectField($field->key, $field->meta, $value),
-			'radio'       => new RadioField($field->key, $field->meta, $value),
-			'color'       => new ColorField($field->key, $field->meta, $value),
-			'editor'      => new EditorField($field->key, $field->meta, $value),
-			'range'       => new RangeField($field->key, $field->meta, $value),
-			'number'      => new NumberField($field->key, $field->meta, $value),
+			'radio' => new RadioField($field->key, $field->meta, $value),
+			'color' => new ColorField($field->key, $field->meta, $value),
+			'editor' => new EditorField($field->key, $field->meta, $value),
+			'range' => new RangeField($field->key, $field->meta, $value),
+			'number' => new NumberField($field->key, $field->meta, $value),
 
 			'repeater' => new RepeaterField($field->key, $field->meta, $value),
 

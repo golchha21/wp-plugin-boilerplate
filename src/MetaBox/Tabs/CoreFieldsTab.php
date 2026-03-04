@@ -62,6 +62,19 @@ class CoreFieldsTab implements MetaBoxTabContract
 				'min' => 0,
 				'max' => 100,
 				'step' => 10,
+				'conditions' => [
+					'relation' => 'AND',
+					[
+						'field' => 'checkbox',
+						'operator' => '==',
+						'value' => '1'
+					],
+					[
+						'field' => 'url',
+						'operator' => '!=',
+						'value' => ''
+					]
+				],
 			),
 
 			'range' => array(

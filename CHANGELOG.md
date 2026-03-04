@@ -10,7 +10,51 @@ This project follows a **foundation-first** release model:
 
 ---
 
-## [1.5.1] - 2026-03-03
+## v1.6.0 – Conditional Field Engine & Repeater Stability
+
+### Added
+
+- Structured conditional field system
+- Multiple condition support per field
+- AND / OR relation logic
+- Expanded operators:
+    - `==`
+    - `!=`
+    - `>`
+    - `<`
+    - `>=`
+    - `<=`
+    - `in`
+    - `not_in`
+    - `empty`
+    - `not_empty`
+- Deterministic condition normalization in the field schema layer
+- Scoped conditional evaluation inside repeater rows
+
+### Improvements
+
+- Conditional visibility now works reliably inside repeater fields
+- Repeater row cloning correctly resets conditional initialization
+- Repeater index remapping now updates conditional targets safely
+- Field condition names are resolved deterministically across Settings and MetaBoxes
+
+### Fixed
+
+- Conditional fields not updating correctly in duplicated repeater rows
+- Incorrect field targeting caused by repeater index changes
+- Conditional initialization not resetting after cloning
+- Conditional evaluation scope leaking across repeater rows
+
+### Internal
+
+- Improved conditional field evaluation engine
+- Safer repeater reindex logic
+- Safer condition field name remapping
+- Improved conditional initialization handling
+
+---
+
+## v1.5.1 - 2026-03-03
 
 ### Fixed
 - Prevent duplicate media selection within media field (multiple mode)

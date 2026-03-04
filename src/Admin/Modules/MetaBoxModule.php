@@ -119,7 +119,7 @@ class MetaBoxModule implements AdminModule
 
 			$value = MetaBoxRepository::get($postId, $box->id(), $key);
 
-			$field = FieldDefinition::fromSchema($metaKey, $definition);
+			$field = FieldDefinition::fromSchema($key, $definition);
 
 			echo '<div class="wppb-meta-field ' . \esc_attr($field->field) .  '">';
 
@@ -132,8 +132,8 @@ class MetaBoxModule implements AdminModule
 				echo '</div>';
 			}
 
-			// Field column (10 cols)
-			FieldRenderer::render(null, $field, $value);
+			$metaPrefix = '_' . WPPB_PREFIX . $box->id();
+			FieldRenderer::render($metaPrefix, $field, $value, 'meta');
 
 			echo '</div>';
 		}

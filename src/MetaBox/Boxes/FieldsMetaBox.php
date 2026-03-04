@@ -70,6 +70,19 @@ class FieldsMetaBox extends AbstractMetaBox
 				'max' => 100,
 				'step' => 10,
 				'label' => 'Number',
+				'conditions' => [
+					'relation' => 'OR',
+					[
+						'field' => 'checkbox',
+						'operator' => '==',
+						'value' => '1'
+					],
+					[
+						'field' => 'url',
+						'operator' => '!=',
+						'value' => ''
+					]
+				],
 			),
 
 			'range' => array(

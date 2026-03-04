@@ -9,8 +9,9 @@ use WPPluginBoilerplate\Plugin;
 
 class RepeaterField extends AbstractField
 {
-	public function render(?string $optionKey): void
+	public function render(?string $optionKey, string $context = 'settings'): void
 	{
+		$this->setContext($context, $optionKey);
 		$this->openFieldWrapper();
 		$rows = is_array($this->value) ? $this->value : [];
 		$min = $this->meta['min'] ?? 0;
@@ -146,10 +147,20 @@ class RepeaterField extends AbstractField
 
 			$value = $row[$subKey] ?? $definition->resolvedDefault();
 
-			if($optionKey === null) {
-				$nestedOptionKey = $this->key . '[' . $index . ']';
+			if ($this->context === 'meta') {
+
+				// meta → flatten key
+				$nestedOptionKey = $optionKey . '_' . $this->key . '[' . $index . ']';
+
 			} else {
-				$nestedOptionKey = $optionKey . '[' . $this->key . '][' . $index . ']';
+
+				// settings
+				if ($optionKey === null) {
+					$nestedOptionKey = $this->key . '[' . $index . ']';
+				} else {
+					$nestedOptionKey = $optionKey . '[' . $this->key . '][' . $index . ']';
+				}
+
 			}
 
 			echo '<div class="wppb-repeater-field">';

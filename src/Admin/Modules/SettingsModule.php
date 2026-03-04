@@ -68,11 +68,7 @@ class SettingsModule implements AdminModule
 						: $raw;
 
 					echo '<div class="wppb-fields-row ' . \esc_attr($field->field) .  '">';
-					FieldRenderer::render(
-						$tab->optionKey(),
-						$field,
-						$value
-					);
+					FieldRenderer::render($tab->optionKey(), $field, $value);
 					echo '</div>';
 				},
 				$option_key,

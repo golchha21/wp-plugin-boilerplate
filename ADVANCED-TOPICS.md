@@ -119,6 +119,28 @@ Rendering and storage structure are strictly aligned.
 
 ------------------------------------------------------------------------
 
+## Conditional Engine Guarantees (v1.6+)
+
+Conditional logic is a rendering-layer concern.
+
+Guarantees:
+
+-   Conditions are normalized deterministically before output.
+-   Structured JSON is emitted via `data-conditions`.
+-   Evaluation is scoped (form-level or repeater-item level).
+-   Flat condition arrays default to AND logic.
+-   Explicit OR relations are supported.
+-   Conditional logic never mutates storage.
+-   Conditional evaluation is repeater-index safe.
+-   Backward compatibility with pre-v1.6 flat condition arrays is
+    preserved.
+
+Nested grouped logic trees are intentionally not supported.
+
+Conditional behavior must never alter persistence structure.
+
+------------------------------------------------------------------------
+
 ## Media Field Guarantees
 
 Media fields store attachment IDs only.
@@ -138,8 +160,16 @@ Multiple mode guarantees:
 -   Per-item removal
 -   Square preview rendering
 -   MIME enforcement before save
+-   Duplicate selection prevention in multiple mode
+-   WordPress core-styled notice rendering
+-   `notice-warning` for duplicates
+-   `notice-error` for invalid file types
+-   Multiple stacked notices per field instance
 
 UI behavior must never mutate storage structure.
+
+Media UI safeguards affect admin experience only. Storage format remains
+unchanged.
 
 ------------------------------------------------------------------------
 
@@ -196,7 +226,8 @@ Lifecycle logic must remain predictable and side-effect free.
 ## What Not To Do
 
 -   Call `get_option()` directly
--   Call `get_post_meta()` / `update_post_meta()` directly for MetaBox fields
+-   Call `get_post_meta()` / `update_post_meta()` directly for MetaBox
+    fields
 -   Manually construct prefixed meta keys
 -   Gate runtime wiring during bootstrap
 -   Share option keys across tabs

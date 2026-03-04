@@ -18,11 +18,12 @@ class MediaField extends AbstractField
 		$this->definition = FieldDefinition::fromSchema($key, $schema);
 	}
 
-	public function render(?string $optionKey): void
+	public function render(?string $optionKey, string $context = 'settings'): void
 	{
+		$this->setContext($context, $optionKey);
 		$this->openFieldWrapper();
 
-		$name     = $this->name($optionKey);
+		$name     = $this->name();
 		$value    = $this->value;
 		$multiple = !empty($this->definition->meta['multiple']);
 

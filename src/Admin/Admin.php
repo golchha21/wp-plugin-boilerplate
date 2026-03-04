@@ -65,10 +65,17 @@ class Admin
 			true
 		);
 
-
 		\wp_enqueue_script(
 			Plugin::prefix() . 'metatab',
 			Plugin::url() . 'assets/admin/js/metatab.js',
+			['jquery'],
+			Plugin::version(),
+			true
+		);
+
+		\wp_enqueue_script(
+			Plugin::prefix() . 'conditional-fields',
+			Plugin::url() . 'assets/admin/js/conditional-fields.js',
 			['jquery'],
 			Plugin::version(),
 			true

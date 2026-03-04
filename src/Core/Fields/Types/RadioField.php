@@ -6,8 +6,9 @@ use WPPluginBoilerplate\Core\Fields\Abstracts\AbstractField;
 
 class RadioField extends AbstractField
 {
-	public function render(?string $optionKey): void
+	public function render(?string $optionKey, string $context = 'settings'): void
 	{
+		$this->setContext($context, $optionKey);
 		$this->openFieldWrapper();
 		foreach ($this->options as $value => $label) {
 			printf(
@@ -15,7 +16,7 @@ class RadioField extends AbstractField
 					<input type="radio" name="%s" value="%s" %s />
 					%s
 				</label>',
-				esc_attr($this->name($optionKey)),
+				esc_attr($this->name()),
 				esc_attr($value),
 				checked($this->value, $value, false),
 				esc_html($label)

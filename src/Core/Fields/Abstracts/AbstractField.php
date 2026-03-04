@@ -11,11 +11,15 @@ abstract class AbstractField implements FieldInterface
 	protected string $field;
 	protected string $label;
 	protected string $description;
+	public array $conditions;
+	protected ?string $optionKey = null;
 	protected mixed $default;
 	protected mixed $sanitize;
 	protected array $options;
 	protected array $meta;
 	protected mixed $value;
+	protected string $context = 'settings'; // or 'meta'
+	private const ALLOWED_OPERATORS = ['==', '!=', 'empty', 'not_empty', 'in', 'not_in',];
 
 	public function __construct(?string $key, array $schema, mixed $value = null)
 	{
@@ -25,6 +29,7 @@ abstract class AbstractField implements FieldInterface
 		$this->sanitize    = $schema['sanitize'] ?? $this->defaultSanitizer($this->type);
 		$this->label       = $schema['label'] ?? $this->humanize($key);
 		$this->description = $schema['description'] ?? '';
+		$this->conditions  = $this->normalizeConditions($schema['conditions'] ?? []);
 		$this->options	   = $this->normalizeOptions($schema['options'] ?? []);
 		$this->meta        = $schema;
 		$this->field       = $schema['field'] ?? $this->inferFieldType($this->type);
@@ -36,24 +41,34 @@ abstract class AbstractField implements FieldInterface
 		return $this->key;
 	}
 
-	protected function name(?string $optionKey): string
+	public function setContext(string $context, ?string $optionKey = null): void
 	{
-		if ($optionKey === null) {
-			// Meta mode → plain key
-			return $this->key;
-		}
-
-		return $optionKey . '[' . $this->key . ']';
+		$this->context = $context;
+		$this->optionKey = $optionKey;
 	}
 
-	protected function id(?string $optionKey): string
+	protected function name(): string
 	{
-		if ($optionKey === null) {
-			return $this->key;
+		if ($this->context === 'meta') {
+			return "{$this->optionKey}_{$this->key}";
+		}
+
+		// settings / repeater
+		if ($this->optionKey !== null) {
+			return "{$this->optionKey}[{$this->key}]";
+		}
+
+		return $this->key;
+	}
+
+	protected function id(): string
+	{
+		if ($this->context === 'meta') {
+			return "{$this->optionKey}_{$this->key}";
 		}
 
 		return \sanitize_key(
-			preg_replace('/[\[\]]+/', '_', $optionKey . '_' . $this->key)
+			preg_replace('/[\[\]]+/', '_', $this->optionKey . '_' . $this->key)
 		);
 	}
 
@@ -117,9 +132,53 @@ abstract class AbstractField implements FieldInterface
 
 	protected function openFieldWrapper(): void
 	{
+		$attributes = '';
+
+		if ($this->hasConditions()) {
+
+			$relation = 'AND';
+			$conditions = [];
+
+			// 🔥 Handle new structured format
+			if (isset($this->conditions['conditions'])) {
+				$relation   = strtoupper($this->conditions['relation'] ?? 'AND');
+				$conditions = $this->conditions['conditions'];
+			} else {
+				// Backward compatibility (flat array)
+				$conditions = $this->conditions;
+			}
+
+			$resolved = [];
+
+			foreach ($conditions as $condition) {
+
+				$resolved[] = [
+					'field'    => $this->resolveConditionFieldName(
+						$condition['field']
+					),
+					'operator' => $condition['operator'],
+					'value'    => $condition['value'],
+				];
+			}
+
+			// 🔥 Output structured JSON
+			$output = [
+				'relation'   => $relation,
+				'conditions' => $resolved,
+			];
+
+			$attributes .= sprintf(
+				' data-conditions="%s"',
+				\esc_attr(\wp_json_encode($output))
+			);
+
+			$attributes .= ' data-has-conditions="1"';
+		}
+
 		printf(
-			'<div class="wppb-field %s">',
-			\esc_attr($this->fieldClass())
+			'<div class="wppb-field %s"%s>',
+			\esc_attr($this->fieldClass()),
+			$attributes
 		);
 	}
 
@@ -142,5 +201,62 @@ abstract class AbstractField implements FieldInterface
 		}
 
 		return $normalized;
+	}
+
+	protected function resolveConditionFieldName(string $key): string
+	{
+		if ($this->context === 'meta') {
+			return "{$this->optionKey}_{$key}";
+		}
+
+		if ($this->optionKey !== null) {
+			return "{$this->optionKey}[{$key}]";
+		}
+
+		return $key;
+	}
+
+	protected function hasConditions(): bool
+	{
+		return !empty($this->conditions);
+	}
+
+	protected function normalizeConditions(array $conditions): array
+	{
+		$relation = 'AND';
+
+		// Extract relation if present
+		if (isset($conditions['relation'])) {
+			$relation = strtoupper($conditions['relation']);
+			unset($conditions['relation']);
+		}
+
+		$normalized = [];
+
+		foreach ($conditions as $condition) {
+
+			if (!isset($condition['field'], $condition['operator'])) {
+				continue;
+			}
+
+			if (!in_array($condition['operator'], self::ALLOWED_OPERATORS, true)) {
+				continue;
+			}
+
+			$normalized[] = [
+				'field'    => \sanitize_key($condition['field']),
+				'operator' => $condition['operator'],
+				'value'    => $condition['value'] ?? null,
+			];
+		}
+
+		if (empty($normalized)) {
+			return [];
+		}
+
+		return [
+			'relation'   => $relation,
+			'conditions' => $normalized,
+		];
 	}
 }

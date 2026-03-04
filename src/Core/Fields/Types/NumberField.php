@@ -6,8 +6,9 @@ use WPPluginBoilerplate\Core\Fields\Abstracts\AbstractField;
 
 class NumberField extends AbstractField
 {
-	public function render(?string $optionKey): void
+	public function render(?string $optionKey, string $context = 'settings'): void
 	{
+		$this->setContext($context, $optionKey);
 		$this->openFieldWrapper();
 		$min  = $this->meta['min']  ?? '';
 		$max  = $this->meta['max']  ?? '';
@@ -21,8 +22,8 @@ class NumberField extends AbstractField
 				min="%s"
 				max="%s"
 				step="%s" />',
-			esc_attr($this->id($optionKey)),
-			esc_attr($this->name($optionKey)),
+			esc_attr($this->id()),
+			esc_attr($this->name()),
 			esc_attr($this->value),
 			esc_attr($min),
 			esc_attr($max),
