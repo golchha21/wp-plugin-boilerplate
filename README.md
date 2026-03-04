@@ -1,8 +1,12 @@
 # WP Plugin Boilerplate
 
+> A structured WordPress plugin boilerplate with a schema-driven field engine, MetaBox system, and deterministic plugin architecture.
+
 ![PHP](https://img.shields.io/badge/PHP-%3E%3D7.4-777BB4?logo=php&logoColor=white)
 ![Version](https://img.shields.io/github/v/tag/golchha21/wp-plugin-boilerplate)
 ![Downloads](https://img.shields.io/github/downloads/golchha21/wp-plugin-boilerplate/total)
+
+------------------------------------------------------------------------
 
 An opinionated WordPress plugin boilerplate for building long-lived
 plugins with explicit structure and predictable lifecycle behavior.
@@ -12,9 +16,34 @@ replace WordPress conventions, Git workflows, or existing development
 practices.
 
 It exists to provide a constrained starting point for plugins that are
-expected to grow over time --- where admin configuration, settings,
+expected to grow over time - where admin configuration, settings,
 frontend behavior, and lifecycle concerns tend to blur and accumulate
 accidental complexity.
+
+------------------------------------------------------------------------
+
+## Built-in Examples
+
+The repository includes working reference implementations demonstrating
+how the field engine, settings system, and MetaBox integration are
+intended to be used.
+
+Examples demonstrate:
+
+-   Settings tab definitions
+-   Field schema structure
+-   Repeater field usage
+-   Conditional field visibility
+-   Media field configuration
+-   MetaBox field integration
+
+See the example modules in:
+
+-   `src/Settings/Tabs`
+-   `src/MetaBox/Boxes`
+
+These examples are intentionally simple and serve as a baseline for
+building more complex plugins.
 
 ------------------------------------------------------------------------
 
@@ -25,6 +54,26 @@ accidental complexity.
 -   Predictable lifecycle behavior
 -   Minimal magic and no hidden side effects
 -   Constraints designed for long-term maintainability
+
+------------------------------------------------------------------------
+
+## Design Goals
+
+This boilerplate is intentionally opinionated.
+
+It is designed to help developers build long-lived plugins without
+accumulating architectural debt.
+
+The project prioritizes:
+
+- deterministic behavior over convenience
+- explicit configuration over hidden automation
+- long-term maintainability over rapid prototyping
+- stable storage structures over dynamic schemas
+
+The goal is not to replace WordPress patterns, but to provide a
+structured starting point for plugins that are expected to evolve over
+time.
 
 ------------------------------------------------------------------------
 
@@ -90,23 +139,6 @@ Repository guarantees deterministic key ownership and collision safety.
 
 ------------------------------------------------------------------------
 
-## Conditional Fields (v1.6+)
-
-Fields support structured conditional visibility.
-
-### Capabilities
-
--   Multiple conditions
--   AND / OR relation logic
--   Operators: `==`, `!=`, `>`, `<`, `>=`, `<=`, `in`, `not_in`,
-    `empty`, `not_empty`
--   Fully supported inside Settings, MetaBoxes, and Repeaters
-
-Conditional visibility affects admin rendering only.\
-Storage format remains unchanged.
-
-------------------------------------------------------------------------
-
 ## Repeater Field
 
 The repeater allows structured, sortable nested data.
@@ -120,7 +152,7 @@ The repeater allows structured, sortable nested data.
 -   Independent row sanitization
 -   Template-based rendering
 -   Dashicon controls
--   Conditional Fields
+-   Conditional field support
 
 Repeaters always store ordered arrays and never leak template markup
 into the runtime DOM.
@@ -144,23 +176,14 @@ Supports:
 -   Multiple selection (ordered array)
 -   Drag sorting (multiple mode)
 -   Per-item removal (multiple mode)
--   MIME restriction support
+-   Duplicate prevention in multiple mode
+-   MIME type restriction support
 -   Square preview layout
 
 Behavior adapts automatically based on `multiple: true`.
 
-### Duplicate Protection (v1.5.1)
-
--   Duplicate selections are prevented in multiple mode
--   Duplicate attempts trigger a WordPress `notice-warning`
-
-### File Type Validation
-
--   Invalid file types trigger a `notice-error`
--   Notices use WordPress core admin styling
--   Multiple notices may stack per field instance
-
-These safeguards affect admin UX only. Storage format remains unchanged.
+Admin validation uses WordPress core notice styles to report duplicate
+selections or invalid file types. Storage format remains unchanged.
 
 ------------------------------------------------------------------------
 
@@ -189,18 +212,18 @@ Available widths:
 
 ## Folder Responsibilities
 
-Directory       Responsibility
-  --------------- ---------------------------------------------------------
-src/Admin       Admin UI, menus, and admin-only modules
-src/Settings    Settings tabs and option persistence
-src/MetaBox     MetaBox definitions, registry, repository
-src/Frontend    Frontend/runtime behavior
-src/Core        Field engine, definitions, rendering, support utilities
-src/Lifecycle   Activation & deactivation logic
-assets          CSS, JS, static assets
-vendor          Bundled dependencies
+| Directory | Responsibility |
+|-----------|----------------|
+| `src/Admin` | Admin UI, menus, and admin-only modules |
+| `src/Settings` | Settings tabs and option persistence |
+| `src/MetaBox` | MetaBox definitions, registry, and repository |
+| `src/Frontend` | Frontend/runtime behavior |
+| `src/Core` | Field engine, definitions, rendering, and support utilities |
+| `src/Lifecycle` | Activation and deactivation logic |
+| `assets` | CSS, JavaScript, and static assets |
+| `vendor` | Bundled Composer dependencies |
 
-Each directory represents a deliberate boundary.
+Each directory represents a deliberate architectural boundary.
 
 ------------------------------------------------------------------------
 
@@ -234,10 +257,14 @@ Semantic Versioning is followed:
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on recent changes.
 
+------------------------------------------------------------------------
+
 ## Security
 
 If you discover any security-related issues, please email
 **vardhans@ulhas.net** instead of using the issue tracker.
+
+------------------------------------------------------------------------
 
 ## Credits
 

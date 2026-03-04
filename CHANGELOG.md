@@ -10,6 +10,26 @@ This project follows a **foundation-first** release model:
 
 ---
 
+## v1.6.1 – Documentation & Repository Improvements
+
+### Added
+- Built-in examples section in README with pointers to reference modules
+- GitHub issue templates for bug reports and feature requests
+- Pull request template for contributor guidance
+- Security policy for responsible vulnerability disclosure
+
+### Improved
+- README structure and clarity
+- Media field documentation updated to include duplicate prevention behavior
+- Repeater documentation wording improved
+- Folder responsibilities table formatting
+
+### Internal
+- Minor documentation alignment with conditional field engine behavior
+- Repository structure improvements for open-source collaboration
+
+---
+
 ## v1.6.0 – Conditional Field Engine & Repeater Stability
 
 ### Added
