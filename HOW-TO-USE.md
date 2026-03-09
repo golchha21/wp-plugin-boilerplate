@@ -299,9 +299,10 @@ SettingsRepository::get('my_plugin_settings', 'network');
 
 ``` php
 $enabled = SettingsRepository::getValue(
-    'my_plugin_settings',
-    'enable_feature',
-    false
+    'my_plugin_settings',  // option key
+    'enable_feature',      // field key
+    'site',                // scope: 'site' or 'network'
+    false                  // default value
 );
 ```
 
@@ -382,7 +383,7 @@ inside callbacks instead.
 
 ------------------------------------------------------------------------
 
-## Step 10.5: Registering Hooks
+## Step 11: Registering Hooks
 
 Hooks are registered through the Loader.
 
@@ -419,7 +420,7 @@ Declarative hooks keep feature classes easier to read as plugins grow.
 
 ------------------------------------------------------------------------
 
-## Step 11: Admin Configuration Rules
+## Step 12: Admin Configuration Rules
 
 Admin is responsible only for:
 
@@ -431,7 +432,7 @@ Admin must never contain runtime logic.
 
 ------------------------------------------------------------------------
 
-## Step 12: Import, Export, and Reset
+## Step 13: Import, Export, and Reset
 
 -   Import and Export are global operations
 -   Reset is tab-scoped
@@ -440,7 +441,7 @@ Capability enforcement must match scope.
 
 ------------------------------------------------------------------------
 
-## Step 13: Lifecycle
+## Step 14: Lifecycle
 
 -   Activation must be side-effect free
 -   Deactivation pauses behavior but keeps data

@@ -10,6 +10,33 @@ This project follows a **foundation-first** release model:
 
 ---
 
+## v1.6.3 – Documentation Improvements
+
+### Documentation
+
+Improves and expands the documentation to better explain the architecture and usage of the boilerplate.
+
+### Added
+
+- Complete **How-To-Use guide** describing the full plugin development workflow
+- Comprehensive **Fields reference** documenting the full field definition structure
+- **Contributing guide** explaining architectural rules and contribution constraints
+- **Advanced topics documentation** covering internal architectural guarantees and system boundaries
+
+### Improved
+
+- README navigation and documentation structure
+- Cross-referencing between documentation files
+- Architectural explanations for settings, MetaBoxes, and the field engine
+
+### Notes
+
+- No runtime behavior changes
+- No API changes
+- No storage or compatibility changes
+
+---
+
 ## v1.6.2 — Declarative Hooks & Module Wiring
 
 ### Added
@@ -120,7 +147,7 @@ Both approaches can be used together.
 
 ---
 
-## v1.5.1 - 2026-03-03
+## v1.5.1 -- 2026-03-03
 
 ### Fixed
 - Prevent duplicate media selection within media field (multiple mode)

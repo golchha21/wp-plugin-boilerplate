@@ -71,7 +71,7 @@ If dependencies are updated, the plugin must continue to work in a clean WordPre
 
 - `wp-plugin-boilerplate.php` must remain wiring-only
 - No logic, conditionals, or side effects are allowed there
-- PublicPlugin (or equivalent) must always be registered unconditionally
+- `Frontend` must always be registered unconditionally (wired in `Plugin::register_services()`)
 - Do not gate frontend behavior behind `is_admin()` during bootstrap
 
 

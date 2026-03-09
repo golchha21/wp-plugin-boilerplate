@@ -1,7 +1,7 @@
 # Fields Reference
 
 This document defines the complete field definition structure supported
-by the WP Plugin Boilerplate as of v1.3.
+by the WP Plugin Boilerplate as of v1.6.3.
 
 Fields are owner-scoped (tab or MetaBox), explicit, and deterministic.
 There is no implicit behavior and no hidden schema magic.
@@ -30,15 +30,12 @@ public static function fields(): array
     return [
         'example_field' => [
 
-            'type' => 'string', // string | int | bool | array
+            'type'  => 'string', // string | integer | boolean | array
             'field' => 'text',
 
-            'label' => 'Example Field',
+            'label'       => 'Example Field',
             'description' => 'Displayed below the field.',
-            'default' => '',
-
-            'placeholder' => 'Enter a value',
-            'required' => false,
+            'default'     => '',
 
             'options' => [
                 'option_1' => 'Option One',
@@ -47,18 +44,15 @@ public static function fields(): array
 
             'conditions' => [
                 [
-                    'field' => 'another_field',
+                    'field'    => 'another_field',
                     'operator' => '==',
-                    'value' => 'yes',
+                    'value'    => 'yes',
                 ],
             ],
 
-            'capability' => 'manage_options',
-            'class' => 'width-6', // width-1 → width-12
-            'readonly' => false,
-            'disabled' => false,
+            'class' => 'width-6', // width-1 → width-12; default: width-4
 
-            'sanitize_callback' => function ($value) {
+            'sanitize' => function ($value) {
                 return sanitize_text_field($value);
             },
         ],
@@ -151,8 +145,9 @@ Fields support a 12-column CSS Grid layout.
 
 Available:
 
--   width-1 → width-12
--   width (default full width)
+-   `width-1` → `width-12`
+-   `width` — full width (default for editor, media, repeater)
+-   Default for all other fields: `width-4`
 
 ------------------------------------------------------------------------
 
@@ -198,7 +193,7 @@ Notes:
 #### checkbox
 
 ``` php
-'type'    => 'bool',
+'type'    => 'boolean',
 'field'   => 'checkbox',
 'default' => false,
 ```
@@ -206,8 +201,22 @@ Notes:
 #### number
 
 ``` php
-'type'    => 'int',
+'type'    => 'integer',
 'field'   => 'number',
+'min'     => 0,   // optional
+'max'     => 100, // optional
+'step'    => 1,   // optional
+'default' => 0,
+```
+
+#### range
+
+``` php
+'type'    => 'integer',
+'field'   => 'range',
+'min'     => 0,
+'max'     => 100,
+'step'    => 10,
 'default' => 0,
 ```
 
@@ -225,6 +234,19 @@ Notes:
 ],
 ```
 
+#### multiselect
+
+``` php
+'type'    => 'array',
+'field'   => 'multiselect',
+'default' => [],
+'options' => [
+    'key' => 'Label',
+],
+```
+
+Stores an array of selected values.
+
 #### radio
 
 ``` php
@@ -233,6 +255,7 @@ Notes:
 'options' => [
     'key' => 'Label',
 ],
+'class' => 'column', // optional: renders options vertically
 ```
 
 ### Option Normalization (v1.3+)
@@ -256,32 +279,85 @@ This ensures semantic values are stored instead of numeric indexes.
 
 ------------------------------------------------------------------------
 
-### Media Field
+### Media Fields
 
-All media fields store attachment IDs only.
+All media fields store attachment IDs only. Never store URLs or file paths.
 
-#### Single Mode
+#### media — any file type
 
 ``` php
-'type'  => 'int',
+'type'  => 'integer',
 'field' => 'media',
 'default' => 0,
 ```
 
-#### Multiple Mode
+#### image — images only
+
+``` php
+'type'  => 'integer',
+'field' => 'image',
+'default' => 0,
+```
+
+Preview renders as thumbnail. Library filtered to images.
+
+#### file — any file type (alias for media)
+
+``` php
+'type'  => 'integer',
+'field' => 'file',
+'default' => 0,
+```
+
+#### document — pdf, doc, xls, etc.
+
+``` php
+'type'  => 'integer',
+'field' => 'document',
+'default' => 0,
+```
+
+#### audio
+
+``` php
+'type'  => 'integer',
+'field' => 'audio',
+'default' => 0,
+```
+
+#### video
+
+``` php
+'type'  => 'integer',
+'field' => 'video',
+'default' => 0,
+```
+
+#### archive — zip, tar, gz
+
+``` php
+'type'  => 'integer',
+'field' => 'archive',
+'default' => 0,
+```
+
+#### Multiple Mode (ordered gallery)
+
+Any media field type supports `multiple: true`:
 
 ``` php
 'type'     => 'array',
-'field'    => 'media',
+'field'    => 'media',   // or image, file, etc.
 'default'  => [],
 'multiple' => true,
 ```
 
 Multiple mode supports:
 
--   Drag sorting
+-   Drag sorting with order persistence
 -   Per-item removal
--   Order persistence
+-   Duplicate prevention (triggers `notice-warning`)
+-   Invalid MIME type rejection (triggers `notice-error`)
 
 Single mode disables drag UI automatically.
 

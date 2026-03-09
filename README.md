@@ -2,7 +2,7 @@
 
 > A structured WordPress plugin boilerplate with a schema-driven field engine, MetaBox system, and deterministic plugin architecture.
 
-![PHP](https://img.shields.io/badge/PHP-%3E%3D7.4-777BB4?logo=php&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-%3E%3D8.3-777BB4?logo=php&logoColor=white)
 ![Version](https://img.shields.io/github/v/tag/golchha21/wp-plugin-boilerplate)
 ![Downloads](https://img.shields.io/github/downloads/golchha21/wp-plugin-boilerplate/total)
 
@@ -19,6 +19,18 @@ It exists to provide a constrained starting point for plugins that are
 expected to grow over time - where admin configuration, settings,
 frontend behavior, and lifecycle concerns tend to blur and accumulate
 accidental complexity.
+
+------------------------------------------------------------------------
+
+## Documentation
+
+| Goal | Document |
+|---|---|
+| Build a plugin from this boilerplate | [HOW-TO-USE.md](HOW-TO-USE.md) |
+| Look up a field type or schema key | [FIELDS.md](FIELDS.md) |
+| Understand architectural decisions | [ADVANCED-TOPICS.md](ADVANCED-TOPICS.md) |
+| Contribute a change | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| See what changed | [CHANGELOG.md](CHANGELOG.md) |
 
 ------------------------------------------------------------------------
 
@@ -57,7 +69,7 @@ building more complex plugins.
 
 ------------------------------------------------------------------------
 
-## Hook Registration (v1.6.2+)
+## Hook Registration (v1.6.3+)
 
 The boilerplate uses a centralized Loader to register WordPress hooks.
 
@@ -166,23 +178,27 @@ Repository guarantees deterministic key ownership and collision safety.
 
 ### Supported Fields
 
--   text
+**Text-based**
+-   text, email, url, password, hidden
 -   textarea
--   email
--   url
--   password
--   hidden
--   date
--   time
--   datetime-local
+-   date, time, datetime-local
+-   editor (wp_editor powered — not supported inside repeaters)
+
+**Numeric & Boolean**
 -   number
+-   range
 -   checkbox
--   radio
+
+**Choice**
 -   select
--   color
--   editor (wp_editor powered)
--   media (single & multiple)
--   repeater (nested structured fields)
+-   multiselect
+-   radio
+
+**Rich**
+-   color (WP Color Picker)
+-   media / image / file / document / audio / video / archive
+-   media with `multiple: true` (ordered gallery — drag sort, per-item remove)
+-   repeater (nested structured fields, all types except editor)
 
 ------------------------------------------------------------------------
 
@@ -253,7 +269,7 @@ Example:
 Available widths:
 
 -   width-1 → width-12
--   Default: width (full width)
+-   Default: `width-4` for most fields; `width` (full) for editor, media, and repeater
 
 ------------------------------------------------------------------------
 

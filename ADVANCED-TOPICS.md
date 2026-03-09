@@ -19,7 +19,7 @@ Runtime wiring must remain deterministic and predictable.
 
 ------------------------------------------------------------------------
 
-## Declarative Hook Architecture (v1.6.2+)
+## Declarative Hook Architecture (v1.6.3+)
 
 Hooks may be declared using a `hooks()` method.
 
@@ -76,7 +76,7 @@ MetaBoxes are a structured post meta domain.
 -   Each MetaBox owns its own namespace.
 -   Field keys are automatically namespaced as:
     *{PREFIX}{BOX_ID}*{FIELD_KEY}
--   ID format and uniqueness are validated at registry level.
+-   ID format and uniqueness validation is available at registry level (opt-in — see `MetaBoxes::validate()`).
 -   Persistence must go through MetaBoxRepository.
 
 MetaBoxes do not share keys across boxes.
@@ -215,7 +215,7 @@ The admin interface is:
 -   Safe from wp-admin style conflicts
 -   Field type is injected as a CSS class on field wrappers for layout
     targeting
--   MetaBoxes are validated for unique IDs at registry level
+-   MetaBox and Settings Tab ID validation is available at registry level (opt-in — uncomment `self::validate()` in `MetaBoxes::all()` and `Tabs::all()` for production use)
 
 Layout affects presentation only. Layout never affects data structure.
 
