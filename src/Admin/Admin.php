@@ -22,12 +22,19 @@ class Admin
 
 	public function register(Loader $loader): void
 	{
-		$loader->action('admin_enqueue_scripts', $this, 'enqueueAssets');
+		$loader->action('admin_enqueue_scripts',[ $this, 'enqueueAssets']);
 
 		foreach ($this->modules as $module) {
-			if ($module instanceof AdminModule) {
-				$module->register($loader);
+
+			if (!$module instanceof AdminModule) {
+				continue;
 			}
+
+			/* declarative hooks */
+			$loader->register($module);
+
+			/* manual wiring */
+			$module->register($loader);
 		}
 	}
 

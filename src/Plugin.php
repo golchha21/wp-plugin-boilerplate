@@ -18,13 +18,24 @@ class Plugin
 
 	protected function register_services(): void
 	{
-		(new I18n())->register($this->loader);
+		$this->wire(new I18n());
 
-		if (is_admin()) {
-			(new Admin())->register($this->loader);
+		if (\is_admin()) {
+			$this->wire(new Admin());
 		}
 
-		(new Frontend())->register($this->loader);
+		$this->wire(new Frontend());
+	}
+
+	protected function wire(object $service): void
+	{
+		/* declarative hooks */
+		$this->loader->register($service);
+
+		/* manual wiring */
+		if (method_exists($service, 'register')) {
+			$service->register($this->loader);
+		}
 	}
 
 	public static function prefix(): string

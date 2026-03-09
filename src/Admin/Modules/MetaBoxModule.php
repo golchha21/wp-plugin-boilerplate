@@ -15,8 +15,8 @@ class MetaBoxModule implements AdminModule
 {
 	public function register(Loader $loader): void
 	{
-		$loader->action('add_meta_boxes', $this, 'registerMetaBoxes');
-		$loader->action('save_post', $this, 'save', 10, 2);
+		$loader->action('add_meta_boxes', [$this, 'registerMetaBoxes']);
+		$loader->action('save_post', [$this, 'save'], 10, 2);
 	}
 
 	public function registerMetaBoxes(): void

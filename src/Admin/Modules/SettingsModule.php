@@ -19,13 +19,28 @@ class SettingsModule implements AdminModule
 {
 	public function register(Loader $loader): void
 	{
-		$loader->action('admin_init', $this, 'boot');
-		$loader->action('admin_post_'. Plugin::prefix() .'reset', new ResetSettings(), 'handle');
-		$loader->action('admin_post_'. Plugin::prefix() .'export', new ExportSettings(), 'handle');
-		$loader->action('admin_post_'. Plugin::prefix() .'import', new ImportSettings(), 'handle');
-		$loader->action('admin_menu', $this, 'register_menus');
+		$prefix = Plugin::prefix();
 
-		$loader->filter('plugin_action_links_' . plugin_basename(Plugin::file()), $this, 'add_settings_link');
+		/* external handlers */
+		$loader->action("admin_post_{$prefix}reset",  [new ResetSettings(), 'handle']);
+		$loader->action("admin_post_{$prefix}export", [new ExportSettings(), 'handle']);
+		$loader->action("admin_post_{$prefix}import", [new ImportSettings(), 'handle']);
+	}
+
+	public function hooks(): array
+	{
+		$file = \plugin_basename(Plugin::file());
+
+		return [
+			'action' => [
+				['admin_init', 'boot'],
+				['admin_menu', 'register_menus'],
+			],
+
+			'filter' => [
+				["plugin_action_links_{$file}", 'add_settings_link'],
+			],
+		];
 	}
 
 	/* -------------------------------------------------

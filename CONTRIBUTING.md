@@ -78,6 +78,7 @@ If dependencies are updated, the plugin must continue to work in a clean WordPre
 ### 2. Hook registration
 
 - `add_action` and `add_filter` may only appear inside `Loader`
+- Feature classes may declare hooks via a `hooks()` method which the Loader resolves.
 - Feature classes must register hooks via the loader
 
 ### 3. Settings discipline

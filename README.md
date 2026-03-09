@@ -57,6 +57,53 @@ building more complex plugins.
 
 ------------------------------------------------------------------------
 
+## Hook Registration (v1.6.2+)
+
+The boilerplate uses a centralized Loader to register WordPress hooks.
+
+Feature classes do not call `add_action()` or `add_filter()` directly.
+
+Instead, hooks can be declared using one of two approaches.
+
+### Declarative Hooks
+
+Classes may define a `hooks()` method.
+
+Example:
+
+```php
+    public function hooks(): array
+    {
+        return [
+            'action' => [
+                ['admin_init', 'boot'],
+                ['admin_menu', 'register_menus'],
+            ],
+
+            'filter' => [
+                ['plugin_action_links_' . plugin_basename(Plugin::file()), 'add_settings_link'],
+            ],
+        ];
+    }
+```
+
+The Loader reads this method and registers the hooks automatically.
+
+### Manual Wiring
+
+For dynamic hooks or external handlers, classes may still register hooks explicitly:
+
+```php
+    public function register(Loader $loader): void
+    {
+        $loader->action("admin_post_{$prefix}reset", [new ResetSettings(), 'handle']);
+    }
+```
+
+Both approaches can be used together.
+
+------------------------------------------------------------------------
+
 ## Design Goals
 
 This boilerplate is intentionally opinionated.

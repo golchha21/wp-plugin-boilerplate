@@ -331,6 +331,29 @@ Repeaters always store ordered arrays.
 
 ------------------------------------------------------------------------
 
+## Hook Integration
+
+Fields are typically registered during the `admin_init` lifecycle.
+
+Modules may declare this using the declarative hook system.
+
+Example:
+
+```php
+    public function hooks(): array
+    {
+        return [
+            'action' => [
+                ['admin_init', 'boot'],
+            ],
+        ];
+    }
+```
+
+The Loader ensures these hooks are registered consistently across modules.
+
+------------------------------------------------------------------------
+
 ## Guarantees
 
 -   `type` controls data safety, not UI

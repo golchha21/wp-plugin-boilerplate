@@ -382,6 +382,43 @@ inside callbacks instead.
 
 ------------------------------------------------------------------------
 
+## Step 10.5: Registering Hooks
+
+Hooks are registered through the Loader.
+
+Feature classes should never call `add_action()` or `add_filter()` directly.
+
+Hooks can be declared using a `hooks()` method.
+
+Example:
+
+```php
+    public function hooks(): array
+    {
+        return [
+            'action' => [
+                ['admin_init', 'boot'],
+                ['admin_menu', 'register_menus'],
+            ],
+        ];
+    }
+```
+
+The Loader reads this structure and registers hooks automatically.
+
+For dynamic hooks or external handlers, use explicit registration:
+
+```php
+    public function register(Loader $loader): void
+    {
+        $loader->action("admin_post_export", [new ExportSettings(), 'handle']);
+    }
+```
+
+Declarative hooks keep feature classes easier to read as plugins grow.
+
+------------------------------------------------------------------------
+
 ## Step 11: Admin Configuration Rules
 
 Admin is responsible only for:

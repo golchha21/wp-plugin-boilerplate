@@ -19,6 +19,38 @@ Runtime wiring must remain deterministic and predictable.
 
 ------------------------------------------------------------------------
 
+## Declarative Hook Architecture (v1.6.2+)
+
+Hooks may be declared using a `hooks()` method.
+
+Example:
+
+```php
+    public function hooks(): array
+    {
+        return [
+            'action' => [
+                ['admin_menu', 'register_menus'],
+            ],
+        ];
+    }
+```
+
+The Loader reads this structure and performs the final `add_action()` / `add_filter()` registration.
+
+Guarantees:
+
+- Hook registration remains centralized.
+- Feature classes never interact with WordPress hook APIs directly.
+- Wiring logic stays deterministic and predictable.
+- Hook declarations remain static and easy to audit.
+
+Dynamic hooks or external handler classes may still be registered using `register()`.
+
+Declarative hooks are preferred for static plugin behavior.
+
+------------------------------------------------------------------------
+
 ## Settings as a Domain Boundary
 
 Settings are domain data shared between admin and runtime.

@@ -4,61 +4,78 @@ namespace WPPluginBoilerplate;
 
 class Loader
 {
-	protected array $actions = array();
-	protected array $filters = array();
+	protected array $hooks = [];
 
-	public function action(
-		string $hook,
-		object $component,
-		string $callback,
-		int    $priority = 10,
-		int    $accepted_args = 1
-	): void
-	{
-		$this->actions[] = compact(
-			'hook',
-			'component',
-			'callback',
-			'priority',
-			'accepted_args'
-		);
+	public function action(string $hook, callable $callback, int $priority = 10, int $accepted_args = 1): void {
+		$this->add('action', $hook, $callback, $priority, $accepted_args);
 	}
 
-	public function filter(
-		string $hook,
-		object $component,
-		string $callback,
-		int    $priority = 10,
-		int    $accepted_args = 1
-	): void
+	public function filter(string $hook, callable $callback, int $priority = 10, int $accepted_args = 1): void {
+		$this->add('filter', $hook, $callback, $priority, $accepted_args);
+	}
+
+	protected function add(string $type, string $hook, callable $callback, int $priority, int $accepted_args): void {
+		$this->hooks[] = [
+			'type' => $type,
+			'hook' => $hook,
+			'callback' => $callback,
+			'priority' => $priority,
+			'accepted_args' => $accepted_args,
+		];
+	}
+
+	public function register(object $component): void
 	{
-		$this->filters[] = compact(
-			'hook',
-			'component',
-			'callback',
-			'priority',
-			'accepted_args'
-		);
+		if (!method_exists($component, 'hooks')) {
+			return;
+		}
+
+		foreach ($component->hooks() as $type => $hooks) {
+
+			if (!method_exists($this, $type)) {
+				continue;
+			}
+
+			foreach ($hooks as $hook) {
+
+				[$name, $method, $priority, $args] =
+					array_pad($hook, 4, null);
+
+				if (!method_exists($component, $method)) {
+					continue;
+				}
+
+				$priority ??= 10;
+				$args ??= 1;
+
+				$this->$type($name, [$component, $method], $priority, $args);
+			}
+		}
 	}
 
 	public function run(): void
 	{
-		foreach ($this->actions as $action) {
-			add_action(
-				$action['hook'],
-				array($action['component'], $action['callback']),
-				$action['priority'],
-				$action['accepted_args']
-			);
-		}
+		foreach ($this->hooks as $hook) {
 
-		foreach ($this->filters as $filter) {
-			add_filter(
-				$filter['hook'],
-				array($filter['component'], $filter['callback']),
-				$filter['priority'],
-				$filter['accepted_args']
-			);
+			if ($hook['type'] === 'action') {
+
+				\add_action(
+					$hook['hook'],
+					$hook['callback'],
+					$hook['priority'],
+					$hook['accepted_args']
+				);
+
+			} else {
+
+				\add_filter(
+					$hook['hook'],
+					$hook['callback'],
+					$hook['priority'],
+					$hook['accepted_args']
+				);
+
+			}
 		}
 	}
 }

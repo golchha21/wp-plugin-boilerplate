@@ -11,7 +11,7 @@ class Frontend
 	{
 		// Public hooks go here.
 
-		$loader->action('wp_enqueue_scripts', $this, 'enqueue_assets');
+		$loader->action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
 	}
 
 	public function enqueue_assets(): void

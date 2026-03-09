@@ -10,6 +10,52 @@ This project follows a **foundation-first** release model:
 
 ---
 
+## v1.6.2 — Declarative Hooks & Module Wiring
+
+### Added
+
+- Declarative hook registration via `hooks()` method.
+- Loader now supports automatic hook discovery from service and module classes.
+- Admin modules can define hooks without manual `$loader->action()` calls.
+
+### Improved
+
+- Admin modules now register both:
+    - `hooks()` (declarative hooks)
+    - `register()` (manual wiring)
+- Cleaner architecture for plugins with multiple modules.
+- Loader safety improvements to prevent invalid callbacks.
+
+### Architecture
+
+Services and modules can now register hooks in two ways.
+
+Declarative hooks example:
+
+```php
+    public function hooks(): array
+    {
+        return [
+            'action' => [
+                ['admin_menu', 'register_menu'],
+            ],
+        ];
+    }
+```
+
+Manual wiring example:
+
+```php
+    public function register(Loader $loader): void
+    {
+        $loader->action('admin_post_reset', [new ResetSettings(), 'handle']);
+    }
+```
+
+Both approaches can be used together.
+
+---
+
 ## v1.6.1 – Documentation & Repository Improvements
 
 ### Added
